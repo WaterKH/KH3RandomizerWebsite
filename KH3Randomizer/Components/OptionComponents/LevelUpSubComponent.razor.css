@@ -1,0 +1,9 @@
+.selector {
+    width: 53px;
+    height: 10px;
+    display: inline-flex;
+    position: absolute;
+    margin-left: 12px;
+    margin-top: -23px;
+    border-radius: 50px;
+}

@@ -1,0 +1,18 @@
+.section-marker {
+    background-color: #DEDEDE;
+    width: 10px;
+    height: 65%;
+    border-radius: 15px;
+}
+
+.active-section-marker {
+    background-color: #4B8FFF;
+    width: 10px;
+    height: 65%;
+    border-radius: 15px;
+}
+
+.section-item {
+    margin-left: 25px;
+    top: -2px;
+}

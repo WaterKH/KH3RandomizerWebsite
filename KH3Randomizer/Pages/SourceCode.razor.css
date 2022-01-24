@@ -1,0 +1,46 @@
+.section-manager {
+
+}
+
+.source-code-header {
+    text-align: left;
+    font-size: 3.5rem;
+    color: #5AC4FF;
+    display: inline-flex;
+}
+
+.github-container {
+    height: 250px;
+    max-width: 400px;
+    padding: 25px;
+    margin: 25px 50px;
+    border-radius: 15px;
+    box-shadow: 4px 4px 10px 0px #888888;
+    text-decoration: none;
+}
+
+.github-image {
+    background-color: black;
+    width: 65px;
+    height: 65px;
+    border-radius: 65px;
+}
+
+.github-title {
+    font-size: 1.5rem;
+    color: white;
+    padding-right: 10px;
+}
+
+.github-body {
+    color: #e3e3e3;
+    font-size: small;
+    padding: 5px;
+}
+
+.github-logo {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    opacity: 0.25;
+}

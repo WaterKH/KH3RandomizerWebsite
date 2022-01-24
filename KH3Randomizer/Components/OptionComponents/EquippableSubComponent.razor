@@ -1,0 +1,139 @@
+﻿@using UE4DataTableInterpreter.Enums
+
+@inject RandomizerService RandomizerService
+
+<h2><span class="selector" style="background-color: #df10fd;"></span>@this.EquippableName</h2>
+
+<Table Items="this.Equippables" Context="Equippable" CurrentPage="1">
+    <TableHeader>
+        <th>Item</th>
+        <th>Ability 1</th>
+        <th>Ability 2</th>
+        <th>Ability 3</th>
+        <th>Action</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@Equippable.EquipItem.KeyIdToDisplay()</td>
+        <td>@Equippable.Ability1.ValueIdToDisplay()</td>
+        <td>@Equippable.Ability2.ValueIdToDisplay()</td>
+        <td>@Equippable.Ability3.ValueIdToDisplay()</td>
+        @if (this.actionType == "Options")
+        {
+            <td><a href="#" @onclick="() => OpenModal(Equippable)" @onclick:preventDefault>Change</a></td>
+        }
+        else if (this.actionType == "Modal")
+        {
+            <td><a href="#" @onclick="() => MakeDecision(Equippable, true)" @onclick:preventDefault>Swap</a></td>
+        }
+    </RowTemplate>
+</Table>
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter] public string EquippableName { get; set; }
+
+    [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
+    [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
+
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    [Parameter] public string ActionType { get; set; } = "Options"; // Options, Modal, Spoiler
+    [Parameter] public string CurrentSeed { get; set; }
+
+
+    [Parameter] public Action<DataTableEnum, string, string, string> SwapOptions { get; set; }
+
+    private List<Equippable> Equippables { get; set; }
+    private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+    private string actionType;
+    private string currentSeed;
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<string>(nameof(this.EquippableName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
+        {
+            this.randomizedOptions = options;
+            this.Equippables = this.RandomizerService.GetAvailableEquippables(value, ref this.randomizedOptions);
+        }
+
+        if (parameters.TryGetValue<Dictionary<string, Dictionary<string, bool>>>(nameof(AvailableOptions), out var availableOptions))
+        {
+            this.availableOptions = availableOptions;
+        }
+
+        if (parameters.TryGetValue<string>(nameof(ActionType), out var actionType))
+        {
+            this.actionType = actionType;
+        }
+
+        if (parameters.TryGetValue<string>(nameof(CurrentSeed), out var currentSeed))
+        {
+            this.currentSeed = currentSeed;
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    private async Task OpenModal(Equippable equippable)
+    {
+        var decision = await MakeDecision(equippable, false);
+
+        if (decision == null)
+            return;
+
+        var parameters = new ModalParameters();
+
+        parameters.Add("Category", DataTableEnum.EquipItem);
+        parameters.Add("SubCategory", equippable.EquipItem);
+        parameters.Add("Name", decision.Item1);
+        parameters.Add("Value", decision.Item2);
+        parameters.Add("CurrentSeed", this.currentSeed);
+        parameters.Add("ActionType", "Modal");
+
+        parameters.Add("UpdateRandomizedOptions", this.UpdateRandomizedOptions);
+        parameters.Add("UpdateModifications", this.UpdateModifications);
+
+        parameters.Add("AvailableOptions", this.availableOptions);
+        parameters.Add("RandomizedOptions", this.randomizedOptions);
+
+        var options = new ModalOptions { Class = "modal-custom" };
+        var displayValue = string.IsNullOrEmpty(decision.Item2.ValueIdToDisplay()) ? "" : decision.Item2.ValueIdToDisplay();
+
+        Modal.Show<ChangeOption>($"Change {this.EquippableName} {equippable.EquipItem.KeyIdToDisplay()} - {displayValue}", parameters, options);
+    }
+
+    private async Task<Tuple<string, string>> MakeDecision(Equippable equippable, bool swap)
+    {
+        var decisions = new List<Tuple<string, string>>() { new Tuple<string, string>("Ability0", equippable.Ability1) };
+
+        if (equippable.Ability2.Length > 0)
+            decisions.Add(new Tuple<string, string>("Ability1", equippable.Ability2));
+        if (equippable.Ability3.Length > 0)
+            decisions.Add(new Tuple<string, string>("Ability2", equippable.Ability3));
+
+        var decisionParms = new ModalParameters();
+
+        decisionParms.Add("Decisions", decisions);
+
+        //if (ModalInstance != null)
+        //    await ModalInstance.CloseAsync(); // TODO Find some other way to handle two modals but not able to open them on the existing modal
+
+        var options = new ModalOptions { Class = "modal-custom" };
+
+        var decisionModal = Modal.Show<DecisionModal>("Please select one of the following:", decisionParms, options);
+        var result = await decisionModal.Result;
+
+        if (result.Cancelled)
+            return null;
+
+        var decision = (Tuple<string, string>)result.Data;
+        if (swap)
+            this.SwapOptions.Invoke(DataTableEnum.EquipItem, equippable.EquipItem, decision.Item1, decision.Item2);
+
+        return decision;
+    }
+}

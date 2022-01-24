@@ -1,0 +1,19 @@
+﻿<div class="simple-form redirect-modal" style="min-width: 60vw; background-color: #F2F2F2;">
+    <p>
+        Do you know what steps need to be taken next to make this mod work in Kingdom Hearts III?
+        If not, you can navigate to the Guides section by clicking the <b>Go To Guides</b> button!
+    </p>
+    <p>
+        Otherwise, you can close this modal.
+        Thank you for supporting this mod by generating a seed!
+    </p>
+
+    <a class="btn kh-button" href="guide">Go To Guides</a>
+
+    <button @onclick="ModalInstance.CancelAsync" class="btn kh-button-cancel" style="margin-left: 15px;">Cancel</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+}

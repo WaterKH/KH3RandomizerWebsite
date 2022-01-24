@@ -1,0 +1,322 @@
+﻿@using UE4DataTableInterpreter.Enums
+
+@inject KH3Randomizer.Data.RandomizerService RandomizerService
+
+<div class="search_options @(this.SpoilerChecked ? "kh-hide-input" : "kh-display-input")" style="height: @(this.SpoilerChecked ? "0px" : "auto")">
+    <label for="randomizer_search" class="kh-label">Search Filter: </label>
+    <input value="@searchValue" id="randomizer_search" name="randomizer_search" class="kh-inputfield" @onchange="@((e) => this.SearchOptions(e))" placeholder="Search for an item, ability, bonus, etc. to filter below..." disabled="@this.SpoilerChecked" />
+</div>
+
+@foreach (var option in this.displayAvailableOptions)
+{
+    <Collapsable @ref="this.collapsableDictionary[option.Key]" CurrentOption="@this.currentOption" ToggleCollapsables="this.ToggleCollapsables" Title="@option.Key" ActionType="@this.ActionType">
+        <div class="row">
+            @if (option.Value.Count > 0)
+            {
+                <div class="col-md-3 suboption-section">
+                    @foreach (var subOption in option.Value)
+                    {
+                        <div class="row">
+                            <div class="@(currentSelection == subOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSelection(subOption.Key)">
+                                <div class="col-md-12">
+                                    <label class="switch" id="switch@(subOption.Key)" name="switch@(subOption.Key)">
+                                        <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key, (bool)value.Value))" checked="@subOption.Value" disabled="@IsDisabled">
+                                        <span class="slider round"></span>
+                                    </label>
+
+
+                                    <label for="switch@(subOption.Key)" style="padding-left: 20px;"><b>@subOption.Key</b></label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <div class="col-md-9" style="overflow-y: visible; max-height: 700px;">
+                    <div style="border-radius: 10px; padding: 20px; @(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" class="@(this.SpoilerChecked ? "spoiler-overlay" : "")">
+                        @if (option.Key == "Treasures")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <TreasureSubComponent WorldName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                      AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></TreasureSubComponent>
+                            }
+                            else
+                            {
+                                <TreasureSubComponent WorldName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                      AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></TreasureSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Equippables")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <EquippableSubComponent EquippableName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></EquippableSubComponent>
+                            }
+                            else
+                            {
+                                <EquippableSubComponent EquippableName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></EquippableSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Starting Stats")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <ChrInitSubComponent ChrInitName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                     AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></ChrInitSubComponent>
+                            }
+                            else
+                            {
+                                <ChrInitSubComponent ChrInitName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                     AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></ChrInitSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Bonuses")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <BonusSubComponent BonusName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></BonusSubComponent>
+                            }
+                            else
+                            {
+                                <BonusSubComponent BonusName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></BonusSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Weapon Upgrades")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <WeaponUpgradeSubComponent WeaponUpgradeName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                           AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></WeaponUpgradeSubComponent>
+                            }
+                            else
+                            {
+                                <WeaponUpgradeSubComponent WeaponUpgradeName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                           AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></WeaponUpgradeSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Lucky Emblems")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <LuckyEmblemSubComponent LuckyEmblemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></LuckyEmblemSubComponent>
+                            }
+                            else
+                            {
+                                <LuckyEmblemSubComponent LuckyEmblemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></LuckyEmblemSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Fullcourse Abilities")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <FullcourseSubComponent FullcourseName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></FullcourseSubComponent>
+                            }
+                            else
+                            {
+                                <FullcourseSubComponent FullcourseName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></FullcourseSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Level Ups")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <LevelUpSubComponent LevelUpName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                     AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></LevelUpSubComponent>
+                            }
+                            else
+                            {
+                                <LevelUpSubComponent LevelUpName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                     AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></LevelUpSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Events")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <EventSubComponent EventName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></EventSubComponent>
+                            }
+                            else
+                            {
+                                <EventSubComponent EventName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></EventSubComponent>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </Collapsable>
+}
+
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public EventCallback<Dictionary<string, Dictionary<string, bool>>> UpdateAvailableOptions { get; set; }
+    [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
+    [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
+
+    [Parameter] public string CurrentSeed { get; set; }
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+    [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
+
+    [Parameter] public bool IsDisabled { get; set; } = false;
+    [Parameter] public bool SpoilerChecked { get; set; } = false;
+    [Parameter] public string ActionType { get; set; } = "Options"; // Options, Modal, Spoiler
+
+    [Parameter] public Action<DataTableEnum, string, string, string> SwapOptions { get; set; }
+
+
+    private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+    private List<Tuple<Option, Option>> modifications = new();
+
+    private string currentSelection = "";
+    private string currentOption = "";
+
+    private Dictionary<string, Collapsable> collapsableDictionary = new Dictionary<string, Collapsable>();
+
+    private string searchValue = "";
+
+    private Dictionary<string, Dictionary<string, bool>> searchAvailableOptions = new();
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> searchRandomizedOptions = new();
+
+
+    private Dictionary<string, Dictionary<string, bool>> displayAvailableOptions = new();
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> displayRandomizedOptions = new();
+
+
+    protected override void OnParametersSet()
+    {
+        this.availableOptions = this.AvailableOptions;
+        this.randomizedOptions = this.RandomizedOptions;
+        this.modifications = this.Modifications;
+
+        if (this.searchAvailableOptions.Count > 0 && this.searchRandomizedOptions.Count > 0)
+        {
+            this.displayAvailableOptions = this.searchAvailableOptions;
+            this.displayRandomizedOptions = this.searchRandomizedOptions;
+        }
+        else
+        {
+            this.displayAvailableOptions = this.availableOptions;
+            this.displayRandomizedOptions = this.randomizedOptions;
+        }
+
+        this.searchValue = "";
+
+        base.OnParametersSet();
+    }
+
+    private void UpdateCurrentSelection(string selection)
+    {
+        this.currentSelection = selection;
+    }
+
+    private void UpdateSwitch(string option, string subOption, bool value)
+    {
+        this.availableOptions[option][subOption] = value;
+
+        if (!string.IsNullOrEmpty(this.CurrentSeed))
+            this.RandomizerService.RandomizeItems(this.CurrentSeed, ref this.availableOptions, ref this.randomizedOptions);
+        
+
+        this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
+        this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void ToggleCollapsables(string currentOption)
+    {
+        this.currentSelection = this.ConvertDisplayStringToDefaultCurrentSelection(currentOption);
+        this.currentOption = currentOption;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private string ConvertDisplayStringToDefaultCurrentSelection(string displayString)
+    {
+        if (this.displayAvailableOptions.ContainsKey(displayString))
+            return this.displayAvailableOptions[displayString].Keys.FirstOrDefault();
+
+        return "";
+    }
+
+    private void SearchOptions(ChangeEventArgs e)
+    {
+        this.searchValue = e.Value.ToString();
+
+        this.searchAvailableOptions = new();
+        this.searchRandomizedOptions = new();
+
+        if (!string.IsNullOrEmpty(this.searchValue))
+        {
+            foreach (var category in this.randomizedOptions)
+            {
+                var categoryConverted = category.Key.DataTableEnumToKey();
+                foreach (var subCategory in category.Value)
+                {
+                    var subCategoryConverted = subCategory.Key.CategoryToKey(category.Key);
+                    var isFound = false;
+
+                    foreach (var option in subCategory.Value)
+                    {
+                        if (option.Key.KeyIdToDisplay().ToLower().Contains(this.searchValue.ToLower()) || option.Value.ValueIdToDisplay().ToLower().Contains(this.searchValue.ToLower()))
+                        {
+                            isFound = true;
+
+                            if (!this.searchRandomizedOptions.ContainsKey(category.Key))
+                                this.searchRandomizedOptions.Add(category.Key, new Dictionary<string, Dictionary<string, string>>());
+
+                            if (!this.searchRandomizedOptions[category.Key].ContainsKey(subCategory.Key))
+                                this.searchRandomizedOptions[category.Key].Add(subCategory.Key, new Dictionary<string, string>());
+
+                            this.searchRandomizedOptions[category.Key][subCategory.Key].Add(option.Key, option.Value);
+                        }
+                    }
+
+
+                    if (isFound)
+                    {
+                        if (!this.searchAvailableOptions.ContainsKey(categoryConverted))
+                            this.searchAvailableOptions.Add(categoryConverted, new Dictionary<string, bool>());
+
+                        if (!this.searchAvailableOptions[categoryConverted].ContainsKey(subCategoryConverted))
+                            this.searchAvailableOptions[categoryConverted].Add(subCategoryConverted, true);
+                    }
+                }
+            }
+
+            this.displayAvailableOptions = this.searchAvailableOptions;
+            this.displayRandomizedOptions = this.searchRandomizedOptions;
+        }
+        else
+        {
+            this.displayAvailableOptions = this.availableOptions;
+            this.displayRandomizedOptions = this.randomizedOptions;
+        }
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

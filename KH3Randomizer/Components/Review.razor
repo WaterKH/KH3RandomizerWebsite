@@ -1,0 +1,173 @@
+﻿@using UE4DataTableInterpreter.Enums
+
+@inject RandomizerService RandomizerService
+@inject IJSRuntime js
+
+<div class="review-section">
+    <div class="review-subsection">
+        <div class="review-sub-subsection">
+            <div class="review-header">
+                <h3 for="seed" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #aeecff;"></span><b>Seed Name: </b></h3>
+                <label id="seed" name="seed" style="margin-left: 50px; margin-top: 2px; font-weight: 600;">@(string.IsNullOrEmpty(this.CurrentSeed) ? "The Seed Name is blank." : this.CurrentSeed)</label>
+            </div>
+
+            <div class="review-content">
+            </div>
+        </div>
+
+        <div class="review-sub-subsection">
+            <div class="review-header">
+                <h3 for="options" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #c9aeff;"></span><b>Pools & Options: </b></h3>
+            </div>
+            <div class="review-content" style="max-height: 500px; overflow-y: auto;">
+                @foreach (var option in options)
+                {
+                    <div style="display: inline-flex; width: 100%">
+                        <label id="@option.Key" name="@option.Key" style="min-width: fit-content; max-width: fit-content; margin-top: 10px;"><span class="pools-options-color" style="@poolColors[option.Key]"></span><b>@(option.Key):</b></label>
+
+                        <div id="@(option.Key)_subOptions" style="display: inline;">
+                            @foreach (var subOption in option.Value.Split(", "))
+                            {
+                                <span class="sub-option-bubble" style="@optionColors[option.Key]">@subOption</span>
+                            }
+                        </div>
+                    </div>
+
+                    <br />
+                }
+            </div>
+        </div>
+
+        <div class="review-sub-subsection">
+            <div class="review-header">
+                <h3 for="modifications" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #f97e94;"></span><b>Modifications: </b></h3>
+                @if (this.Modifications.Count == 0)
+                {
+                    <label id="modifications" name="modifications" style="margin-left: 50px; margin-top: 2px; font-weight: 600;">There are no Modifications.</label>
+                }
+            </div>
+            <div class="review-content" style="max-height: 500px; overflow-y: auto;">
+                @foreach (var modification in this.Modifications)
+                {
+                    <div style="display: inline-flex; width: 100%">
+                        <label id="@modification.Item1.Category" name="@modification.Item1.Category" style="min-width: fit-content; max-width: fit-content; margin-top: 10px;">
+                            <span class="pools-options-color" style="@poolColors[modification.Item1.Category.DataTableEnumToKey()]"></span><b>@(@modification.Item1.Category.DataTableEnumToKey()):</b>
+                        </label>
+
+                        <div id="@(modification.Item1.Category)_subOptions" style="display: inline;">
+                            <span style="margin-left: 25px;"><b>@modification.Item1.SubCategory.KeyIdToDisplay() - </b></span>
+
+                            <span class="sub-option-bubble" style="@optionColors[modification.Item1.Category.DataTableEnumToKey()]">@modification.Item1.Value.ValueIdToDisplay()</span>
+                            <span style="margin-left: 5px;"><b> Swapped with:</b></span>
+                        </div>
+                    </div>
+
+                    <div style="display: inline-flex; width: 90%; margin-left: 50px;">
+                        <label id="@modification.Item2.Category" name="@modification.Item2.Category" style="min-width: fit-content; max-width: fit-content; margin-top: 10px;">
+                            <span class="pools-options-color" style="@poolColors[modification.Item2.Category.DataTableEnumToKey()]"></span><b>@(@modification.Item2.Category.DataTableEnumToKey()):</b>
+                        </label>
+
+                        <div id="@(modification.Item2.Category)_subOptions" style="display: inline;">
+                            <span style="margin-left: 25px;"><b>@modification.Item2.SubCategory.KeyIdToDisplay() - </b></span>
+
+                            <span class="sub-option-bubble" style="@optionColors[modification.Item2.Category.DataTableEnumToKey()]">@modification.Item2.Value.ValueIdToDisplay()</span>
+                        </div>
+                    </div>
+
+                    <br />
+                }
+            </div>
+        </div>
+    </div>
+
+    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Options...</button>
+    <button class="btn kh-button" @onclick="() => this.GenerateSeed()" style="float: right;">Generate Seed</button>
+</div>
+@code {
+    [Inject] IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
+
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public Action BackTo { get; set; }
+    [Parameter] public string CurrentSeed { get; set; }
+
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    [Parameter] public Dictionary<string, bool> AvailablePools { get; set; }
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
+
+    private List<string> pools { get; set; } = new();
+    private Dictionary<string, string> options { get; set; } = new();
+    private List<string> modifications { get; set; } = new();
+
+    private Dictionary<string, string> poolColors = new();
+    private Dictionary<string, string> optionColors = new();
+
+    protected override void OnInitialized()
+    {
+        this.pools = this.AvailablePools.Where(x => x.Value).Select(x => x.Key).ToList();
+        this.options = new();
+
+        foreach (var pool in pools)
+        {
+            var listOfOptions = new List<string>();
+            foreach (var option in this.AvailableOptions[pool])
+            {
+                if (option.Value)
+                    listOfOptions.Add(option.Key);
+            }
+
+            this.options.Add(pool, string.Join(", ", listOfOptions));
+        }
+
+        //foreach (var modification in this.Modifications)
+        //{
+        //    var initial = modification.Item1;
+        //    var swap = modification.Item2;
+
+        //    this.modifications.Add($"{initial.Category}>{initial.SubCategory}>{initial.Name}>{initial.Value} <-> {swap.Category}>{swap.SubCategory}>{swap.Name}>{swap.Value}");
+        //}
+
+        this.poolColors = new() {
+            { "Treasures", "background-color: #00b0f8;" },
+            { "Events", "background-color: #ad70df;" },
+            { "Starting Stats", "background-color: #ff4141;" },
+            { "Lucky Emblems", "background-color: #f19b39;" },
+            { "Bonuses", "background-color: #ff6cf7;" },
+            { "Fullcourse Abilities", "background-color: #f6c00f;" },
+            { "Level Ups", "background-color: #56adff;" },
+            { "Weapon Upgrades", "background-color: #59ed84;" },
+            { "Equippables", "background-color: #df10fd;" }
+        };
+
+
+        this.optionColors = new() {
+            { "Treasures", "background: linear-gradient(to right, #397e9b, #00b0f8);" },
+            { "Events", "background: linear-gradient(to right, #753da3, #ad70df);" },
+            { "Starting Stats", "background: linear-gradient(to right, #b72e2e, #ff4141);" },
+            { "Lucky Emblems", "background: linear-gradient(to right, #bd782a, #f19b39);" },
+            { "Bonuses", "background: linear-gradient(to right, #b541ae, #ff6cf7);" },
+            { "Fullcourse Abilities", "background: linear-gradient(to right, #b79010, #f6c00f);" },
+            { "Level Ups", "background: linear-gradient(to right, #407fbb, #56adff);" },
+            { "Weapon Upgrades", "background: linear-gradient(to right, #4abd6b, #59ed84);" },
+            { "Equippables", "background: linear-gradient(to right, #b312cb, #df10fd);" }
+        };
+    }
+
+    public void GenerateSeed()
+    {
+        var file = this.RandomizerService.GenerateRandomizerSeed(this.CurrentSeed, this.RandomizedOptions, this.AvailablePools, this.AvailableOptions, this.Modifications);
+
+        js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".zip", Convert.ToBase64String(file));
+        // js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".pak", Convert.ToBase64String(files[0]));
+        // js.InvokeAsync<object>("saveAsFile", "SpoilerLog-" + this.CurrentSeed + ".json", Convert.ToBase64String(files[1]));
+
+        this.RandomizerService.DeleteRandomizerSeed(this.CurrentSeed);
+
+        var parameters = new ModalParameters();
+        var options = new ModalOptions { Class = "modal-custom" };
+
+        Modal.Show<RedirectToGuideModal>("Redirect To Guides", parameters, options);
+    }
+}

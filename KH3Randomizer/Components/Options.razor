@@ -1,0 +1,180 @@
+﻿@using UE4DataTableInterpreter.Enums
+
+@inject KH3Randomizer.Data.RandomizerService RandomizerService
+
+<div class="options-section">
+    <div class="options-subsection">
+        <div class="row">
+            <div class="kh-input col-md-10">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="seed" style="font-size: 1.3rem; padding: 5px 0px 0px 0px;">Seed Name: </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input id="seed" name="seed" class="kh-inputfield" @onchange="RandomizeOptions" placeholder="Enter a seed name..." value="@(string.IsNullOrEmpty(this.currentSeed) ? "" : this.currentSeed)" disabled="@(!this.isSpoilerChecked)" />
+                    </div>
+                    <div class="col-md-1" style="margin-top: 8px; float: right;">
+                        <Tooltip Text="This is what is used to randomize the items. You can generate a duplicate seed if the same name is used.">
+                            <i class="bi bi-question-circle" style="font-size: 1.2rem;"></i>
+                        </Tooltip>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2">
+                        <label for="switchSpoiler" style="padding-right: 20px; margin-bottom: unset;"><b>No Spoilers</b></label>
+
+                        <label class="switch" id="switchSpoiler" name="switchSpoiler" style="margin-top: 9px;">
+                            <input type="checkbox" checked="@(this.isSpoilerChecked)" @onchange="ToggleSpoilerChecked">
+                            <span class="slider round"></span>
+                        </label>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 kh-modification-button">
+                @if (this.modifications.Count > 0)
+                {
+                    <button class="btn btn-danger" @onclick="ResetModifications">Reset Modifications</button>
+                }
+            </div>
+        </div>
+
+        <br />
+
+        <OptionsSubsection UpdateAvailableOptions="@this.UpdateAvailableOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                           CurrentSeed="@this.currentSeed" AvailableOptions="@this.tempOptions" RandomizedOptions="@this.randomizedOptions"
+                           SpoilerChecked="@this.isSpoilerChecked" />
+    </div>
+
+    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Pools...</button>
+    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to Review...</button>
+</div>
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public EventCallback<string> BackTo { get; set; }
+    [Parameter] public EventCallback<string> ContinueTo { get; set; }
+
+    [Parameter] public EventCallback<string> UpdateCurrentSeed { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, Dictionary<string, bool>>> UpdateAvailableOptions { get; set; }
+    [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
+    [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
+
+    [Parameter] public string CurrentSeed { get; set; }
+    [Parameter] public Dictionary<string, bool> AvailablePools { get; set; }
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+    [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
+    [Parameter] public bool IsGoingBack { get; set; }
+
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> tempRandomizedItems = new();
+    private Dictionary<string, Dictionary<string, bool>> tempOptions = new();
+
+    private Dictionary<string, bool> availablePools = new();
+    private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+    private List<Tuple<Option, Option>> modifications = new();
+
+    private string currentSelection = "";
+    private string currentSeed = "";
+    private bool isSpoilerChecked = true;
+
+    protected override void OnInitialized()
+    {
+        this.currentSeed = this.CurrentSeed;
+        this.availableOptions = this.AvailableOptions;
+        this.randomizedOptions = this.RandomizedOptions;
+        this.modifications = this.Modifications;
+
+        this.tempOptions = this.RandomizerService.GetAvailableOptions(this.AvailablePools, ref this.availableOptions, ref this.randomizedOptions, this.IsGoingBack);
+        //this.tempRandomizedItems = this.RandomizerService.GetRandomizedItems();
+        this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
+        this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    protected override void OnParametersSet()
+    {
+        this.currentSeed = this.CurrentSeed;
+        this.availableOptions = this.AvailableOptions;
+        this.randomizedOptions = this.RandomizedOptions;
+        this.modifications = this.Modifications;
+
+        base.OnParametersSet();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (!string.IsNullOrEmpty(this.currentSeed))
+                this.RandomizeOptions(new ChangeEventArgs { Value = this.currentSeed });
+
+            foreach (var (initialOption, swapOption) in this.modifications)
+                this.RandomizerService.UpdateRandomizedItem(ref this.randomizedOptions, initialOption.Category, initialOption.SubCategory, initialOption.Name, initialOption.Value,
+                                                            swapOption.Category, swapOption.SubCategory, swapOption.Name, swapOption.Value);
+
+            this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+        }
+    }
+
+    private void RandomizeOptions(ChangeEventArgs e)
+    {
+        this.currentSeed = e.Value.ToString();
+
+        this.UpdateCurrentSeed.InvokeAsync(this.currentSeed);
+
+        //this.RandomizerService.SetAvailableOptions(this.tempOptions);
+        this.RandomizerService.RandomizeItems(this.currentSeed, ref this.availableOptions, ref this.randomizedOptions);
+
+        this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
+        this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+
+        // TODO check which section is open, then update that section with the below logic
+        //var t = new Dictionary<string, object> { { "WorldName", this.currentSelection } };
+        //TreasureSubComponent.SetParametersAsync(ParameterView.FromDictionary(t));
+    }
+
+    private void UpdateCurrentSelection(string selection)
+    {
+        this.currentSelection = selection;
+    }
+
+    private void ToggleSpoilerChecked(ChangeEventArgs e)
+    {
+        this.isSpoilerChecked = !this.isSpoilerChecked;
+        this.
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void ResetModifications()
+    {
+        this.modifications.Reverse();
+
+        foreach (var (initialOption, swapOption) in this.modifications)
+        {
+            this.RandomizerService.UpdateRandomizedItem(ref this.randomizedOptions, initialOption.Category, initialOption.SubCategory, initialOption.Name, swapOption.Value,
+                                                        swapOption.Category, swapOption.SubCategory, swapOption.Name, initialOption.Value);
+
+        }
+
+        this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+        this.UpdateModifications(null, null);
+
+        this.modifications = new();
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

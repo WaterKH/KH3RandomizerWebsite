@@ -1,0 +1,251 @@
+﻿@page "/spoilerlog"
+
+@using UE4DataTableInterpreter.Enums;
+@using System.Text.Json;
+@using System.IO;
+
+@inject RandomizerService RandomizerService
+
+<div class="spoiler-log-content">
+    <div class="spoiler-log-header">
+        <span class="bi bi-door-open" aria-hidden="true"></span>
+        <h1 style="align-self: center; margin-left: 25px;"><b>Spoiler</b><b style="color: black"> Log</b></h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="instructions-section">
+                <h3 class="instruction-section-header"><span class="selector" style="background-color: #9555DC;"></span><b style="color: #9555DC;">Instructions</b></h3>
+
+                <br />
+
+                <p style="margin-bottom: 5px;">Upload your <b style="color: #9555DC;">SpoilerLog.json</b> on the right to load a specific seed's Spoiler Log.</p>
+                <div class="decorated"><span><b>OR</b></span></div>
+                <p>Input the seed name, pools, options and modifications below to manually create a Spoiler Log.</p>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="upload-section">
+                <span class="side-selector" style="background-color: #9555DC;"></span>
+                <label for="input" class="upload-sub-section">
+                    <div class="upload-border" style="display: inline-flex;">
+                        <span class="bi bi-file-earmark-fill" aria-hidden="true" style="color: grey; font-size: 5.5rem;"></span>
+                        <h3 style="align-self: center; margin-left: 25px; margin-top: 10px;"><b style="color: #9555DC;">Click</b><b style="color: black"> to upload Spoiler Log...</b></h3>
+                    </div>
+                </label>
+
+                <InputFile id="input" class="sr-only" OnChange="@LoadSpoilerLog" />
+            </div>
+        </div>
+    </div>
+
+    <div class="spoiler-log-options">
+        <div class="spoiler-log-pools">
+            <div class="row">
+                @foreach (var pool in this.availablePools)
+                {
+                    if (pool.Key != "Bosses" && pool.Key != "Enemies" && pool.Key != "Room Transitions" && pool.Key != "General Stats")
+                    { 
+                        <div class="col-md-2">
+                            <a class="rounded-selector a-tag-selector @(pool.Value ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { availablePools[pool.Key] = !pool.Value; this.UpdateAvailablePools(); })" @onclick:preventDefault>@pool.Key</a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+            <div class="kh-input col-md-10">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label for="seed" style="font-size: 1.3rem; padding: 5px 0px 0px 0px;">Seed Name: </label>
+                    </div>
+                    <div class="col-md-6">
+                        <input id="seed" name="seed" class="kh-inputfield" @onchange="RandomizeOptions" placeholder="Enter a seed name..." value="@(string.IsNullOrEmpty(this.currentSeed) ? "" : this.currentSeed)" />
+                    </div>
+                    <div class="col-md-1" style="margin-top: 8px; float: right;">
+                        <Tooltip Text="This is what is used to randomize the items. You can generate a duplicate seed if the same name is used.">
+                            <i class="bi bi-question-circle" style="font-size: 1.2rem;"></i>
+                        </Tooltip>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+            <div class="col-md-2 kh-modification-button">
+                @if (this.modifications.Count > 0)
+                {
+                    <button class="btn btn-danger" @onclick="ResetModifications">Reset Modifications</button>
+                }
+            </div>
+        </div>
+
+        <div style="margin-top: 25px;"></div>
+
+        <OptionsSubsection UpdateAvailableOptions="@this.UpdateAvailableOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                           CurrentSeed="@this.currentSeed" AvailableOptions="@this.tempOptions" RandomizedOptions="@this.randomizedOptions"
+                           ActionType="Modal" SpoilerChecked="false" />
+    </div>
+</div>
+
+
+@code {
+    private string currentSeed { get; set; }
+
+    private Dictionary<string, bool> allPools = new Dictionary<string, bool> {
+        { "Treasures", true }, { "Events", true }, { "Starting Stats", true }, { "Lucky Emblems", false }, { "Bonuses", true },
+        { "Fullcourse Abilities", true }, { "Level Ups", true }, { "Weapon Upgrades", true }, {"Equippables", true }
+    };
+
+    private Dictionary<string, bool> availablePools = new();
+    private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+
+    private Dictionary<string, Dictionary<string, bool>> tempOptions = new();
+
+    private List<Tuple<Option, Option>> modifications = new();
+
+    protected override void OnInitialized()
+    {
+        this.UpdateAvailablePools(this.allPools);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void RandomizeOptions(ChangeEventArgs e)
+    {
+        this.currentSeed = e.Value.ToString();
+
+        this.UpdateCurrentSeed(this.currentSeed);
+
+        this.RandomizerService.RandomizeItems(this.currentSeed, ref this.availableOptions, ref this.randomizedOptions);
+
+        this.UpdateAvailableOptions(this.availableOptions);
+        this.UpdateRandomizedOptions(this.randomizedOptions);
+    }
+
+    private void ResetModifications()
+    {
+        this.modifications.Reverse();
+
+        foreach (var (initialOption, swapOption) in this.modifications)
+        {
+            this.RandomizerService.UpdateRandomizedItem(ref this.randomizedOptions, initialOption.Category, initialOption.SubCategory, initialOption.Name, swapOption.Value,
+                                                        swapOption.Category, swapOption.SubCategory, swapOption.Name, initialOption.Value);
+
+        }
+
+        this.UpdateRandomizedOptions(this.randomizedOptions);
+        this.UpdateModifications(null, null);
+
+        this.modifications = new();
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+
+
+    public void UpdateCurrentSeed(string currentSeed)
+    {
+        this.currentSeed = currentSeed;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateAvailablePools(Dictionary<string, bool> availablePools = null)
+    {
+        if (availablePools != null)
+            this.availablePools = availablePools;
+
+        this.tempOptions = this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, ref this.randomizedOptions);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateAvailableOptions(Dictionary<string, Dictionary<string, bool>> availableOptions)
+    {
+        this.availableOptions = availableOptions;
+        this.tempOptions = availableOptions;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateRandomizedOptions(Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions)
+    {
+        this.randomizedOptions = randomizedOptions;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateModifications(Option initalOption, Option swapOption)
+    {
+        if (initalOption == null && swapOption == null)
+            this.modifications = new();
+        else
+            this.modifications.Add(new Tuple<Option, Option>(initalOption, swapOption));
+
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public async void LoadSpoilerLog(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        var reader = await new StreamReader(file.OpenReadStream()).ReadToEndAsync();
+
+        var spoilerLogFile = JsonSerializer.Deserialize<SpoilerLogFile>(reader);
+
+        if (spoilerLogFile != null)
+        {
+            this.UpdateAvailablePools(spoilerLogFile.AvailablePools);
+            this.UpdateAvailableOptions(spoilerLogFile.AvailableOptions);
+            this.UpdateCurrentSeed(spoilerLogFile.SeedName);
+
+            this.RandomizerService.RandomizeItems(this.currentSeed, ref this.availableOptions, ref this.randomizedOptions);
+
+            foreach (var item in spoilerLogFile.Modifications)
+            {
+                var initial = item.Item1;
+                var swap = item.Item2;
+
+                var initialOption = new Option { Category = (DataTableEnum)initial.Item1, SubCategory = initial.Item2, Name = initial.Item3, Value = initial.Item4 };
+                var swapOption = new Option { Category = (DataTableEnum)swap.Item1, SubCategory = swap.Item2, Name = swap.Item3, Value = swap.Item4 };
+
+                this.RandomizerService.UpdateRandomizedItem(ref randomizedOptions, initialOption.Category, initialOption.SubCategory, initialOption.Name, initialOption.Value,
+                                                        swapOption.Category, swapOption.SubCategory, swapOption.Name, swapOption.Value);
+
+                this.UpdateModifications(initialOption, swapOption);
+            }
+
+
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        }
+    }
+}

@@ -1,0 +1,120 @@
+﻿@page "/support"
+
+@using Microsoft.JSInterop
+
+<div class="support-content">
+    <div class="support-header">
+        <span class="bi bi-question-circle" aria-hidden="true"></span>
+        <h1 style="align-self: center; margin-left: 25px; margin-top: 15px;"><b>Support</b></h1>
+    </div>
+
+    <div style="margin-top: 25px;"></div>
+
+    <div style="text-align: left; font-size: 1.25rem;"><b><i>Main Developers</i></b></div>
+
+    <div class="row creator-section">
+        <div id="waterkh_bio" class="col-md-8">
+            <h3 class="creator-header"><span class="selector" style="background-color: #43d967;"></span><b>WaterKH</b></h3>
+
+            <br />
+
+            <div class="creator-value">
+                <p>
+                    I'm a software developer and love modding games. I've worked on heaps of things in the past, ranging from Minecraft mods in highschool to SuperSmashFlash 2 to Black Ops 3 cipher decryptions and now, Kingdom Hearts mods.
+                </p>
+                <p>
+                    I mainly focused on the Randomizer portion of this mod, like working out the randomizing logic, de/re-compiling the randomized assets so they worked and creating the website.
+                    It's been an absolute pleasure working with Critic_Perfect, and I hope to work more with him in the future again!
+                </p>
+            </div>
+
+            <br />
+
+            <h3 style="text-align: left;">Projects:</h3>
+            <ul style="text-align: left; margin-left: 25px; list-style: none;">
+                <li style="margin: 5px 0px;"><a href="https://github.com/WaterKH/ReWriteClient" target="_blank">Kingdom Hearts Re:Write</a></li>
+                <li style="margin: 5px 0px;"><a href="https://github.com/WaterKH/ReChart" target="_blank">Kingdom Hearts Re:Chart</a></li>
+                <li style="margin: 5px 0px;"><a href="sourcecode" target="_blank">Kingdom Hearts 3 Randomizer</a></li>
+            </ul>
+        </div>
+
+        <div id="waterkh_twitter" class="col-md-4 twitter-timeline-centered">
+            <a class="twitter-timeline" data-width="500" data-height="400" href="https://twitter.com/water_kh?ref_src=twsrc%5Etfw" style="box-shadow: 4px 2px 6px #888888;">Tweets by water_kh</a>
+        </div>
+    </div>
+
+    <div class="row creator-section">
+        <div id="critic_bio" class="col-md-8">
+            <h3 class="creator-header"><span class="selector" style="background-color: #00adb5;"></span><b>CriticPerfect</b></h3>
+
+            <br />
+
+            <div class="creator-value">
+                <p>
+                    Hey everyone, Critic here! I’m an aspiring programmer who really likes Kingdom Hearts. But to this day, I’m still learning a lot especially when it comes to Unreal Engine 4.
+                    I got introduced to Kingdom Hearts back when 1.5 had come out on the PS3 and Kingdom Hearts III is the first game I’ve ever modded!
+                </p>
+                <p>
+                    This project is my very first large project that I’ve ever worked on!
+                    Half the time I don’t know what I’m doing but in the end everything works out and I’m really glad that I was able to be apart of all this.
+                </p>
+            </div>
+
+            <br />
+
+            <h3 style="text-align: left;">Projects:</h3>
+            <ul style="text-align: left; margin-left: 25px; list-style: none;">
+                <li style="margin: 5px 0px;">Kingdom Hearts 3 C-Mod Menu</li>
+                <li style="margin: 5px 0px;"><a href="sourcecode" target="_blank">Kingdom Hearts 3 Garden of Assemblage</a></li>
+            </ul>
+        </div>
+
+        <div id="waterkh_twitter" class="col-md-4 twitter-timeline-centered">
+            <a class="twitter-timeline" data-width="500" data-height="400" href="https://twitter.com/critic_perfect?ref_src=twsrc%5Etfw" style="box-shadow: 4px 2px 6px #888888;">Tweets by critic_perfect</a>
+        </div>
+    </div>
+
+    <br />
+
+    <div style="text-align: left; font-size: 1.25rem;"><b><i>Discord</i></b></div>
+
+    <div class="row creator-section">
+        <div id="discord_bio" class="col-md-8">
+            <h3 class="creator-header"><span class="selector" style="background-color: #7289DA;"></span><b>The Official KH3 Randomizer Discord</b></h3>
+
+            <br />
+
+            <div class="creator-value">
+                <p>
+                    Join the Official Kingdom Hearts 3 Randomizer Discord, created by <a href="https://twitter.com/ViolinGamer" target="_blank">Violin</a>, to support this mod or if you have questions!
+                </p>
+                <p>
+                    Submit bug reports or feedback to help out with the future development for the Kingdom Hearts 3 Randomizer + GoA. Discuss strategies, plan/ share seeds or share your experience with the mod.
+                    Maybe even participate in tournaments or race people using the voice and text channels readily available in the Discord.
+                </p>
+            </div>
+        </div>
+
+        <div id="kh3_rando_discord" class="col-md-4 discord-centered">
+            <iframe src="https://discord.com/widget?id=896533621362552894&theme=dark" width="500" height="400" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    private bool loading { get; set; } = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("twttr.widgets.load");
+
+            this.loading = true;
+        }
+    }
+}

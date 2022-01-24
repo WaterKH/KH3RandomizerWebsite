@@ -1,0 +1,214 @@
+.review-section {
+    
+}
+
+.review-header {
+    display: inline-flex;
+}
+
+.review-subsection {
+    min-width: 100%;
+    width: 100%;
+    min-height: 100%;
+    border-radius: 15px;
+    padding: 30px;
+}
+
+.review-sub-subsection {
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 25px 0px;
+}
+
+.kh-input {
+    background: linear-gradient(to right, #015eea, #00c0fa);
+    padding: 5px 25px;
+    margin: 0px 0px -35px 15px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.kh-inputfield {
+    padding: 5px 15px;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: unset;
+    width: 100%;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    text-align: left;
+}
+    
+input:focus {
+    border: unset;
+}
+
+.kh-button {
+    background: linear-gradient(to right, #015eea, #00c0fa);
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.kh-button:hover {
+    opacity: .75;
+}
+
+.subreview-section {
+    overflow-y: scroll;
+    max-height: 700px;
+    padding: 0px 25px 15px 25px;
+}
+
+.subreview-subsection {
+    background: white;
+    overflow-y: scroll;
+    max-height: 700px;
+    padding: 25px;
+}
+
+.subreview-radio {
+    min-width: 100%;
+    border-radius: 30px;
+    padding: 30px 25px 20px 25px;
+    margin-bottom: 25px;
+    background: white;
+    cursor: pointer;
+}
+
+.subreview-radio-active {
+    border: 1px solid #2196F3;
+    min-width: 100%;
+    border-radius: 30px;
+    padding: 30px 25px 20px 25px;
+    margin-bottom: 25px;
+    background: white;
+    cursor: pointer;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 22px;
+    top: 1px;
+}
+
+    /* Hide default HTML checkbox */
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 3px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+        border-radius: 10px;
+    }
+
+
+.header-color {
+    width: 53px;
+    height: 10px;
+    display: inline-flex;
+    position: absolute;
+    margin-left: 12px;
+    margin-top: -34px;
+    border-radius: 50px;
+}
+
+.pools-options-color {
+    width: 10px;
+    height: 10px;
+    display: inline-flex;
+    position: relative;
+    margin-left: 15px;
+    margin-right: 5px;
+    margin-bottom: 2px;
+    border-radius: 50px;
+}
+
+.sub-option-bubble {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 30px;
+    margin: 5px 7px;
+    display: inline-block;
+    font-weight: 600;
+}

@@ -1,0 +1,231 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="C:\Users\water\.nuget\packages\ue4datatableinterpreter\0.1.4\contentFiles\any\net5.0\DefaultKH3.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Content\DataTable\Player\LevelUp\p_ex001_LevelUpData.uasset" />
+    <None Remove="Content\DataTable\Player\LevelUp\p_ex001_LevelUpData.uexp" />
+    <None Remove="Content\DataTable\Player\LevelUp\p_ex001_LevelUpLookupData.uasset" />
+    <None Remove="Content\DataTable\Player\LevelUp\p_ex001_LevelUpLookupData.uexp" />
+    <None Remove="Content\Game\UI\Data\MobilePortal\MobilePortalDataAsset.uasset" />
+    <None Remove="Content\Game\UI\Data\MobilePortal\MobilePortalDataAsset.uexp" />
+    <None Remove="Content\Load\Common\TresChrInitData.uasset" />
+    <None Remove="Content\Load\Common\TresChrInitData.uexp" />
+    <None Remove="Content\Load\ItemSynthesis\TresItemWeaponEnhanceData.uasset" />
+    <None Remove="Content\Load\ItemSynthesis\TresItemWeaponEnhanceData.uexp" />
+    <None Remove="Content\Load\Tres\TresEquipItemData.uasset" />
+    <None Remove="Content\Load\Tres\TresEquipItemData.uexp" />
+    <None Remove="Content\Load\Tres\TresEventData.uasset" />
+    <None Remove="Content\Load\Tres\TresEventData.uexp" />
+    <None Remove="Content\Load\Tres\TresFullcourseAbilityList.uasset" />
+    <None Remove="Content\Load\Tres\TresFullcourseAbilityList.uexp" />
+    <None Remove="Content\Load\Tres\TresLuckyMarkMilestoneRewardData.uasset" />
+    <None Remove="Content\Load\Tres\TresLuckyMarkMilestoneRewardData.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataBT.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataBT.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataBX.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataBX.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataCA.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataCA.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataEW.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataEW.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataFZ.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataFZ.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataHE.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataHE.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataKG.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataKG.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataMI.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataMI.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataRA.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataRA.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataTS.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataTS.uexp" />
+    <None Remove="Content\Load\Tres\TresTreasureDataTT.uasset" />
+    <None Remove="Content\Load\Tres\TresTreasureDataTT.uexp" />
+    <None Remove="Content\Load\Tres\TresVBonusData.uasset" />
+    <None Remove="Content\Load\Tres\TresVBonusData.uexp" />
+    <None Remove="Content\Load\Tres\TresVBonusTableAlt.uasset" />
+    <None Remove="Content\Load\Tres\TresVBonusTableAlt.uexp" />
+    <None Remove="Pages\Guide.razor.css~RF40dc6528.TMP" />
+    <None Remove="Pages\Guide.razor~RF40900595.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Content\DataTable\Player\LevelUp\p_ex001_LevelUpData.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DataTable\Player\LevelUp\p_ex001_LevelUpData.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DataTable\Player\LevelUp\p_ex001_LevelUpLookupData.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DataTable\Player\LevelUp\p_ex001_LevelUpLookupData.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Game\UI\Data\MobilePortal\MobilePortalDataAsset.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Game\UI\Data\MobilePortal\MobilePortalDataAsset.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Common\TresChrInitData.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Common\TresChrInitData.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\ItemSynthesis\TresItemWeaponEnhanceData.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\ItemSynthesis\TresItemWeaponEnhanceData.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresEquipItemData.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresEquipItemData.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresEventData.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresEventData.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresFullcourseAbilityList.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresFullcourseAbilityList.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresLuckyMarkMilestoneRewardData.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresLuckyMarkMilestoneRewardData.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataBT.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataBT.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataBX.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataBX.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataCA.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataCA.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataEW.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataEW.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataFZ.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataFZ.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataHE.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataHE.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataKG.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataKG.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataMI.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataMI.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataRA.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataRA.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataTS.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataTS.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataTT.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresTreasureDataTT.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresVBonusData.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresVBonusData.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresVBonusTableAlt.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\TresVBonusTableAlt.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorDownloadFile" Version="2.1.6" />
+    <PackageReference Include="Blazored.Modal" Version="6.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
+    <PackageReference Include="UE4DataTableInterpreter" Version="0.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\SpoilerLog\" />
+    <Folder Include="Components\Review\" />
+    <Folder Include="Components\Pools\" />
+    <Folder Include="Seeds\" />
+    <Folder Include="wwwroot\pak\Seeds\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="C:\Users\water\.nuget\packages\ue4datatableinterpreter\0.1.2\contentFiles\any\net5.0\DefaultKH3.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="uAssetIds.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\DefaultKH3.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\pak\filelist.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\pak\UnrealPak-With-Compression.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\pak\UnrealPak.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

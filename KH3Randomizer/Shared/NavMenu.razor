@@ -1,0 +1,80 @@
+﻿@inject NavigationManager NavigationManager
+
+<div class="top-row pl-4 navbar">
+    <a class="navbar-brand" href="">
+        <img src="images/logo.png" style="width: 100%;" />
+    </a>
+</div>
+
+<div class="middle-row">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi-shuffle" aria-hidden="true" style="font-size: 1.5rem; color: #F11B43;"></span>
+                <b style="font-size: 1.1rem; margin-left: 20px;">
+                    Randomizer
+                    @if (string.IsNullOrEmpty(this.RelativePath))
+                    {
+                        <span class="selector" style="color: #F11B43;"></span>
+                    }
+                </b>
+                
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="guide" style="font-size: 1.1rem;">
+                <span class="bi-file-earmark-text" aria-hidden="true" style="font-size: 1.5rem; color: #F4CF8E;"></span>
+                <b style="font-size: 1.1rem; margin-left: 20px;">Guide</b>
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="spoilerlog" style="font-size: 1.1rem;">
+                <span class="bi bi-door-open" aria-hidden="true" style="font-size: 1.5rem; color: #9555DC;"></span>
+                <b style="font-size: 1.1rem; margin-left: 20px;">Spoiler Log</b>
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="sourcecode" style="font-size: 1.1rem;">
+                <span class="bi bi-terminal" aria-hidden="true" style="font-size: 1.5rem; color: #5AC4FF;"></span>
+                <b style="font-size: 1.1rem; margin-left: 20px;">Source Code</b>
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="support" style="font-size: 1.1rem;">
+                <span class="bi bi-question-circle" aria-hidden="true" style="font-size: 1.5rem; color: #43D967;"></span>
+                <b style="font-size: 1.1rem; margin-left: 20px;">Support</b>
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+<div class="bottom-row">
+    <div class="row">
+        <div class="col-md-12">Mod created by:</div>
+        <div class="col-md-12">
+            <a href="https://twitter.com/water_kh" target="_blank" style="margin-left: 25px;">WaterKH</a>
+        </div>
+
+        <div class="col-md-12">
+            <a href="https://twitter.com/critic_perfect" target="_blank" style="margin-left: 25px;">CriticPerfect</a>
+        </div>
+
+        <div class="col-md-12" style="margin-top: 5px;">Website design by:</div>
+        <div class="col-md-1"></div>
+        <div class="col-md-4">
+            <a href="https://twitter.com/Kimpchuu" target="_blank">Kimpchuu</a>
+        </div>
+    </div>
+</div>
+
+<div class="divider"></div>
+
+
+@code {
+    public string RelativePath = "";
+
+    protected override void OnInitialized()
+    {
+        this.RelativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+    }
+}

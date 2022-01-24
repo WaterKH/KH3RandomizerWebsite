@@ -1,0 +1,53 @@
+﻿<div class="collapsable @(Collapsed ? "collapsable-full" : "collapsable-half")" style="@(ActionType == "Options" ? "background-color: #F2F2F2;" : ActionType == "Modal" ? "background-color: #ffffff;" : "")">
+    <div class="title" @onclick="@(() => Toggle())">
+        <div class="row">
+            <div class="col-md-4">
+                <b style="font-size: 1.5rem;">@Title</b>
+            </div>
+            <div class="col-md-7"></div>
+            <div class="col-md-1">
+                @if (Collapsed)
+                {
+                    <span class="oi oi-chevron-top mr-1" style="float: right; font-size: 1.7rem; color: #8D8D8D;"></span>
+                }
+                else
+                {
+                    <span class="oi oi-chevron-bottom mr-1" style="float: right; font-size: 1.7rem; color: #8D8D8D;"></span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!Collapsed)
+{
+    <div id="collapse@(Title)" class="collapsable-panel" style="@(ActionType == "Options" ? "background-color: #F2F2F2;" : ActionType == "Modal" ? "background-color: #ffffff;" : "")">
+        @ChildContent
+    </div>
+}
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public bool Collapsed { get; set; } = true;
+    [Parameter] public string CurrentOption { get; set; }
+    [Parameter] public string Title { get; set; }
+    [Parameter] public Action<string> ToggleCollapsables { get; set; }
+    [Parameter] public string ActionType {get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (this.CurrentOption != this.Title)
+        {
+            this.Collapsed = true;
+        }
+
+        base.OnParametersSet();
+    }
+
+    private void Toggle()
+    {
+        this.ToggleCollapsables.Invoke(this.Title);
+
+        this.Collapsed = !this.Collapsed;
+    }
+}

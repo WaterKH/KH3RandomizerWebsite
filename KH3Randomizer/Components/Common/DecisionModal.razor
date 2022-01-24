@@ -1,0 +1,20 @@
+﻿<div class="simple-form decision-modal row" style="min-width: 60vw; background-color: #F2F2F2;">
+    @foreach (var (id, value) in this.Decisions)
+    {
+        <div class="col-md-3" style="text-align: center;">
+            <button class="btn kh-button" @onclick="@(() => MakeDecision(id, value))">@(string.IsNullOrEmpty(value.ValueIdToDisplay()) ? "None" : value.ValueIdToDisplay())</button>
+        </div>
+    }
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter] public List<Tuple<string, string>> Decisions { get; set; }
+    
+    public void MakeDecision(string id, string value)
+    {
+        ModalInstance.CloseAsync(ModalResult.Ok(new Tuple<string, string>(id, value)));
+    }
+}

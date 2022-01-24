@@ -1,0 +1,93 @@
+.navbar-toggler {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.divider {
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%,rgba(173,173,173,1) 10%, rgba(173,173,173,1) 90%,rgba(0,0,0,0) 100%);
+    box-shadow: 3px 0px 5px 1px #8888884a;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    height: 100%;
+    width: 2px;
+}
+
+.top-row {
+    height: 3.5rem;
+}
+
+.middle-row {
+    position: absolute;
+    top: 20%;
+}
+
+.bottom-row {
+    padding: 5px 25px;
+    position: absolute;
+    bottom: 1%;
+}
+
+.navbar-brand {
+    font-size: 1.1rem;
+}
+
+.oi {
+    width: 2rem;
+    font-size: 1.1rem;
+    vertical-align: text-top;
+    top: -2px;
+}
+
+.nav-item {
+    color: #999999;
+    font-size: 0.9rem;
+    padding-bottom: 0.5rem;
+}
+
+    .nav-item:first-of-type {
+        padding-top: 1rem;
+    }
+
+    .nav-item:last-of-type {
+        padding-bottom: 1rem;
+    }
+
+    .nav-item ::deep a {
+        color: #d7d7d7;
+        border-radius: 4px;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        line-height: 3rem;
+    }
+
+.nav-item ::deep a.active {
+    color: black;
+}
+
+.nav-item ::deep a:hover {
+    color: black;
+}
+
+@media (min-width: 641px) {
+    .navbar-toggler {
+        display: none;
+    }
+
+    .collapse {
+        /* Never collapse the sidebar for wide screens */
+        display: block;
+    }
+}
+
+
+
+
+.selector {
+    width: 10px;
+    height: 35px;
+    display: inline-flex;
+    position: absolute;
+    margin-right: -49px;
+    border-radius: 50px;
+}

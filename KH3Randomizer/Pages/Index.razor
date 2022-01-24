@@ -1,0 +1,124 @@
+﻿@page "/"
+
+
+@using UE4DataTableInterpreter.Enums
+
+<div class="randomizer-content">
+    <SectionBar CurrentSection="@this.currentSection"></SectionBar>
+    
+    @if (this.currentSection == "Pools")
+    {
+        <Pools ContinueTo="@(ContinueTo)" AvailablePools="@this.availablePools"
+               UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))">
+        </Pools>
+    }
+    else if (this.currentSection == "Options")
+    {
+        <Options ContinueTo="@(() => ContinueTo("Review"))" BackTo="@(() => BackTo("Pools"))" 
+                 UpdateAvailableOptions="@(options => UpdateAvailableOptions(options))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateModifications="@((option1, option2) => UpdateModifications(option1, option2))"
+                 CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack">
+        </Options>
+    }
+    else if (this.currentSection == "Review")
+    {
+        <Review BackTo="@(() => BackTo("Options"))" CurrentSeed="@this.CurrentSeed" RandomizedOptions="@this.randomizedOptions" 
+                AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" Modifications="@this.modifications"></Review>
+    }
+</div>
+
+
+@code {
+    public string CurrentSeed { get; set; }
+
+    private Dictionary<string, bool> availablePools = new Dictionary<string, bool> {
+        { "Treasures", true }, { "Events", true }, { "Starting Stats", true }, { "Lucky Emblems", false }, { "Bonuses", true },
+        { "Fullcourse Abilities", true }, { "Level Ups", true }, { "Weapon Upgrades", true }, {"Equippables", true },
+        { "Bosses", false }, { "Enemies", false }, { "Room Transitions", false }, { "General Stats", false }
+    };
+
+    private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
+
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+
+    private List<Tuple<Option, Option>> modifications = new();
+
+    private string currentSection = "Pools";
+    private bool isGoingBack = false;
+
+
+    public void ContinueTo(string section)
+    {
+        this.currentSection = section;
+        this.isGoingBack = false;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void BackTo(string section)
+    {
+        this.currentSection = section;
+        this.isGoingBack = true;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateCurrentSeed(string currentSeed)
+    {
+        this.CurrentSeed = currentSeed;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateAvailablePools(Dictionary<string, bool> availablePools)
+    {
+        this.availablePools = availablePools;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateAvailableOptions(Dictionary<string, Dictionary<string, bool>> availableOptions)
+    {
+        this.availableOptions = availableOptions;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateRandomizedOptions(Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions)
+    {
+        this.randomizedOptions = randomizedOptions;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateModifications(Option initalOption, Option swapOption)
+    {
+        if (initalOption == null && swapOption == null)
+            this.modifications = new();
+        else
+            this.modifications.Add(new Tuple<Option, Option>(initalOption, swapOption));
+
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

@@ -1,0 +1,115 @@
+﻿@inject KH3Randomizer.Data.RandomizerService RandomizerService
+
+<div class="pools-section">
+    <div class="pools-subsection">
+        <button class="btn kh-button" @onclick="ToggleOptions">All Options: @(this.allOptionText)</button>
+
+        <br />
+        <br />
+
+        <div class="row">
+            @foreach (var pool in pools)
+            {
+                <div class="col-md-4" style="margin: 15px 0px;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="switch">
+                                <input type="checkbox" @onchange="@((value) => { pools[pool.Key] = (bool)value.Value; this.UpdateOptionsText(); })" checked="@pool.Value" disabled="@(pool.Key == "Bosses" || pool.Key == "Enemies" || pool.Key == "Room Transitions" || pool.Key == "General Stats")">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <div class="col-md-6">
+                            @if (pool.Key == "Bosses" || pool.Key == "Enemies" || pool.Key == "Room Transitions" || pool.Key == "General Stats")
+                            {
+                                <label><b><strike>@pool.Key</strike></b></label>
+                            }
+                            else
+                            {
+                                <label><b>@pool.Key</b></label>
+                            }
+                        </div>
+
+                        <div class="col-md-1">
+                            <Tooltip Text="@optionDescriptions[pool.Key]">
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem;"></i>
+                            </Tooltip>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <button class="btn kh-button" @onclick="ContinueToOptions" style="float: right;">Continue to Options...</button>
+</div>
+
+@code {
+    [Parameter] public EventCallback<string> ContinueTo { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, bool>> UpdateAvailablePools { get; set; }
+
+    [Parameter] public Dictionary<string, bool> AvailablePools { get; set; }
+
+    private bool isOn { get; set; } = false;
+    private string allOptionText { get; set; } = "MIXED";
+
+    private Dictionary<string, bool> pools = new Dictionary<string, bool>();
+
+    private Dictionary<string, string> optionDescriptions = new Dictionary<string, string> {
+        { "Treasures", "The treasure chests in each world." },
+        { "Starting Stats", "Starting abilities and keyblade." },
+        { "Lucky Emblems", "Rewards earned for finding Lucky Emblems." },
+        { "Bonuses", "Abilities, Magic and Status Boosts earned through specific events." },
+        { "Fullcourse Abilities", "Abilities earned through eating a fullcourse meal." },
+        { "Level Ups", "Abilities earned through leveling up Sora." },
+        { "Events", "Certain key items earned through cutscenes." },
+        { "Weapon Upgrades", "Abilities earned through leveling up keyblades" },
+        { "Equippables", "Items such as accessories, armor and keyblades." },
+
+        { "Bosses", "Bosses such as Xehanort, Data-Xehanort and Replica Xehanort." },
+        { "Enemies", "Base mob enemies such as shadows, flame cores, etc." },
+        { "Room Transitions", "Probably won't be doing this one since it will mess with the gameflows too much" },
+        { "General Stats", "Keyblade, Accessory and Armor stats, along with Health, Attack and Magic upgrades. Bosses and Enemies included potentially." }
+    };
+
+    protected override void OnInitialized()
+    {
+        this.pools = this.AvailablePools;
+        this.UpdateOptionsText();
+    }
+
+    private void ToggleOptions()
+    {
+        if (this.allOptionText.Equals("MIXED"))
+            this.isOn = false;
+        else if (this.allOptionText.Equals("ON"))
+            this.isOn = false;
+        else if (this.allOptionText.Equals("OFF"))
+            this.isOn = true;
+
+        foreach (var pool in this.pools.Where(x => x.Key != "Bosses" && x.Key != "Enemies" && x.Key != "Room Transitions" && x.Key != "General Stats"))
+            this.pools[pool.Key] = this.isOn;
+
+        this.UpdateOptionsText();
+    }
+
+    private void UpdateOptionsText()
+    {
+        var poolBools = this.pools.Where(x => x.Key != "Bosses" && x.Key != "Enemies" && x.Key != "Room Transitions" && x.Key != "General Stats").Select(x => x.Value).Distinct();
+
+        if (poolBools.Count() == 2)
+            this.allOptionText = "MIXED";
+        else if (poolBools.FirstOrDefault())
+            this.allOptionText = "ON";
+        else
+            this.allOptionText = "OFF";
+    }
+
+    private void ContinueToOptions()
+    {
+        //this.RandomizerService.SetAvailablePools(this.pools);
+        this.UpdateAvailablePools.InvokeAsync(this.pools);
+
+        this.ContinueTo.InvokeAsync("Options");
+    }
+}

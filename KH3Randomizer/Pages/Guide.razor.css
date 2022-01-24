@@ -1,0 +1,53 @@
+.guide-header {
+    text-align: left;
+    font-size: 3.5rem;
+    color: #fead1f;
+    display: inline-flex;
+}
+
+.guide-sub-header {
+    font-size: .8rem;
+    margin-left: 25px;
+    color: black;
+    margin-top: -10px;
+}
+
+.guide-section {
+    background-color: #f2f2f2;
+    border-radius: 15px;
+    padding: 30px;
+    margin: 25px 0px;
+    min-height: 75vh;
+}
+
+.selector {
+    width: 53px;
+    height: 10px;
+    display: inline-flex;
+    position: absolute;
+    margin-left: 12px;
+    margin-top: -33px;
+    border-radius: 50px;
+}
+
+ol {
+    counter-reset: item;
+    margin-left: 0;
+    padding-left: 0;
+}
+
+li {
+    display: block;
+    margin-bottom: .5em;
+    margin-left: 2em;
+}
+
+    li::before {
+        display: inline-block;
+        content: counter(item) ". ";
+        counter-increment: item;
+        width: 2em;
+        margin-left: -2em;
+        color: #0f76f6;
+        font-weight: 800;
+    }

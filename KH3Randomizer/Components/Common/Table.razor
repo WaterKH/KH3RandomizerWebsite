@@ -1,0 +1,80 @@
+﻿@typeparam TItem
+@using System.Diagnostics.CodeAnalysis
+
+<table class="table">
+    <thead>
+        <tr>@TableHeader</tr>
+    </thead>
+    <tbody>
+        @foreach (var item in this.GetPaginatedResults())
+        {
+            if (RowTemplate is not null)
+            {
+                <tr>@RowTemplate(item)</tr>
+            }
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<div class="pagination">
+    <button class="btn btn-primary-outline" @onclick="@(() => UpdateCurrentPage(-1))" disabled="@(this.CurrentPage == 1)"><b>@("<")</b></button>
+    @foreach(var page in this.paginations)
+    {
+        <button class="btn btn-primary-outline @(page.Key == this.CurrentPage ? "" : "button-text-color")" @onclick="@(() => SetCurrentPage(page.Key))" disabled="@(page.Key == this.CurrentPage)"><b>@(page.Key)</b></button>
+    }
+    <button class="btn btn-primary-outline" @onclick="@(() => UpdateCurrentPage(1))" disabled="@(this.CurrentPage == this.totalPages)"><b>@(">")</b></button>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? TableHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem>? RowTemplate { get; set; }
+
+    [Parameter, AllowNull]
+    public IReadOnlyList<TItem> Items { get; set; }
+
+    [Parameter, AllowNull]
+    public int ItemsPerPage { get; set; } = 10;
+
+    [Parameter]
+    public int CurrentPage { get; set; } = 1;
+
+    private int totalPages { get; set; } = 1;
+    private Dictionary<int, bool> paginations { get; set; } = new();
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<IReadOnlyList<TItem>>(nameof(this.Items), out var items))
+        {
+            if (parameters.TryGetValue<int>(nameof(this.ItemsPerPage), out var itemsPerPage))
+                this.totalPages = items.Count / itemsPerPage + (items.Count % itemsPerPage > 0 ? 1 : 0);
+            else
+                this.totalPages = items.Count / this.ItemsPerPage + (items.Count % this.ItemsPerPage > 0 ? 1 : 0);
+
+            this.paginations = new();
+            for (int i = 1; i <= this.totalPages; ++i)
+                this.paginations.Add(i, false);
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    public void UpdateCurrentPage(int updateByValue)
+    {
+        this.CurrentPage += updateByValue;
+    }
+
+    public void SetCurrentPage(int value)
+    {
+        this.CurrentPage = value;
+    }
+
+    public IEnumerable<TItem> GetPaginatedResults()
+    {
+        return this.Items.Skip((this.CurrentPage - 1) * this.ItemsPerPage).Take<TItem>(this.ItemsPerPage);
+    }
+}

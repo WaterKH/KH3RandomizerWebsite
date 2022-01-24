@@ -1,0 +1,104 @@
+﻿@using UE4DataTableInterpreter.Enums
+
+@inject RandomizerService RandomizerService
+
+<div class="simple-form change-option-modal">
+    <OptionsSubsection UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications" SwapOptions="@this.SwapOptions" 
+                       IsDisabled="true" CurrentSeed="@this.currentSeed" ActionType="@this.actionType" 
+                       AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" />
+
+    <div class="button-group">
+        <button @onclick="SwapForDefault" class="btn kh-button" style="margin-right: 5px;">Change to Default</button>
+        <button @onclick="SwapForNone" class="btn kh-button">Change to None</button>
+
+        <button @onclick="ModalInstance.CancelAsync" class="btn kh-button-cancel" style="margin-left: 15px;">Cancel</button>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
+    [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
+
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    [Parameter] public DataTableEnum Category { get; set; }
+    [Parameter] public string SubCategory { get; set; }
+    [Parameter] public string Name { get; set; }
+    [Parameter] public string Value { get; set; }
+
+    [Parameter] public string CurrentSeed { get; set; }
+    [Parameter] public string ActionType { get; set; }
+
+    public Dictionary<string, Dictionary<string, bool>> availableOptions = new();
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+    private string currentSeed;
+    private string actionType = "Modal";
+
+    private List<Option> changeOptions { get; set; } = new();
+
+    protected override void OnParametersSet()
+    {
+        this.availableOptions = this.AvailableOptions;
+        this.randomizedOptions = this.RandomizedOptions;
+        this.currentSeed = this.CurrentSeed;
+        this.actionType = this.ActionType;
+
+        base.OnParametersSet();
+    }
+
+    private void SwapOptions(DataTableEnum category, string subCategory, string name, string value)
+    {
+        this.RandomizerService.UpdateRandomizedItem(ref this.randomizedOptions, this.Category, this.SubCategory, this.Name, this.Value, category, subCategory, name, value);
+
+        this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+
+        this.UpdateModifications(new Option { Category = this.Category, SubCategory = this.SubCategory, Name = this.Name, Value = this.Value },
+                                 new Option { Category = category, SubCategory = subCategory, Name = name, Value = value });
+
+
+        ModalInstance.CloseAsync();
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void SwapForDefault()
+    {
+        var option = this.RandomizerService.UpdateRandomizedItemWithDefault(ref this.randomizedOptions, this.Category, this.SubCategory, this.Name, this.Value);
+
+        this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+
+        this.UpdateModifications(new Option { Category = this.Category, SubCategory = this.SubCategory, Name = this.Name, Value = this.Value },
+                                 new Option { Category = this.Category, SubCategory = option.SubCategory, Name = option.Name, Value = option.Value });
+
+        ModalInstance.CloseAsync();
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void SwapForNone()
+    {
+        var option = this.RandomizerService.UpdateRandomizedItemWithNone(ref this.randomizedOptions, ref this.availableOptions, this.Category, this.SubCategory, this.Name, this.Value);
+
+        this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+
+        this.UpdateModifications(new Option { Category = this.Category, SubCategory = this.SubCategory, Name = this.Name, Value = this.Value },
+                                 new Option { Category = option.Category, SubCategory = option.SubCategory, Name = option.Name, Value = option.Value });
+
+        ModalInstance.CloseAsync();
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}
