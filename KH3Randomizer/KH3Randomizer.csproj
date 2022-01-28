@@ -196,7 +196,7 @@
     <PackageReference Include="BlazorDownloadFile" Version="2.1.6" />
     <PackageReference Include="Blazored.Modal" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageReference Include="UE4DataTableInterpreter" Version="0.1.9" />
+    <PackageReference Include="UE4DataTableInterpreter" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

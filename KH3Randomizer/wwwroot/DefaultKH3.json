@@ -1922,12 +1922,6 @@
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
-    "Vbonus_009": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
-      "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
-    },
     "Vbonus_010": {
       "Sora_Bonus1": "ETresVictoryBonusKind::MP_UP5\u0000",
       "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
@@ -2472,38 +2466,8 @@
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
-    "VBonus_DLC_009": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
-      "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
-    },
     "VBonus_DLC_010": {
       "Sora_Bonus1": "ETresVictoryBonusKind::MP_UP3\u0000",
-      "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
-      "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
-    },
-    "VBonus_DLC_011": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
-      "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
-    },
-    "VBonus_DLC_012": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
-      "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
-    },
-    "VBonus_DLC_013": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
-      "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
-      "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
-    },
-    "VBonus_DLC_014": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
