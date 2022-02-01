@@ -7,10 +7,10 @@
 span {
     visibility: hidden;
     position: absolute;
-    width: 250px;
-    bottom: 100%;
+    width: 200px;
+    /*bottom: 100%;
     left: 50%;
-    margin-left: -110px;
+    margin-left: -110px;*/
     background-color: white;
     color: black;
     text-align: center;

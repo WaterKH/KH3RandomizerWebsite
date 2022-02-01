@@ -1,0 +1,154 @@
+﻿<div class="hints-section">
+
+    <div class="hint-selection">
+        <div class="row" style="width: 100%;">
+            <div class="col-md-2">
+                <label style="margin-top: 8px; font-size: larger; font-weight: 500;">Hint Selection Type: </label>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedHintType == "None" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("None"); })" @onclick:preventDefault>None</a>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedHintType == "Vague" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Vague"); })" @onclick:preventDefault>Vague</a>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedHintType == "Verbose" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Verbose"); })" @onclick:preventDefault>Verbose</a>
+            </div>
+        </div>
+    </div>
+
+    @if (selectedHintType != "None")
+    {
+    <Collapsable @ref="@hintCollapsable" CurrentOption="@this.currentHint" ToggleCollapsables="this.ToggleCollapsables" Title="@("Hints")" ActionType="@("Options")">
+        <div class="hints-subsection">
+            @foreach (var hint in this.hints)
+            {
+                <div class="row" style="margin-top: 50px;">
+                    <div class="col-md-12">
+                        <h3 style="display: inline; margin-right: 15px;"><b>@hint.Key</b></h3>
+
+                        <label class="switch" style="margin-right: 25px;">
+                            <input type="checkbox" @onchange="@((value) => { UpdateHints(hint.Key, (bool)value.Value); })" checked="@this.CheckHints(hint.Key)">
+                            <span class="slider round"></span>
+                        </label>
+
+                        <Tooltip Text="@hintDescriptions[hint.Key]" Style="margin-top: 8px;">
+                            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue; margin-left: 100px;"></i>
+                        </Tooltip>
+                    </div>
+                </div>
+
+
+
+                <div class="row hints-sub-subsection">
+                    @foreach (var subHint in hint.Value)
+                    {
+                        <div class="col-md-4" style="margin: 15px 0px;">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label class="switch">
+                                        <input type="checkbox" @onchange="@((value) => { this.hints[hint.Key][subHint.Key] = (bool)value.Value; CheckHints(hint.Key); })" checked="@subHint.Value">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label><b>@subHint.Key</b></label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <hr />
+                </div>
+            }
+        </div>
+    </Collapsable>
+    }
+    else
+    {
+        <div style="margin-top: 50px"></div>
+    }
+
+    <br />
+
+    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Options...</button>
+    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to Review...</button>
+</div>
+
+@code {
+    [Parameter] public EventCallback<string> BackTo { get; set; }
+    [Parameter] public EventCallback<string> ContinueTo { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, Dictionary<string, bool>>> UpdateAvailableHints { get; set; }
+    [Parameter] public EventCallback<string> UpdateHintSelection { get; set; }
+
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableHints { get; set; }
+
+    private Dictionary<string, Dictionary<string, bool>> hints = new Dictionary<string, Dictionary<string, bool>>();
+
+    private Dictionary<string, string> hintDescriptions = new Dictionary<string, string> {
+        { "Proofs", "All Proofs will be considered checks: Proof of Promises, Proof of Memories Past, Proof of Fantasy." },
+        { "Abilities", "Certain Abilities that may be useful and will be considered checks: Pole Spin, Block, Dodge Roll, Air-Slide, Double Flight, Second Chance, Withstand Combo." },
+        { "Heartbinders", "All Links will be considered checks: Dream Heartbinder, Pixel Heartbinder, Pride Heartbinder, Ocean Heartbinder, \'Ohana Heartbinder." },
+        { "Magic", "All Magic and their upgrades will be considered checks: Fire, Water, Cure, Blizzard, Thunder & Aero." },
+        { "Formchanges", "The following keyblade formchanges will be considered checks: Hero's Origin, Grand Chef, Ultima Weapon, Oblivion & Oathkeeper." },
+        { "Secret Reports", "All Secret Reports will be conidered checks: Secret Reports 1 - 13." },
+    };
+
+    private Collapsable hintCollapsable;
+    private string currentHint = string.Empty;
+    private string selectedHintType = "Verbose";
+
+    protected override void OnInitialized()
+    {
+        this.hints = this.AvailableHints;
+    }
+
+    private bool CheckHints(string key)
+    {
+        var allOn = false;
+
+        foreach (var subHint in this.hints[key])
+        {
+            if (subHint.Value)
+            {
+                allOn = true;
+                break;
+            }
+        }
+
+        return allOn;
+    }
+
+    private void UpdateHints(string key, bool value)
+    {
+        foreach (var subHint in this.hints[key])
+        {
+            this.hints[key][subHint.Key] = value;
+        }
+
+        this.UpdateAvailableHints.InvokeAsync(this.hints);
+    }
+
+    private void UpdateCurrentHintSelection(string selection)
+    {
+        this.selectedHintType = selection;
+
+        this.UpdateHintSelection.InvokeAsync(this.selectedHintType);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void ToggleCollapsables(string currentHint)
+    {
+        this.currentHint = currentHint;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

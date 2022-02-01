@@ -32,7 +32,7 @@
                     }
                 </div>
 
-                <div class="col-md-9" style="overflow-y: visible; max-height: 700px;">
+                <div class="col-md-9" style="overflow-y: auto; max-height: 700px;">
                     <div style="border-radius: 10px; padding: 20px; @(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" class="@(this.SpoilerChecked ? "spoiler-overlay" : "")">
                         @if (option.Key == "Treasures")
                         {
@@ -149,6 +149,19 @@
                             {
                                 <EventSubComponent EventName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
                                                    AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></EventSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Synthesis Items")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <SynthesisItemSubComponent SynthesisItemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></SynthesisItemSubComponent>
+                            }
+                            else
+                            {
+                                <SynthesisItemSubComponent SynthesisItemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></SynthesisItemSubComponent>
                             }
                         }
                     </div>

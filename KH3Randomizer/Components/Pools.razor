@@ -14,13 +14,13 @@
                     <div class="row">
                         <div class="col-md-2">
                             <label class="switch">
-                                <input type="checkbox" @onchange="@((value) => { pools[pool.Key] = (bool)value.Value; this.UpdateOptionsText(); })" checked="@pool.Value" disabled="@(pool.Key == "Bosses" || pool.Key == "Enemies" || pool.Key == "Room Transitions" || pool.Key == "General Stats")">
+                                <input type="checkbox" @onchange="@((value) => { pools[pool.Key] = (bool)value.Value; this.UpdateOptionsText(); })" checked="@pool.Value" disabled="@(pool.Key == "Bosses" || pool.Key == "Enemies" || pool.Key == "General Stats")">
                                 <span class="slider round"></span>
                             </label>
                         </div>
 
                         <div class="col-md-6">
-                            @if (pool.Key == "Bosses" || pool.Key == "Enemies" || pool.Key == "Room Transitions" || pool.Key == "General Stats")
+                            @if (pool.Key == "Bosses" || pool.Key == "Enemies" || pool.Key == "General Stats")
                             {
                                 <label><b><strike>@pool.Key</strike></b></label>
                             }
@@ -32,7 +32,7 @@
 
                         <div class="col-md-1">
                             <Tooltip Text="@optionDescriptions[pool.Key]">
-                                <i class="bi bi-question-circle" style="font-size: 1.2rem;"></i>
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
                             </Tooltip>
                         </div>
                     </div>
@@ -65,10 +65,10 @@
         { "Events", "Certain key items earned through cutscenes." },
         { "Weapon Upgrades", "Abilities earned through leveling up keyblades" },
         { "Equippables", "Items such as accessories, armor and keyblades." },
+        { "Synthesis Items", "Items that are synthesized through Moogle Shops." },
 
         { "Bosses", "Bosses such as Xehanort, Data-Xehanort and Replica Xehanort." },
         { "Enemies", "Base mob enemies such as shadows, flame cores, etc." },
-        { "Room Transitions", "Probably won't be doing this one since it will mess with the gameflows too much" },
         { "General Stats", "Keyblade, Accessory and Armor stats, along with Health, Attack and Magic upgrades. Bosses and Enemies included potentially." }
     };
 
@@ -87,7 +87,7 @@
         else if (this.allOptionText.Equals("OFF"))
             this.isOn = true;
 
-        foreach (var pool in this.pools.Where(x => x.Key != "Bosses" && x.Key != "Enemies" && x.Key != "Room Transitions" && x.Key != "General Stats"))
+        foreach (var pool in this.pools.Where(x => x.Key != "Bosses" && x.Key != "Enemies" && x.Key != "General Stats"))
             this.pools[pool.Key] = this.isOn;
 
         this.UpdateOptionsText();
@@ -95,7 +95,7 @@
 
     private void UpdateOptionsText()
     {
-        var poolBools = this.pools.Where(x => x.Key != "Bosses" && x.Key != "Enemies" && x.Key != "Room Transitions" && x.Key != "General Stats").Select(x => x.Value).Distinct();
+        var poolBools = this.pools.Where(x => x.Key != "Bosses" && x.Key != "Enemies" && x.Key != "General Stats").Select(x => x.Value).Distinct();
 
         if (poolBools.Count() == 2)
             this.allOptionText = "MIXED";

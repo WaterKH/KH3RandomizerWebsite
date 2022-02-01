@@ -1,6 +1,7 @@
 ﻿@using UE4DataTableInterpreter.Enums
 
 @inject RandomizerService RandomizerService
+@inject HintService HintService
 @inject IJSRuntime js
 
 <div class="review-section">
@@ -19,7 +20,7 @@
             <div class="review-header">
                 <h3 for="options" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #c9aeff;"></span><b>Pools & Options: </b></h3>
             </div>
-            <div class="review-content" style="max-height: 500px; overflow-y: auto;">
+            <div class="review-content" style="max-height: 600px; overflow-y: auto;">
                 @foreach (var option in options)
                 {
                     <div style="display: inline-flex; width: 100%">
@@ -80,7 +81,7 @@
         </div>
     </div>
 
-    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Options...</button>
+    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Hints...</button>
     <button class="btn kh-button" @onclick="() => this.GenerateSeed()" style="float: right;">Generate Seed</button>
 </div>
 @code {
@@ -96,6 +97,8 @@
     [Parameter] public Dictionary<string, bool> AvailablePools { get; set; }
     [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
     [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableHints { get; set; }
+    [Parameter] public string HintSelectionType { get; set; }
 
     private List<string> pools { get; set; } = new();
     private Dictionary<string, string> options { get; set; } = new();
@@ -129,7 +132,8 @@
         //    this.modifications.Add($"{initial.Category}>{initial.SubCategory}>{initial.Name}>{initial.Value} <-> {swap.Category}>{swap.SubCategory}>{swap.Name}>{swap.Value}");
         //}
 
-        this.poolColors = new() {
+        this.poolColors = new()
+        {
             { "Treasures", "background-color: #00b0f8;" },
             { "Events", "background-color: #ad70df;" },
             { "Starting Stats", "background-color: #ff4141;" },
@@ -138,11 +142,13 @@
             { "Fullcourse Abilities", "background-color: #f6c00f;" },
             { "Level Ups", "background-color: #56adff;" },
             { "Weapon Upgrades", "background-color: #59ed84;" },
-            { "Equippables", "background-color: #df10fd;" }
+            { "Equippables", "background-color: #df10fd;" },
+            { "Synthesis Items", "background-color: #70c0df;" }
         };
 
 
-        this.optionColors = new() {
+        this.optionColors = new()
+        {
             { "Treasures", "background: linear-gradient(to right, #397e9b, #00b0f8);" },
             { "Events", "background: linear-gradient(to right, #753da3, #ad70df);" },
             { "Starting Stats", "background: linear-gradient(to right, #b72e2e, #ff4141);" },
@@ -151,13 +157,27 @@
             { "Fullcourse Abilities", "background: linear-gradient(to right, #b79010, #f6c00f);" },
             { "Level Ups", "background: linear-gradient(to right, #407fbb, #56adff);" },
             { "Weapon Upgrades", "background: linear-gradient(to right, #4abd6b, #59ed84);" },
-            { "Equippables", "background: linear-gradient(to right, #b312cb, #df10fd);" }
+            { "Equippables", "background: linear-gradient(to right, #b312cb, #df10fd);" },
+            { "Synthesis Items", "background: linear-gradient(to right, #126dcb, #70c0df);" }
         };
     }
 
     public void GenerateSeed()
     {
-        var file = this.RandomizerService.GenerateRandomizerSeed(this.CurrentSeed, this.RandomizedOptions, this.AvailablePools, this.AvailableOptions, this.Modifications);
+        byte[] hintResults;
+        var hints = new Dictionary<string, bool>();
+
+        foreach(var hint in this.AvailableHints)
+        {
+            foreach (var subHint in hint.Value)
+            {
+                hints.Add(subHint.Key, subHint.Value);
+            }
+        }
+
+        hintResults = this.HintService.GenerateHints(this.CurrentSeed, this.RandomizedOptions, this.HintSelectionType, hints);
+
+        var file = this.RandomizerService.GenerateRandomizerSeed(this.CurrentSeed, this.RandomizedOptions, this.AvailablePools, this.AvailableOptions, this.Modifications, hintResults);
 
         js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".zip", Convert.ToBase64String(file));
         // js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".pak", Convert.ToBase64String(files[0]));

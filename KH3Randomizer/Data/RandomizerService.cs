@@ -129,6 +129,15 @@ namespace KH3Randomizer.Data
                         randomizedOptions.Add(DataTableEnum.Event, defaultOptions[DataTableEnum.Event]);
 
                         break;
+                    case "Synthesis Items":
+                        availableOptions.Add("Synthesis Items", new Dictionary<string, bool>
+                        {
+                            { "Synthesis Items", true }
+                        });
+
+                        randomizedOptions.Add(DataTableEnum.SynthesisItem, defaultOptions[DataTableEnum.SynthesisItem]);
+
+                        break;
                     default:
                         break;
                 }
@@ -476,6 +485,12 @@ namespace KH3Randomizer.Data
             //    }
             //}
 
+            // Account for Events that have None in them
+            if (availableOptions.ContainsKey("Events"))
+            {
+                this.RemoveNoneFromEvents(DataTableEnum.Event, rng, ref randomizedOptions, availableOptions);
+            }
+
             // Account for Keyblade on ChrInit
             if (availableOptions.ContainsKey("Starting Stats") && availableOptions["Starting Stats"]["Weapons"])
             {
@@ -506,6 +521,155 @@ namespace KH3Randomizer.Data
 
                 var altWeapon = this.ConvertKeybladeWeaponToDefenseWeaponEnum(swapWeapon);
                 randomizedOptions[DataTableEnum.ChrInit]["m_PlayerSora"]["Weapon"] = altWeapon;
+            }
+
+            // Account for Luckymark Data
+            if (availableOptions.ContainsKey("Lucky Emblems") && availableOptions["Lucky Emblems"]["Lucky Emblems"])
+            {
+                foreach (var luckyMark in randomizedOptions[DataTableEnum.LuckyMark])
+                {
+                    foreach (var subLuckyMark in luckyMark.Value)
+                    {
+                        if (!subLuckyMark.Value.Contains("::"))
+                            continue;
+
+                        while (true) // Is there a way we can use a var instead of true?
+                        {
+                            var tempOptions = randomizedOptions.Where(x => x.Key == DataTableEnum.EquipItem || x.Key == DataTableEnum.LevelUp || x.Key == DataTableEnum.VBonus);
+
+                            var swapDataTable = tempOptions.ElementAt(rng.Next(0, tempOptions.Count()));
+                            var swapCategory = swapDataTable.Value.ElementAt(rng.Next(0, randomizedOptions[swapDataTable.Key].Count));
+
+                            if (swapCategory.Key == "EVENT_KEYBLADE_012" || swapCategory.Key == "EVENT_KEYBLADE_013" || !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapCategory.Key.CategoryToKey(swapDataTable.Key)])
+                                continue;
+
+                            if (swapCategory.Value.Where(x => !x.Value.Contains("::")).Count() > 0)
+                            {
+                                var swapData = swapCategory.Value.Where(x => !x.Value.Contains("::")).ElementAt(rng.Next(0, swapCategory.Value.Where(x => !x.Value.Contains("::")).Count()));
+
+
+                                if (swapCategory.Key == "m_PlayerSora" && !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapData.Key.CategoryToKey(swapDataTable.Key)])
+                                    continue;
+
+                                randomizedOptions[swapDataTable.Key][swapCategory.Key][swapData.Key] = subLuckyMark.Value;
+                                randomizedOptions[DataTableEnum.LuckyMark][luckyMark.Key][subLuckyMark.Key] = swapData.Value;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Account for Synth Data (It will always needs items)
+            if (availableOptions.ContainsKey("Synthesis Items") && availableOptions["Synthesis Items"]["Synthesis Items"])
+            {
+                foreach (var synthesisItem in randomizedOptions[DataTableEnum.SynthesisItem])
+                {
+                    foreach (var subSynthesisItem in synthesisItem.Value)
+                    {
+                        if (!subSynthesisItem.Value.Contains("::"))
+                            continue;
+
+                        while (true) // Is there a way we can use a var instead of true?
+                        {
+                            var tempOptions = randomizedOptions.Where(x => x.Key != DataTableEnum.SynthesisItem && x.Key != DataTableEnum.FullcourseAbility && x.Key != DataTableEnum.ChrInit && x.Key != DataTableEnum.LuckyMark);
+
+                            var swapDataTable = tempOptions.ElementAt(rng.Next(0, tempOptions.Count()));
+                            var swapCategory = swapDataTable.Value.ElementAt(rng.Next(0, randomizedOptions[swapDataTable.Key].Count));
+
+                            if (swapCategory.Key == "EVENT_KEYBLADE_012" || swapCategory.Key == "EVENT_KEYBLADE_013" || !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapCategory.Key.CategoryToKey(swapDataTable.Key)])
+                                continue;
+
+                            if (swapCategory.Value.Where(x => !x.Value.Contains("::")).Count() > 0)
+                            {
+                                var swapData = swapCategory.Value.Where(x => !x.Value.Contains("::")).ElementAt(rng.Next(0, swapCategory.Value.Where(x => !x.Value.Contains("::")).Count()));
+
+                                if (swapCategory.Key == "m_PlayerSora" && !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapData.Key.CategoryToKey(swapDataTable.Key)])
+                                    continue;
+                                else if ((swapDataTable.Key == DataTableEnum.TreasureBT || swapDataTable.Key == DataTableEnum.TreasureBX || swapDataTable.Key == DataTableEnum.TreasureCA || swapDataTable.Key == DataTableEnum.TreasureEW ||
+                                         swapDataTable.Key == DataTableEnum.TreasureFZ || swapDataTable.Key == DataTableEnum.TreasureHE || swapDataTable.Key == DataTableEnum.TreasureKG || swapDataTable.Key == DataTableEnum.TreasureMI ||
+                                         swapDataTable.Key == DataTableEnum.TreasureRA || swapDataTable.Key == DataTableEnum.TreasureTS || swapDataTable.Key == DataTableEnum.TreasureTT) && subSynthesisItem.Value.ToLower().Contains("none"))
+                                    continue;
+
+                                randomizedOptions[swapDataTable.Key][swapCategory.Key][swapData.Key] = subSynthesisItem.Value;
+                                randomizedOptions[DataTableEnum.SynthesisItem][synthesisItem.Key][subSynthesisItem.Key] = swapData.Value;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Account for Pole Spin not being locked behind Frozen
+
+            // List of places it can't be
+            var disallowedPlaces = new List<string> { //"FZ_", // Disallow it in Frozen's treasures
+                                                      //"21", // Disallow after level 20
+                                                      //"20", // Disallow after lucky emblem milestone 15
+                                                      //"IW_", // Disallow on weapon enhances
+                                                      //"I0", // Disallow on equip items
+                                                      "EVENT_007", // Disallow on Herc's Gold Statue Return
+                                                      "TresUIMobilePortalDataAsset", // Disallow on all CK game reward
+                                                      "EVENT_KEYBLADE_007", // Disallow on Keyblade event for Frozen
+                                                      "EVENT_REPORT_009a", "EVENT_REPORT_009b", // Disallow on Reports in Arendelle
+                                                      "Vbonus_041", "Vbonus_042", "Vbonus_043", "Vbonus_044", "Vbonus_045",
+                                                      "Vbonus_046", "Vbonus_047", "Vbonus_048", "Vbonus_049", "Vbonus_050",
+                                                      "VBonus_Minigame003", "VBonus_Minigame004", "VBonus_Minigame011" // Disallow on VBonuses related to Frozen
+                                                    };
+            foreach (var category in randomizedOptions)
+            {
+                foreach (var subCategory in category.Value)
+                {
+                    foreach (var option in subCategory.Value)
+                    {
+                        if (option.Value.Contains("POLE_SPIN"))
+                        {
+                            var swapLogic = this.IsPoleSpinDisallowed(category.Key, subCategory.Key);
+
+                            while (swapLogic) // Is there a way we can use a var instead of true?
+                            {
+                                var tempOptions = randomizedOptions.Where(x => x.Key == DataTableEnum.EquipItem || x.Key == DataTableEnum.WeaponEnhance || x.Key == DataTableEnum.TreasureFZ);
+
+                                var swapDataTable = randomizedOptions.ElementAt(rng.Next(0, tempOptions.Count()));
+                                var swapCategory = swapDataTable.Value.ElementAt(rng.Next(0, randomizedOptions[swapDataTable.Key].Count));
+
+                                if (swapCategory.Key == "EVENT_KEYBLADE_012" || swapCategory.Key == "EVENT_KEYBLADE_013" || !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapCategory.Key.CategoryToKey(swapDataTable.Key)])
+                                    continue;
+
+                                if (!this.IsPoleSpinDisallowed(swapDataTable.Key, swapCategory.Key) && swapCategory.Value.Where(x => x.Value.Contains("ETresAbilityKind::")).Count() > 0)
+                                {
+                                    var swapData = swapCategory.Value.Where(x => x.Value.Contains("ETresAbilityKind::")).ElementAt(rng.Next(0, swapCategory.Value.Where(x => x.Value.Contains("ETresAbilityKind::")).Count()));
+
+                                    if (swapCategory.Key == "m_PlayerSora" && !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapData.Key.CategoryToKey(swapDataTable.Key)])
+                                        continue;
+
+                                    randomizedOptions[swapDataTable.Key][swapCategory.Key][swapData.Key] = option.Value;
+                                    randomizedOptions[category.Key][subCategory.Key][option.Key] = swapData.Value;
+
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Account for Treasures that have None in them
+            if (availableOptions.ContainsKey("Treasures"))
+            {
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureBT, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureBX, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureCA, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureEW, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureFZ, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureHE, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureKG, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureMI, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureRA, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureTS, rng, ref randomizedOptions, availableOptions);
+                this.RemoveNoneFromTreasure(DataTableEnum.TreasureTT, rng, ref randomizedOptions, availableOptions);
             }
 
             // Account for Levelup Data
@@ -547,120 +711,6 @@ namespace KH3Randomizer.Data
                 }
             }
 
-            // Account for Luckymark Data
-            if (availableOptions.ContainsKey("Lucky Emblems") && availableOptions["Lucky Emblems"]["Lucky Emblems"])
-            {
-                foreach (var luckyMark in randomizedOptions[DataTableEnum.LuckyMark])
-                {
-                    foreach (var subLuckyMark in luckyMark.Value)
-                    {
-                        if (!subLuckyMark.Value.Contains("::"))
-                            continue;
-
-                        while (true) // Is there a way we can use a var instead of true?
-                        {
-                            var tempOptions = randomizedOptions.Where(x => x.Key == DataTableEnum.EquipItem || x.Key == DataTableEnum.LevelUp || x.Key == DataTableEnum.VBonus);
-
-                            var swapDataTable = tempOptions.ElementAt(rng.Next(0, tempOptions.Count()));
-                            var swapCategory = swapDataTable.Value.ElementAt(rng.Next(0, randomizedOptions[swapDataTable.Key].Count));
-
-                            if (!availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapCategory.Key.CategoryToKey(swapDataTable.Key)])
-                                continue;
-
-                            if (swapCategory.Value.Where(x => !x.Value.Contains("::")).Count() > 0)
-                            {
-                                var swapData = swapCategory.Value.Where(x => !x.Value.Contains("::")).ElementAt(rng.Next(0, swapCategory.Value.Where(x => !x.Value.Contains("::")).Count()));
-
-
-                                if (swapCategory.Key == "m_PlayerSora" && !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapData.Key.CategoryToKey(swapDataTable.Key)])
-                                    continue;
-
-                                randomizedOptions[swapDataTable.Key][swapCategory.Key][swapData.Key] = subLuckyMark.Value;
-                                randomizedOptions[DataTableEnum.LuckyMark][luckyMark.Key][subLuckyMark.Key] = swapData.Value;
-
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Account for Treasures that have None in them
-            if (availableOptions.ContainsKey("Treasures"))
-            {
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureBT, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureBX, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureCA, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureEW, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureFZ, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureHE, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureKG, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureMI, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureRA, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureTS, rng, ref randomizedOptions, availableOptions);
-                this.RemoveNoneFromTreasure(DataTableEnum.TreasureTT, rng, ref randomizedOptions, availableOptions);
-            }
-
-            // Account for Events that have None in them
-            if (availableOptions.ContainsKey("Events"))
-            {
-                this.RemoveNoneFromEvents(DataTableEnum.Event, rng, ref randomizedOptions, availableOptions);
-            }
-
-            // Account for Pole Spin not being locked behind Frozen
-
-            // List of places it can't be
-            var disallowedPlaces = new List<string> { //"FZ_", // Disallow it in Frozen's treasures
-                                                      //"21", // Disallow after level 20
-                                                      //"20", // Disallow after lucky emblem milestone 15
-                                                      //"IW_", // Disallow on weapon enhances
-                                                      //"I0", // Disallow on equip items
-                                                      "EVENT_007", // Disallow on Herc's Gold Statue Return
-                                                      "TresUIMobilePortalDataAsset", // Disallow on all CK game reward
-                                                      "EVENT_KEYBLADE_007", // Disallow on Keyblade event for Frozen
-                                                      "EVENT_REPORT_009a", "EVENT_REPORT_009b", // Disallow on Reports in Arendelle
-                                                      "Vbonus_041", "Vbonus_042", "Vbonus_043", "Vbonus_044", "Vbonus_045",
-                                                      "Vbonus_046", "Vbonus_047", "Vbonus_048", "Vbonus_049", "Vbonus_050",
-                                                      "VBonus_Minigame003", "VBonus_Minigame004", "VBonus_Minigame011" // Disallow on VBonuses related to Frozen
-                                                    };
-            foreach (var category in randomizedOptions)
-            {
-                foreach (var subCategory in category.Value)
-                {
-                    foreach (var option in subCategory.Value)
-                    {
-                        if (option.Value.Contains("POLE_SPIN"))
-                        {
-                            var swapLogic = this.IsPoleSpinDisallowed(category.Key, subCategory.Key);
-
-                            while (swapLogic) // Is there a way we can use a var instead of true?
-                            {
-                                var tempOptions = randomizedOptions.Where(x => x.Key == DataTableEnum.EquipItem || x.Key == DataTableEnum.WeaponEnhance || x.Key == DataTableEnum.TreasureFZ);
-
-                                var swapDataTable = randomizedOptions.ElementAt(rng.Next(0, tempOptions.Count()));
-                                var swapCategory = swapDataTable.Value.ElementAt(rng.Next(0, randomizedOptions[swapDataTable.Key].Count));
-
-                                if (!availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapCategory.Key.CategoryToKey(swapDataTable.Key)])
-                                    continue;
-
-                                if (!this.IsPoleSpinDisallowed(swapDataTable.Key, swapCategory.Key) && swapCategory.Value.Where(x => x.Value.Contains("ETresAbilityKind::")).Count() > 0)
-                                {
-                                    var swapData = swapCategory.Value.Where(x => x.Value.Contains("ETresAbilityKind::")).ElementAt(rng.Next(0, swapCategory.Value.Where(x => x.Value.Contains("ETresAbilityKind::")).Count()));
-
-                                    if (swapCategory.Key == "m_PlayerSora" && !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapData.Key.CategoryToKey(swapDataTable.Key)])
-                                        continue;
-
-                                    randomizedOptions[swapDataTable.Key][swapCategory.Key][swapData.Key] = option.Value;
-                                    randomizedOptions[category.Key][subCategory.Key][option.Key] = swapData.Value;
-
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
             // Add back the default values that were not included
             foreach (var option in availableOptions)
             {
@@ -678,12 +728,12 @@ namespace KH3Randomizer.Data
         }
 
         public byte[] GenerateRandomizerSeed(string currentSeed, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions,
-                                             Dictionary<string, bool> availablePools, Dictionary<string, Dictionary<string, bool>> availableOptions, List<Tuple<Option, Option>> modifications)
+                                             Dictionary<string, bool> availablePools, Dictionary<string, Dictionary<string, bool>> availableOptions, List<Tuple<Option, Option>> modifications, byte[] hints)
         {
             var dataTableManager = new UE4DataTableInterpreter.DataTableManager();
             var dataTables = dataTableManager.RandomizeDataTables(randomizedOptions);
 
-            var zipArchive = this.CreateZipArchive(dataTables, currentSeed, availablePools, availableOptions, modifications);
+            var zipArchive = this.CreateZipArchive(dataTables, currentSeed, availablePools, availableOptions, modifications, hints);
 
             return zipArchive;
 
@@ -706,7 +756,7 @@ namespace KH3Randomizer.Data
             //return new List<byte[]> { this.GetFile(@$".\Seeds\pakchunk99-randomizer-{currentSeed}.pak"), this.GetFile(@$"{pakPath}\SpoilerLog.json") };
         }
 
-        public byte[] CreateZipArchive(Dictionary<string, List<byte>> dataTables, string randomSeed, Dictionary<string, bool> availablePools, Dictionary<string, Dictionary<string, bool>> availableOptions, List<Tuple<Option, Option>> modifications)
+        public byte[] CreateZipArchive(Dictionary<string, List<byte>> dataTables, string randomSeed, Dictionary<string, bool> availablePools, Dictionary<string, Dictionary<string, bool>> availableOptions, List<Tuple<Option, Option>> modifications, byte[] hints)
         {
             var zipPath = @$".\Seeds\pakchunk99-randomizer-{randomSeed}\pakchunk99-randomizer-{randomSeed}.zip";
 
@@ -723,7 +773,7 @@ namespace KH3Randomizer.Data
             {
                 using var archive = new ZipArchive(zipFile, ZipArchiveMode.Update);
 
-                // Create the README file
+                // Create the SpoilerLog file
                 var spoilerEntry = archive.CreateEntry("SpoilerLog.json");
                 using var spoilerWriter = new StreamWriter(spoilerEntry.Open());
 
@@ -745,6 +795,15 @@ namespace KH3Randomizer.Data
                 var jsonSpoiler = JsonSerializer.Serialize(spoilerLogFile);
 
                 spoilerWriter.WriteLine(jsonSpoiler);
+
+
+                // Create Hints
+                var hintEntry = archive.CreateEntry(@"KINGDOM HEARTS III\Content\Localization\Game\en\kh3_mobile.locres");
+                using var hintStream = new MemoryStream(hints);
+                using var hintEntryStream = hintEntry.Open();
+                
+                hintStream.CopyTo(hintEntryStream);
+
 
                 // Create the entry from the file path/ name, open the data in a memory stream and copy it to the entry
                 foreach (var (filePathAndName, data) in dataTables)
@@ -1083,6 +1142,27 @@ namespace KH3Randomizer.Data
             return events;
         }
 
+        public List<SynthesisItem> GetAvailableSynthesisItems(string currentSelection, ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions)
+        {
+            var synthesisItems = new List<SynthesisItem>();
+
+            if (randomizedOptions.ContainsKey(DataTableEnum.SynthesisItem))
+            {
+                var synthesisItemSubsets = new Dictionary<string, Dictionary<string, string>>();
+
+                if (currentSelection.Equals("Synthesis Items"))
+                    synthesisItemSubsets = randomizedOptions[DataTableEnum.SynthesisItem].ToDictionary(x => x.Key, y => y.Value);
+
+                foreach (var tempSynthesisItem in synthesisItemSubsets)
+                {
+                    foreach (var subSubset in tempSynthesisItem.Value)
+                        synthesisItems.Add(new SynthesisItem { Id = tempSynthesisItem.Key, Category = subSubset.Key, Reward = subSubset.Value });
+                }
+            }
+
+            return synthesisItems;
+        }
+
         private DataTableEnum GetDataTableEnumFromSelection(string selection)
         {
             switch(selection)
@@ -1134,6 +1214,8 @@ namespace KH3Randomizer.Data
                     return DataTableEnum.VBonus;
                 case "Weapon Upgrades":
                     return DataTableEnum.WeaponEnhance;
+                case "Synthesis Items":
+                    return DataTableEnum.SynthesisItem;
                 default:
                     return DataTableEnum.None;
             }
@@ -1250,7 +1332,7 @@ namespace KH3Randomizer.Data
                         var swapDataTable = tempOptions.ElementAt(rng.Next(0, tempOptions.Count()));
                         var swapCategory = swapDataTable.Value.ElementAt(rng.Next(0, randomizedOptions[swapDataTable.Key].Count));
                         
-                        if (!availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapCategory.Key.CategoryToKey(swapDataTable.Key)])
+                        if (swapCategory.Key == "EVENT_KEYBLADE_012" || swapCategory.Key == "EVENT_KEYBLADE_013" || !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapCategory.Key.CategoryToKey(swapDataTable.Key)])
                             continue;
 
                         if (swapCategory.Value.Where(x => !x.Value.Contains("NONE")).Count() > 0)
@@ -1325,7 +1407,7 @@ namespace KH3Randomizer.Data
                             var swapDataTable = tempOptions.ElementAt(rng.Next(0, tempOptions.Count()));
                             var swapCategory = swapDataTable.Value.ElementAt(rng.Next(0, randomizedOptions[swapDataTable.Key].Count));
 
-                            if (!availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapCategory.Key.CategoryToKey(swapDataTable.Key)])
+                            if (swapCategory.Key == "EVENT_KEYBLADE_012" || swapCategory.Key == "EVENT_KEYBLADE_013" || !availableOptions[swapDataTable.Key.DataTableEnumToKey()][swapCategory.Key.CategoryToKey(swapDataTable.Key)])
                                 continue;
 
                             if (swapCategory.Value.Where(x => !x.Value.Contains("NONE")).Count() > 0)

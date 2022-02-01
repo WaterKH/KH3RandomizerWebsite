@@ -5,7 +5,7 @@
 
 <div class="randomizer-content">
     <SectionBar CurrentSection="@this.currentSection"></SectionBar>
-    
+
     @if (this.currentSection == "Pools")
     {
         <Pools ContinueTo="@(ContinueTo)" AvailablePools="@this.availablePools"
@@ -14,15 +14,20 @@
     }
     else if (this.currentSection == "Options")
     {
-        <Options ContinueTo="@(() => ContinueTo("Review"))" BackTo="@(() => BackTo("Pools"))" 
+        <Options ContinueTo="@(() => ContinueTo("Hints"))" BackTo="@(() => BackTo("Pools"))"
                  UpdateAvailableOptions="@(options => UpdateAvailableOptions(options))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateModifications="@((option1, option2) => UpdateModifications(option1, option2))"
                  CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack">
         </Options>
     }
+    else if (this.currentSection == "Hints")
+    {
+        <Hints ContinueTo="@(() => ContinueTo("Review"))" BackTo="@(() => BackTo("Options"))" AvailableHints="@this.availableHints" UpdateAvailableHints="@(hints => UpdateAvailableHints(hints))" UpdateHintSelection="@(selection => UpdateHintSelection(selection))"></Hints>
+    }
     else if (this.currentSection == "Review")
     {
-        <Review BackTo="@(() => BackTo("Options"))" CurrentSeed="@this.CurrentSeed" RandomizedOptions="@this.randomizedOptions" 
-                AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" Modifications="@this.modifications"></Review>
+        <Review BackTo="@(() => BackTo("Hints"))" CurrentSeed="@this.CurrentSeed" RandomizedOptions="@this.randomizedOptions"
+                AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" Modifications="@this.modifications"
+                AvailableHints="@this.availableHints" HintSelectionType="@this.hintSelectionType"></Review>
     }
 </div>
 
@@ -33,7 +38,9 @@
     private Dictionary<string, bool> availablePools = new Dictionary<string, bool> {
         { "Treasures", true }, { "Events", true }, { "Starting Stats", true }, { "Lucky Emblems", false }, { "Bonuses", true },
         { "Fullcourse Abilities", true }, { "Level Ups", true }, { "Weapon Upgrades", true }, {"Equippables", true },
-        { "Bosses", false }, { "Enemies", false }, { "Room Transitions", false }, { "General Stats", false }
+        { "Synthesis Items", true },
+
+        { "Bosses", false }, { "Enemies", false }, { "General Stats", false }
     };
 
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
@@ -41,6 +48,41 @@
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
 
     private List<Tuple<Option, Option>> modifications = new();
+
+    private string hintSelectionType = "Verbose";
+    private Dictionary<string, Dictionary<string, bool>> availableHints = new Dictionary<string, Dictionary<string, bool>>
+    {
+        { "Proofs", new Dictionary<string, bool>
+            { { "Proof of Promises", true }, { "Proof of Times Past", true }, { "Proof of Fantasy", true } }
+        },
+        { "Abilities", new Dictionary<string, bool>
+            { { "Pole Spin", true }, { "Block", true }, { "Dodge Roll", true }, { "Air-Slide", true },
+              { "Double Flight", true }, { "Second Chance", true }, { "Withstand Combo", true }, }
+        },
+        { "Heartbinders", new Dictionary<string, bool>
+            { { "Dream Heartbinder", true }, { "Pixel Heartbinder", true }, { "Pride Heartbinder", true },
+              { "Ocean Heartbinder", true }, { "\'Ohana Heartbinder", true } }
+        },
+        { "Magic", new Dictionary<string, bool>
+            { { "Fire", true }, { "Fira", true }, { "Firaga", true },
+              { "Water", true }, { "Watera", true }, { "Waterga", true },
+              { "Cure", true }, { "Cura", true }, { "Curaga", true },
+              { "Blizzard", true }, { "Blizzara", true }, { "Blizzaga", true },
+              { "Thunder", true }, { "Thundara", true }, { "Thundaga", true },
+              { "Aero", true }, { "Aerora", true }, { "Aeroga", true } }
+        },
+        { "Formchanges", new Dictionary<string, bool>
+            { { "Hero\'s Origin", true }, { "Grand Chef", true }, { "Ultima Weapon", true },
+              { "Oblivion", true }, { "Oathkeeper", true } }
+        },
+        { "Secret Reports", new Dictionary<string, bool>
+            { { "Secret Report 1", true }, { "Secret Report 2", true }, { "Secret Report 3", true }, { "Secret Report 4", true },
+              { "Secret Report 5", true }, { "Secret Report 6", true }, { "Secret Report 7", true }, { "Secret Report 8", true },
+              { "Secret Report 9", true }, { "Secret Report 10", true }, { "Secret Report 11", true }, { "Secret Report 12", true },
+              { "Secret Report 13", true }
+            }
+        },
+    };
 
     private string currentSection = "Pools";
     private bool isGoingBack = false;
@@ -115,6 +157,26 @@
         else
             this.modifications.Add(new Tuple<Option, Option>(initalOption, swapOption));
 
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateHintSelection(string selection)
+    {
+        this.hintSelectionType = selection;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateAvailableHints(Dictionary<string, Dictionary<string, bool>> availableHints)
+    {
+        this.availableHints = availableHints;
 
         InvokeAsync(() =>
         {

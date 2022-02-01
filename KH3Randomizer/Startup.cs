@@ -30,7 +30,8 @@ namespace KH3Randomizer
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<RandomizerService>(); 
+            services.AddSingleton<RandomizerService>();
+            services.AddSingleton<HintService>();
             services.AddBlazoredModal();
             services.AddBlazorDownloadFile(ServiceLifetime.Scoped);
         }

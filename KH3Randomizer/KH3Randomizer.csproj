@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Content Remove="C:\Users\water\.nuget\packages\ue4datatableinterpreter\0.1.4\contentFiles\any\net5.0\DefaultKH3.json" />
+    <Content Remove="C:\Users\water\.nuget\packages\ue4datatableinterpreter\1.1.0\contentFiles\any\net5.0\DefaultKH3.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,8 +18,10 @@
     <None Remove="Content\Game\UI\Data\MobilePortal\MobilePortalDataAsset.uexp" />
     <None Remove="Content\Load\Common\TresChrInitData.uasset" />
     <None Remove="Content\Load\Common\TresChrInitData.uexp" />
-    <None Remove="Content\Load\ItemSynthesis\TresItemWeaponEnhanceData.uasset" />
-    <None Remove="Content\Load\ItemSynthesis\TresItemWeaponEnhanceData.uexp" />
+    <None Remove="Content\Load\Tres\ItemSynthesis\TresItemSynthesisData.uasset" />
+    <None Remove="Content\Load\Tres\ItemSynthesis\TresItemSynthesisData.uexp" />
+    <None Remove="Content\Load\Tres\ItemSynthesis\TresItemWeaponEnhanceData.uasset" />
+    <None Remove="Content\Load\Tres\ItemSynthesis\TresItemWeaponEnhanceData.uexp" />
     <None Remove="Content\Load\Tres\TresEquipItemData.uasset" />
     <None Remove="Content\Load\Tres\TresEquipItemData.uexp" />
     <None Remove="Content\Load\Tres\TresEventData.uasset" />
@@ -53,6 +56,7 @@
     <None Remove="Content\Load\Tres\TresVBonusData.uexp" />
     <None Remove="Content\Load\Tres\TresVBonusTableAlt.uasset" />
     <None Remove="Content\Load\Tres\TresVBonusTableAlt.uexp" />
+    <None Remove="Content\Locres\kh3_mobile.locres" />
     <None Remove="Pages\Guide.razor.css~RF40dc6528.TMP" />
     <None Remove="Pages\Guide.razor~RF40900595.TMP" />
   </ItemGroup>
@@ -82,10 +86,16 @@
     <Content Include="Content\Load\Common\TresChrInitData.uexp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Load\ItemSynthesis\TresItemWeaponEnhanceData.uasset">
+    <Content Include="Content\Load\Tres\ItemSynthesis\TresItemSynthesisData.uasset">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Load\ItemSynthesis\TresItemWeaponEnhanceData.uexp">
+    <Content Include="Content\Load\Tres\ItemSynthesis\TresItemSynthesisData.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\ItemSynthesis\TresItemWeaponEnhanceData.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Load\Tres\ItemSynthesis\TresItemWeaponEnhanceData.uexp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\Load\Tres\TresEquipItemData.uasset">
@@ -190,13 +200,16 @@
     <Content Include="Content\Load\Tres\TresVBonusTableAlt.uexp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Locres\kh3_mobile.locres">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BlazorDownloadFile" Version="2.1.6" />
     <PackageReference Include="Blazored.Modal" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageReference Include="UE4DataTableInterpreter" Version="1.0.0" />
+    <PackageReference Include="UE4DataTableInterpreter" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -212,6 +225,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="uAssetIds.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\DefaultKH3 - Copy.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\DefaultKH3.json">

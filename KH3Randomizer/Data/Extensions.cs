@@ -74,6 +74,8 @@ namespace KH3Randomizer.Data
                     return $"Victory Bonus {int.Parse(inputSplit[1])}";
             else if (inputSplit[0] == "IW")
                 return $"Level {(int.Parse(inputSplit[1]) % 10) + 1}";
+            else if (inputSplit[0] == "IS")
+                return $"Synthesis Item {int.Parse(inputSplit[1]) + 1}";
 
             switch (input.Replace("\u0000", ""))
             {
@@ -347,25 +349,25 @@ namespace KH3Randomizer.Data
 
                 #region Weapon Upgrades
                 case "IW_0":
-                    return "Grand Chef Upgrade 1";
+                    return "Kingdom Key Upgrade 1";
                 case "IW_1":
-                    return "Grand Chef Upgrade 2";
+                    return "Kingdom Key Upgrade 2";
                 case "IW_2":
-                    return "Grand Chef Upgrade 3";
+                    return "Kingdom Key Upgrade 3";
                 case "IW_3":
-                    return "Grand Chef Upgrade 4";
+                    return "Kingdom Key Upgrade 4";
                 case "IW_4":
-                    return "Grand Chef Upgrade 5";
+                    return "Kingdom Key Upgrade 5";
                 case "IW_5":
-                    return "Grand Chef Upgrade 6";
+                    return "Kingdom Key Upgrade 6";
                 case "IW_6":
-                    return "Grand Chef Upgrade 7";
+                    return "Kingdom Key Upgrade 7";
                 case "IW_7":
-                    return "Grand Chef Upgrade 8";
+                    return "Kingdom Key Upgrade 8";
                 case "IW_8":
-                    return "Grand Chef Upgrade 9";
+                    return "Kingdom Key Upgrade 9";
                 case "IW_9":
-                    return "Grand Chef Upgrade 10";
+                    return "Kingdom Key Upgrade 10";
 
                 case "IW_10":
                     return "Shooting Star Upgrade 1";
@@ -968,7 +970,7 @@ namespace KH3Randomizer.Data
                 case "Vbonus_056":
                     return "After the Darkube boss battle in San Fransokyo";
                 case "Vbonus_057":
-                    return "After the Dark Bay Max boss battle in San Fransokyo";
+                    return "After the Dark Baymax boss battle in San Fransokyo";
 
                 case "Vbonus_058":
                     return "After catching the Black Pearl in Davy Jones Locker in The Caribbean";
@@ -1014,9 +1016,9 @@ namespace KH3Randomizer.Data
                 case "Vbonus_082":
                     return "After the Darkside boss battle in The Final World";
                 case "Vbonus_083":
-                    return "After collecting 200 Sora's in The Final World";
+                    return "After collecting 200 Soras in The Final World";
                 case "Vbonus_084":
-                    return "After collecting 300 Sora's in The Final World";
+                    return "After collecting 300 Soras in The Final World";
 
                 case "VBonus_Minigame001":
                     return "After obtaining the first A-rank in Verum Rex: Beat of Lead minigame in Toy Box";
@@ -1183,17 +1185,42 @@ namespace KH3Randomizer.Data
                 #region Weapons
                 case "WEP_DONALD_01":
                     return "Mage's Staff+";
+                case "WEP_DONALD_03":
+                    return "Warhammer+";
                 case "WEP_DONALD_05":
                     return "Magician's Wand+";
                 case "WEP_DONALD_07":
                     return "Nirvana+";
+                case "WEP_DONALD_09":
+                    return "Astrolabe+";
+                case "WEP_DONALD_011":
+                    return "Heartless Maul";
+                case "WEP_DONALD_012":
+                    return "Heartless Maul+";
+                case "WEP_DONALD_013":
+                    return "Save the Queen";
+                case "WEP_DONALD_014":
+                    return "Save the Queen+";
+
 
                 case "WEP_GOOFY_01":
                     return "Knight's Shield+";
+                case "WEP_GOOFY_03":
+                    return "Clockwork Shield+";
                 case "WEP_GOOFY_05":
                     return "Star Shield+";
+                case "WEP_GOOFY_07":
+                    return "Aegis Shield+";
                 case "WEP_GOOFY_09":
                     return "Storm Anchor+";
+                case "WEP_GOOFY_011":
+                    return "Nobody Guard";
+                case "WEP_GOOFY_012":
+                    return "Nobody Guard+";
+                case "WEP_GOOFY_013":
+                    return "Save the King";
+                case "WEP_GOOFY_014":
+                    return "Save the King+";
                 #endregion Weapons
 
                 #region Armor
@@ -1223,17 +1250,28 @@ namespace KH3Randomizer.Data
                 case "PRT_ITEM12":
                     return "Firaga Bangle";
 
+                case "PRT_ITEM14":
+                    return "Fire Chain";
+
                 case "PRT_ITEM15":
                     return "Blizzard Choker";
                 case "PRT_ITEM16":
                     return "Blizzara Choker";
                 case "PRT_ITEM17":
                     return "Blizzaga Choker";
+                
+                case "PRT_ITEM18":
+                    return "Blizzard Chain";
 
                 case "PRT_ITEM19":
                     return "Thunder Trinket";
                 case "PRT_ITEM20":
                     return "Thundara Trinket";
+                case "PRT_ITEM21":
+                    return "Thundaga Trinket";
+
+                case "PRT_ITEM22":
+                    return "Thunder Chain";
 
                 case "PRT_ITEM23":
                     return "Dark Anklet";
@@ -1242,35 +1280,46 @@ namespace KH3Randomizer.Data
                 case "PRT_ITEM25":
                     return "Chaos Anklet";
 
+                case "PRT_ITEM26":
+                    return "Dark Chain";
+
                 case "PRT_ITEM27":
                     return "Divine Bandanna";
                 case "PRT_ITEM28":
                     return "Elven Bandanna";
+
+                case "PRT_ITEM29":
+                    return "Aqua Chaplet";
+
                 case "PRT_ITEM30":
                     return "Wind Fan";
                 case "PRT_ITEM31":
                     return "Storm Fan";
 
+                case "PRT_ITEM32":
+                    return "Aero Armlet";
 
                 case "PRT_ITEM33":
                     return "Aegis Chain";
                 case "PRT_ITEM34":
                     return "Acrisius";
-
+                case "PRT_ITEM35":
+                    return "Cosmic Chain";
                 case "PRT_ITEM36":
                     return "Petite Ribbon";
                 case "PRT_ITEM37":
-                    return "Fira Bangle";
+                    return "Ribbon";
                 case "PRT_ITEM38":
                     return "Fira Bangle";
 
                 case "PRT_ITEM40":
-                    return "Ribbon";
+                    return "Royal Ribbon";
                 case "PRT_ITEM41":
                     return "Shadow Anklet";
                 case "PRT_ITEM42":
                     return "Abas Chain";
-
+                case "PRT_ITEM43":
+                    return "Acrisius+";
                 case "PRT_ITEM44":
                     return "Royal Ribbon";
                 case "PRT_ITEM45":
@@ -1311,7 +1360,8 @@ namespace KH3Randomizer.Data
                     return "Expert's Ring";
                 case "ACC_ITEM10":
                     return "Master's Ring";
-
+                case "ACC_ITEM11":
+                    return "Cosmic Ring";
                 case "ACC_ITEM12":
                     return "Power Ring";
                 case "ACC_ITEM13":
@@ -1504,18 +1554,44 @@ namespace KH3Randomizer.Data
                 #endregion Food Items
 
                 #region Materials
+                case "MAT_ITEM04":
+                    return "Blazing Crystal";
+
+                case "MAT_ITEM08":
+                    return "Frost Crystal";
+
+                case "MAT_ITEM12":
+                    return "Lightning Crystal";
+
+                case "MAT_ITEM16":
+                    return "Lucid Crystal";
+
+                case "MAT_ITEM20":
+                    return "Pulsing Crystal";
+
+                case "MAT_ITEM24":
+                    return "Writhing Crystal";
+
                 case "MAT_ITEM33":
                     return "Mythril Shard";
                 case "MAT_ITEM34":
                     return "Mythril Stone";
                 case "MAT_ITEM35":
                     return "Mythril Gem";
+                case "MAT_ITEM36":
+                    return "Mythril Crystal";
+
+                case "MAT_ITEM44":
+                    return "Soothing Crystal";
+
                 case "MAT_ITEM47":
                     return "Wellspring Gem";
                 case "MAT_ITEM48":
                     return "Wellspring Crystal";
+
                 case "MAT_ITEM52":
                     return "Hungry Crystal";
+
                 case "MAT_ITEM53":
                     return "Fluorite";
                 case "MAT_ITEM54":
@@ -1994,6 +2070,10 @@ namespace KH3Randomizer.Data
                     return "";
                 #endregion Bonuses
 
+                #region Synthesis Items
+
+                #endregion Synthesis Items
+
                 default:
                     return input;
             }
@@ -2019,6 +2099,8 @@ namespace KH3Randomizer.Data
                     return "Bonuses";
                 case DataTableEnum.WeaponEnhance:
                     return "Weapon Upgrades";
+                case DataTableEnum.SynthesisItem:
+                    return "Synthesis Items";
 
                 case DataTableEnum.TreasureHE:
                 case DataTableEnum.TreasureTT:
@@ -2133,6 +2215,8 @@ namespace KH3Randomizer.Data
                         return "Oblivion";
 
                     break;
+                case DataTableEnum.SynthesisItem:
+                    return "Synthesis Items";
 
                 case DataTableEnum.TreasureHE:
                     return "Olympus";

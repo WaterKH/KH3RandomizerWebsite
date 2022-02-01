@@ -431,6 +431,33 @@
     "I05021": {
       "Ability0": "ETresAbilityKind::WIZZARD_STAR\u0000"
     },
+    "I05022": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000"
+    },
+    "I05023": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000"
+    },
+    "I05024": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000"
+    },
+    "I05025": {
+      "Ability0": "ETresAbilityKind::HP_CONVERTER\u0000"
+    },
+    "I05026": {
+      "Ability0": "ETresAbilityKind::MP_CONVERTER\u0000"
+    },
+    "I05027": {
+      "Ability0": "ETresAbilityKind::MUNNY_CONVERTER\u0000"
+    },
+    "I05028": {
+      "Ability0": "ETresAbilityKind::PRIZE_DRAW\u0000"
+    },
+    "I05029": {
+      "Ability0": "ETresAbilityKind::FIRE_UP\u0000"
+    },
+    "I05030": {
+      "Ability0": "ETresAbilityKind::THUNDER_UP\u0000"
+    },
     "I05031": {
       "Ability0": "ETresAbilityKind::ENDLESS_MAGIC\u0000",
       "Ability1": "ETresAbilityKind::MP_HASTEGA\u0000"
@@ -502,6 +529,216 @@
     "I05050": {
       "Ability0": "ETresAbilityKind::MP_SAVE\u0000",
       "Ability1": "ETresAbilityKind::MP_HASTERA\u0000"
+    },
+    "I05051": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::DEFENDER\u0000"
+    },
+    "I05052": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::MP_LEAVE\u0000"
+    },
+    "I05053": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::FULLMP_BURST\u0000"
+    },
+    "I05054": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::LUCK_UP\u0000"
+    },
+    "I05055": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::HP_CONVERTER\u0000"
+    },
+    "I05056": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::MP_CONVERTER\u0000"
+    },
+    "I05057": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::MUNNY_CONVERTER\u0000"
+    },
+    "I05058": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::BURN_GUARD\u0000"
+    },
+    "I05059": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::CLOUD_GUARD\u0000"
+    },
+    "I05060": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::SNEEZE_GUARD\u0000"
+    },
+    "I05061": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::FREEZE_GUARD\u0000"
+    },
+    "I05062": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::DISCHARGE_GUARD\u0000"
+    },
+    "I05063": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::BLIZZARD_UP\u0000"
+    },
+    "I05064": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::WATER_UP\u0000"
+    },
+    "I05065": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::MAGIC_DRAW\u0000"
+    },
+    "I05066": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::LAST_LEAVE\u0000"
+    },
+    "I05067": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::STUN_GUARD\u0000"
+    },
+    "I05068": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::ITEM_UP\u0000"
+    },
+    "I05069": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::FIRE_ASPIR\u0000"
+    },
+    "I05070": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::BLIZZARD_ASPIR\u0000"
+    },
+    "I05071": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::THUNDER_ASPIR\u0000"
+    },
+    "I05072": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::WATER_ASPIR\u0000"
+    },
+    "I05073": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::AERO_ASPIR\u0000"
+    },
+    "I05074": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::AERO_UP\u0000"
+    },
+    "I05075": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::WIZZARD_STAR\u0000"
+    },
+    "I05076": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::COMBO_LEAVE\u0000"
+    },
+    "I05077": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::DAMAGE_ASPIR\u0000"
+    },
+    "I05078": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::MP_SAVE\u0000"
+    },
+    "I05079": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::CHARGE_BERSERK\u0000"
+    },
+    "I05080": {
+      "Ability0": "ETresAbilityKind::MP_HASTE\u0000",
+      "Ability1": "ETresAbilityKind::DARK_ASPIR\u0000"
+    },
+    "I05081": {
+      "Ability0": "ETresAbilityKind::DEFENDER\u0000"
+    },
+    "I05082": {
+      "Ability0": "ETresAbilityKind::MP_LEAVE\u0000"
+    },
+    "I05083": {
+      "Ability0": "ETresAbilityKind::FULLMP_BURST\u0000"
+    },
+    "I05084": {
+      "Ability0": "ETresAbilityKind::LUCK_UP\u0000"
+    },
+    "I05085": {
+      "Ability0": "ETresAbilityKind::HP_CONVERTER\u0000"
+    },
+    "I05086": {
+      "Ability0": "ETresAbilityKind::MP_CONVERTER\u0000"
+    },
+    "I05087": {
+      "Ability0": "ETresAbilityKind::MUNNY_CONVERTER\u0000"
+    },
+    "I05088": {
+      "Ability0": "ETresAbilityKind::BURN_GUARD\u0000"
+    },
+    "I05089": {
+      "Ability0": "ETresAbilityKind::CLOUD_GUARD\u0000"
+    },
+    "I05090": {
+      "Ability0": "ETresAbilityKind::SNEEZE_GUARD\u0000"
+    },
+    "I05091": {
+      "Ability0": "ETresAbilityKind::FREEZE_GUARD\u0000"
+    },
+    "I05092": {
+      "Ability0": "ETresAbilityKind::DISCHARGE_GUARD\u0000"
+    },
+    "I05093": {
+      "Ability0": "ETresAbilityKind::BLIZZARD_UP\u0000"
+    },
+    "I05094": {
+      "Ability0": "ETresAbilityKind::WATER_UP\u0000"
+    },
+    "I05095": {
+      "Ability0": "ETresAbilityKind::MAGIC_DRAW\u0000"
+    },
+    "I05096": {
+      "Ability0": "ETresAbilityKind::LAST_LEAVE\u0000"
+    },
+    "I05097": {
+      "Ability0": "ETresAbilityKind::STUN_GUARD\u0000"
+    },
+    "I05098": {
+      "Ability0": "ETresAbilityKind::ITEM_UP\u0000"
+    },
+    "I05099": {
+      "Ability0": "ETresAbilityKind::FIRE_ASPIR\u0000"
+    },
+    "I05100": {
+      "Ability0": "ETresAbilityKind::BLIZZARD_ASPIR\u0000"
+    },
+    "I05101": {
+      "Ability0": "ETresAbilityKind::THUNDER_ASPIR\u0000"
+    },
+    "I05102": {
+      "Ability0": "ETresAbilityKind::WATER_ASPIR\u0000"
+    },
+    "I05103": {
+      "Ability0": "ETresAbilityKind::AERO_ASPIR\u0000"
+    },
+    "I05104": {
+      "Ability0": "ETresAbilityKind::AERO_UP\u0000"
+    },
+    "I05105": {
+      "Ability0": "ETresAbilityKind::WIZZARD_STAR\u0000"
+    },
+    "I05106": {
+      "Ability0": "ETresAbilityKind::COMBO_LEAVE\u0000"
+    },
+    "I05107": {
+      "Ability0": "ETresAbilityKind::DAMAGE_ASPIR\u0000"
+    },
+    "I05108": {
+      "Ability0": "ETresAbilityKind::MP_SAVE\u0000"
+    },
+    "I05109": {
+      "Ability0": "ETresAbilityKind::CHARGE_BERSERK\u0000"
+    },
+    "I05110": {
+      "Ability0": "ETresAbilityKind::DARK_ASPIR\u0000"
     },
     "I05111": {
       "Ability0": "ETresAbilityKind::POWER_CURE\u0000"
