@@ -7,10 +7,10 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["KH3Randomizer.csproj", "."]
-RUN dotnet restore "KH3Randomizer.csproj"
+COPY ["KH3Randomizer/KH3Randomizer.csproj", "KH3Randomizer/"]
+RUN dotnet restore "KH3Randomizer/KH3Randomizer.csproj"
 COPY . .
-WORKDIR "/src"
+WORKDIR "/src/KH3Randomizer"
 RUN dotnet build "KH3Randomizer.csproj" -c Release -o /app/build
 
 FROM build AS publish
