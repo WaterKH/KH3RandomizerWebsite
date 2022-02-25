@@ -17,7 +17,7 @@ namespace KH3Randomizer.Data
             if (backTo)
                 return availableOptions;
             
-            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot\DefaultKH3.json"));
+            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot/DefaultKH3.json"));
             var defaultOptions = JsonSerializer.Deserialize<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(streamReader.ReadToEnd());
 
             availableOptions = new();
@@ -176,7 +176,7 @@ namespace KH3Randomizer.Data
         public Option UpdateRandomizedItemWithDefault(ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions,
                                                       DataTableEnum dataTableEnum, string category, string subCategory, string itemToChange)
         {
-            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot\DefaultKH3.json"));
+            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot/DefaultKH3.json"));
             
             var defaultOptions = JsonSerializer.Deserialize<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(streamReader.ReadToEnd());
             var swapItemToFind = (string)defaultOptions[dataTableEnum][category][subCategory].Clone();
@@ -253,7 +253,7 @@ namespace KH3Randomizer.Data
             var rng = new Random((int)hash);
 
             // Use randomizedItems
-            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot\DefaultKH3.json"));
+            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot/DefaultKH3.json"));
             // Category > Id > Item > Value
             var defaultOptions = JsonSerializer.Deserialize<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(streamReader.ReadToEnd());
 
@@ -758,13 +758,13 @@ namespace KH3Randomizer.Data
 
         public byte[] CreateZipArchive(Dictionary<string, List<byte>> dataTables, string randomSeed, Dictionary<string, bool> availablePools, Dictionary<string, Dictionary<string, bool>> availableOptions, List<Tuple<Option, Option>> modifications, byte[] hints)
         {
-            var zipPath = @$".\Seeds\pakchunk99-randomizer-{randomSeed}\pakchunk99-randomizer-{randomSeed}.zip";
+            var zipPath = @$"./Seeds/pakchunk99-randomizer-{randomSeed}/pakchunk99-randomizer-{randomSeed}.zip";
 
-            if (Directory.Exists(@$".\Seeds\pakchunk99-randomizer-{randomSeed}"))
-                Directory.Delete(@$".\Seeds\pakchunk99-randomizer-{randomSeed}", true);
+            if (Directory.Exists(@$"./Seeds/pakchunk99-randomizer-{randomSeed}"))
+                Directory.Delete(@$"./Seeds/pakchunk99-randomizer-{randomSeed}", true);
 
             // Create the ZIP Archive
-            Directory.CreateDirectory(@$".\Seeds\pakchunk99-randomizer-{randomSeed}");
+            Directory.CreateDirectory(@$"./Seeds/pakchunk99-randomizer-{randomSeed}");
 
             if (File.Exists(zipPath))
                 File.Delete(zipPath);
@@ -798,7 +798,7 @@ namespace KH3Randomizer.Data
 
 
                 // Create Hints
-                var hintEntry = archive.CreateEntry(@"KINGDOM HEARTS III\Content\Localization\Game\en\kh3_mobile.locres");
+                var hintEntry = archive.CreateEntry(@"KINGDOM HEARTS III/Content/Localization/Game/en/kh3_mobile.locres");
                 using var hintStream = new MemoryStream(hints);
                 using var hintEntryStream = hintEntry.Open();
                 
@@ -830,7 +830,7 @@ namespace KH3Randomizer.Data
 
         public void DeleteRandomizerSeed(string currentSeed)
         {
-            Directory.Delete($@".\Seeds\pakchunk99-randomizer-{currentSeed}", true);
+            Directory.Delete($@"./Seeds/pakchunk99-randomizer-{currentSeed}", true);
             //Directory.Delete($@".\wwwroot\pak\Seeds\pakchunk99-randomizer-{currentSeed}", true);
             //File.Delete($@".\Seeds\pakchunk99-randomizer-{currentSeed}.pak");
         }
