@@ -3,6 +3,8 @@
 
 @using UE4DataTableInterpreter.Enums
 
+@inject KH3Randomizer.Data.RandomizerService RandomizerService
+
 <div class="randomizer-content">
     <SectionBar CurrentSection="@this.currentSection"></SectionBar>
 
@@ -57,20 +59,20 @@
 
     private string hintSelectionType = "Verbose";
     private Dictionary<string, Dictionary<string, bool>> availableHints = new Dictionary<string, Dictionary<string, bool>>
-    {
+{
         { "Proofs", new Dictionary<string, bool>
-            { { "Proof of Promises", true }, { "Proof of Times Past", true }, { "Proof of Fantasy", true } }
+        { { "Proof of Promises", true }, { "Proof of Times Past", true }, { "Proof of Fantasy", true } }
         },
         { "Abilities", new Dictionary<string, bool>
-            { { "Pole Spin", true }, { "Block", true }, { "Dodge Roll", true }, { "Air-Slide", true },
+        { { "Pole Spin", true }, { "Block", true }, { "Dodge Roll", true }, { "Air-Slide", true },
               { "Double Flight", true }, { "Second Chance", true }, { "Withstand Combo", true }, }
         },
         { "Heartbinders", new Dictionary<string, bool>
-            { { "Dream Heartbinder", true }, { "Pixel Heartbinder", true }, { "Pride Heartbinder", true },
+        { { "Dream Heartbinder", true }, { "Pixel Heartbinder", true }, { "Pride Heartbinder", true },
               { "Ocean Heartbinder", true }, { "\'Ohana Heartbinder", true } }
         },
         { "Magic", new Dictionary<string, bool>
-            { { "Fire", true }, { "Fira", true }, { "Firaga", true },
+        { { "Fire", true }, { "Fira", true }, { "Firaga", true },
               { "Water", true }, { "Watera", true }, { "Waterga", true },
               { "Cure", true }, { "Cura", true }, { "Curaga", true },
               { "Blizzard", true }, { "Blizzara", true }, { "Blizzaga", true },
@@ -78,11 +80,11 @@
               { "Aero", true }, { "Aerora", true }, { "Aeroga", true } }
         },
         { "Formchanges", new Dictionary<string, bool>
-            { { "Hero\'s Origin", true }, { "Grand Chef", true }, { "Ultima Weapon", true },
+        { { "Hero\'s Origin", true }, { "Grand Chef", true }, { "Ultima Weapon", true },
               { "Oblivion", true }, { "Oathkeeper", true } }
         },
         { "Secret Reports", new Dictionary<string, bool>
-            { { "Secret Report 1", true }, { "Secret Report 2", true }, { "Secret Report 3", true }, { "Secret Report 4", true },
+        { { "Secret Report 1", true }, { "Secret Report 2", true }, { "Secret Report 3", true }, { "Secret Report 4", true },
               { "Secret Report 5", true }, { "Secret Report 6", true }, { "Secret Report 7", true }, { "Secret Report 8", true },
               { "Secret Report 9", true }, { "Secret Report 10", true }, { "Secret Report 11", true }, { "Secret Report 12", true },
               { "Secret Report 13", true }
@@ -91,15 +93,15 @@
     };
 
     private Dictionary<string, Dictionary<string, bool>> availableQualityOfLifeOptions = new Dictionary<string, Dictionary<string, bool>>
-    {
+{
         { "Bosses", new Dictionary<string, bool>
-            { { "Faster Raging Vulture", true }, { "Easier Mini-UFO", true }, { "Faster Lich Sequence", false } }
+        { { "Faster Raging Vulture", true }, { "Easier Mini-UFO", true }, { "Faster Lich Sequence", false } }
         },
         { "Events", new Dictionary<string, bool>
-            { { "Slow Mickey Skip", true }, { "Frozen Slider Skip", true }, { "Faster Sora Collection", true }, { "All Battle Portals Active", true } }
+        { { "Slow Mickey Skip", true }, { "Frozen Slider Skip", true }, { "Faster Sora Collection", true }, { "All Battle Portals Active", true } }
         },
         { "Items", new Dictionary<string, bool>
-            { { "All Maps Unlocked", false }, { "Fully Upgraded Keyblades", false }, { "CK Auto-Highscore", true } }
+        { { "All Maps Unlocked", false }, { "Fully Upgraded Keyblades", false }, { "CK Auto-Highscore", true } }
         }
     };
 
@@ -122,6 +124,23 @@
     {
         this.currentSection = section;
         this.isGoingBack = true;
+
+        if (this.currentSection == "Pools")
+        {
+            this.modifications.Reverse();
+
+            foreach (var (initialOption, swapOption) in this.modifications)
+            {
+                this.RandomizerService.UpdateRandomizedItem(ref this.randomizedOptions, initialOption.Category, initialOption.SubCategory, initialOption.Name, swapOption.Value,
+                                                            swapOption.Category, swapOption.SubCategory, swapOption.Name, initialOption.Value);
+
+            }
+
+            this.UpdateRandomizedOptions(this.randomizedOptions);
+            this.UpdateModifications(null, null);
+
+            this.modifications = new();
+        }
 
         InvokeAsync(() =>
         {

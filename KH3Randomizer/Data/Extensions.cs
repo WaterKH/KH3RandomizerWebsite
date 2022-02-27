@@ -1690,11 +1690,11 @@ namespace KH3Randomizer.Data
 
                 #region Maps
                 case "NAVI_MAP_HE01":
-                    return "Map: Thebes";
+                    return "Map: Realm of the Gods";
                 case "NAVI_MAP_HE02":
                     return "Map: Mount Olympus";
                 case "NAVI_MAP_HE03":
-                    return "Map: Realm of the Gods";
+                    return "Map: Thebes";
 
                 case "NAVI_MAP_TT01":
                     return "Map: The Neighborhood";
@@ -1720,15 +1720,15 @@ namespace KH3Randomizer.Data
                     return "Map: The Labyrinth of Ice";
 
                 case "NAVI_MAP_CA01":
-                    return "Map: Huddled Isles";
-                case "NAVI_MAP_CA02":
                     return "Map: Port Royal Waters";
-                case "NAVI_MAP_CA03":
+                case "NAVI_MAP_CA02":
                     return "Map: Isla de los Mastiles";
-                case "NAVI_MAP_CA04":
-                    return "Map: Sandbar Isle";
-                case "NAVI_MAP_CA05":
+                case "NAVI_MAP_CA03":
                     return "Map: Ship's End";
+                case "NAVI_MAP_CA04":
+                    return "Map: Huddled Isles";
+                case "NAVI_MAP_CA05":
+                    return "Map: Sandbar Isle";
 
                 case "NAVI_MAP_BX01":
                     return "Map: The City";
@@ -2073,6 +2073,33 @@ namespace KH3Randomizer.Data
                 #region Synthesis Items
 
                 #endregion Synthesis Items
+
+                #region Magic
+                case "Fire":
+                case "Fira":
+                case "Firaga":
+                    return "Fire Spell";
+                case "Water":
+                case "Watera":
+                case "Waterga":
+                    return "Water Spell";
+                case "Cure":
+                case "Cura":
+                case "Curaga":
+                    return "Cure Spell";
+                case "Blizzard":
+                case "Blizzara":
+                case "Blizzaga":
+                    return "Blizzard Spell";
+                case "Thunder":
+                case "Thundara":
+                case "Thundaga":
+                    return "Thunder Spell";
+                case "Aero":
+                case "Aerora":
+                case "Aeroga":
+                    return "Aero Spell";
+                #endregion Magic
 
                 default:
                     return input;
