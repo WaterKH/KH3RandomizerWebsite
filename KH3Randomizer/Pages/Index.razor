@@ -8,20 +8,26 @@
 
     @if (this.currentSection == "Pools")
     {
-        <Pools ContinueTo="@(ContinueTo)" AvailablePools="@this.availablePools"
+        <Pools ContinueTo="@(() => ContinueTo("Options"))" AvailablePools="@this.availablePools"
                UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))">
         </Pools>
     }
     else if (this.currentSection == "Options")
     {
-        <Options ContinueTo="@(() => ContinueTo("Hints"))" BackTo="@(() => BackTo("Pools"))"
+        <Options ContinueTo="@(() => ContinueTo("QoL"))" BackTo="@(() => BackTo("Pools"))"
                  UpdateAvailableOptions="@(options => UpdateAvailableOptions(options))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateModifications="@((option1, option2) => UpdateModifications(option1, option2))"
                  CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack">
         </Options>
     }
+    else if (this.currentSection == "QoL")
+    {
+        <QualityOfLife ContinueTo="@(() => ContinueTo("Hints"))" BackTo="@(() => BackTo("Options"))"
+                       UpdateAvailableQoLOptions="@(options => UpdateAvailableQualityOfLifeOptions(options))" AvailableQoLOptions="@this.availableQualityOfLifeOptions">
+        </QualityOfLife>
+    }
     else if (this.currentSection == "Hints")
     {
-        <Hints ContinueTo="@(() => ContinueTo("Review"))" BackTo="@(() => BackTo("Options"))" AvailableHints="@this.availableHints" UpdateAvailableHints="@(hints => UpdateAvailableHints(hints))" UpdateHintSelection="@(selection => UpdateHintSelection(selection))"></Hints>
+        <Hints ContinueTo="@(() => ContinueTo("Review"))" BackTo="@(() => BackTo("QoL"))" AvailableHints="@this.availableHints" UpdateAvailableHints="@(hints => UpdateAvailableHints(hints))" UpdateHintSelection="@(selection => UpdateHintSelection(selection))"></Hints>
     }
     else if (this.currentSection == "Review")
     {
@@ -82,6 +88,19 @@
               { "Secret Report 13", true }
             }
         },
+    };
+
+    private Dictionary<string, Dictionary<string, bool>> availableQualityOfLifeOptions = new Dictionary<string, Dictionary<string, bool>>
+    {
+        { "Bosses", new Dictionary<string, bool>
+            { { "Faster Raging Vulture", true }, { "Easier Mini-UFO", true }, { "Faster Lich Sequence", false } }
+        },
+        { "Events", new Dictionary<string, bool>
+            { { "Slow Mickey Skip", true }, { "Frozen Slider Skip", true }, { "Faster Sora Collection", true }, { "All Battle Portals Active", true } }
+        },
+        { "Items", new Dictionary<string, bool>
+            { { "All Maps Unlocked", false }, { "Fully Upgraded Keyblades", false }, { "CK Auto-Highscore", true } }
+        }
     };
 
     private string currentSection = "Pools";
@@ -177,6 +196,16 @@
     public void UpdateAvailableHints(Dictionary<string, Dictionary<string, bool>> availableHints)
     {
         this.availableHints = availableHints;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateAvailableQualityOfLifeOptions(Dictionary<string, Dictionary<string, bool>> availableQualityOfLifeOptions)
+    {
+        this.availableQualityOfLifeOptions = availableQualityOfLifeOptions;
 
         InvokeAsync(() =>
         {

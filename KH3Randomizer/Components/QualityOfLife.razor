@@ -1,0 +1,122 @@
+﻿@inject KH3Randomizer.Data.RandomizerService RandomizerService
+
+<div class="qol-section">
+    <div class="qol-subsection">
+        <button class="btn kh-button" @onclick="ToggleOptions">All Options: @(this.allOptionText)</button>
+
+        <br />
+        <br />
+
+        <div class="row">
+            @foreach (var (category, subOptions) in qolOptions)
+            {
+                <div class="col-md-12">
+                    <h3>@category</h3>
+
+                    <div class="row">
+                        @foreach (var (name, value) in subOptions)
+                        {
+                            <div class="col-md-4" style="margin: 15px 0px;">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <label class="switch">
+                                            <input type="checkbox" @onchange="@((value) => { qolOptions[category][name] = (bool)value.Value; this.UpdateQoLOptionsText(); })" checked="@value">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label><b>@name</b></label>
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <Tooltip Text="@qolOptionDescriptions[name]">
+                                            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
+                                        </Tooltip>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                if (category == "Bosses" || category == "Events")
+                {
+                    <hr />
+                }
+            }
+        </div>
+    </div>
+
+    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Options...</button>
+    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to Hints...</button>
+</div>
+
+@code {
+    [Parameter] public EventCallback<string> BackTo { get; set; }
+    [Parameter] public EventCallback<string> ContinueTo { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, Dictionary<string, bool>>> UpdateAvailableQoLOptions { get; set; }
+
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableQoLOptions { get; set; }
+
+    private bool isOn { get; set; } = false;
+    private string allOptionText { get; set; } = "MIXED";
+
+    private Dictionary<string, Dictionary<string, bool>> qolOptions = new Dictionary<string, Dictionary<string, bool>>();
+
+    private Dictionary<string, string> qolOptionDescriptions = new Dictionary<string, string> {
+        { "Faster Raging Vulture", "Sets the Raging Vulture's health to a lower amount to make the fight faster." },
+        { "Easier Mini-UFO", "Disables the ability for the UFO to teleport and zip around the area. Also, sets the amount of hits needed to 20 instead of 40." },
+        { "Faster Lich Sequence", "Skips the in-between fights against the Lich. Only the first and last battle are required." },
+
+        { "Slow Mickey Skip", "Skips the fight with the Replica Xehanorts and Mickey Mouse." },
+        { "Frozen Slider Skip", "Skips the Frozen Slider Minigame, since this is somewhat difficult on Critical." },
+        { "Faster Sora Collection", "Sets the threshold from collecting 111, 222 & 333 Soras in The Final World to a smaller amount." },
+        { "All Battle Portals Active", "Allows Battle Portals to be available from the start of a world." },
+
+        { "All Maps Unlocked", "Gives all of the maps in the game to Sora from the start. (Useful for new players using the Map Mod that shows items and lucky emblems." },
+        { "Fully Upgraded Keyblades", "Sets all of the keyblades' levels to max." },
+        { "CK Auto-Highscore", "Set Classic Kingdom highscores when obtained so that on obtaining the last CK game, the reward will be given." }
+    };
+
+    protected override void OnInitialized()
+    {
+        this.qolOptions = this.AvailableQoLOptions;
+        this.UpdateQoLOptionsText();
+    }
+
+    private void ToggleOptions()
+    {
+        if (this.allOptionText.Equals("MIXED"))
+            this.isOn = false;
+        else if (this.allOptionText.Equals("ON"))
+            this.isOn = false;
+        else if (this.allOptionText.Equals("OFF"))
+            this.isOn = true;
+
+        foreach (var (category, subOptions) in this.qolOptions)
+        {
+            foreach (var (name, value) in subOptions)
+                this.qolOptions[category][name] = this.isOn;
+        }
+
+        this.UpdateQoLOptionsText();
+    }
+
+    private void UpdateQoLOptionsText()
+    {
+        var qolBools = new List<bool>();
+
+        foreach (var (category, subOptions) in this.qolOptions)
+            qolBools.AddRange(subOptions.Select(x => x.Value));
+
+        qolBools = qolBools.Distinct().ToList();
+
+        if (qolBools.Count() == 2)
+            this.allOptionText = "MIXED";
+        else if (qolBools.FirstOrDefault())
+            this.allOptionText = "ON";
+        else
+            this.allOptionText = "OFF";
+    }
+}

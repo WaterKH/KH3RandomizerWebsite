@@ -82,7 +82,7 @@
     </div>
 
     <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Hints...</button>
-    <button class="btn kh-button" @onclick="() => this.GenerateSeed()" style="float: right;">Generate Seed</button>
+    <button class="btn kh-button" @onclick="() => this.GenerateSeed()" style="float: right;" disabled="@this.isGeneratingSeed">@(!this.isGeneratingSeed ? "Generate Seed" : "Generating Seed...")</button>
 </div>
 @code {
     [Inject] IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
@@ -106,6 +106,8 @@
 
     private Dictionary<string, string> poolColors = new();
     private Dictionary<string, string> optionColors = new();
+
+    bool isGeneratingSeed { get; set; }
 
     protected override void OnInitialized()
     {
@@ -162,8 +164,15 @@
         };
     }
 
-    public void GenerateSeed()
+    public async Task GenerateSeed()
     {
+        this.isGeneratingSeed = true;
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+
         byte[] hintResults;
         var hints = new Dictionary<string, bool>();
 
@@ -179,11 +188,18 @@
 
         var file = this.RandomizerService.GenerateRandomizerSeed(this.CurrentSeed, this.RandomizedOptions, this.AvailablePools, this.AvailableOptions, this.Modifications, hintResults);
 
-        js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".zip", Convert.ToBase64String(file));
+        await js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".zip", Convert.ToBase64String(file));
         // js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".pak", Convert.ToBase64String(files[0]));
         // js.InvokeAsync<object>("saveAsFile", "SpoilerLog-" + this.CurrentSeed + ".json", Convert.ToBase64String(files[1]));
 
         this.RandomizerService.DeleteRandomizerSeed(this.CurrentSeed);
+
+        this.isGeneratingSeed = false;
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
 
         var parameters = new ModalParameters();
         var options = new ModalOptions { Class = "modal-custom" };
