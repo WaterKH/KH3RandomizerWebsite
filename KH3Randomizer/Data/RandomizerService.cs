@@ -216,8 +216,7 @@ namespace KH3Randomizer.Data
                                                    ref Dictionary<string, Dictionary<string, bool>> availableOptions,
                                                    DataTableEnum dataTableEnum, string category, string subCategory, string itemToChange)
         {
-            var hash = "ChangeOption".StringToSeed();
-            var rng = new Random((int)hash);
+            var rng = new Random();
 
             var option = new Option();
 
