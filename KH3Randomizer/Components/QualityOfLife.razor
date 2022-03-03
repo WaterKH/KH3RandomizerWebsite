@@ -10,6 +10,8 @@
         <div class="row">
             @foreach (var (category, subOptions) in qolOptions)
             {
+                <hr />
+
                 <div class="col-md-12">
                     <h3>@category</h3>
 
@@ -39,11 +41,6 @@
                         }
                     </div>
                 </div>
-
-                if (category == "Bosses" || category == "Events")
-                {
-                    <hr />
-                }
             }
         </div>
     </div>
@@ -64,19 +61,26 @@
 
     private Dictionary<string, Dictionary<string, bool>> qolOptions = new Dictionary<string, Dictionary<string, bool>>();
 
-    private Dictionary<string, string> qolOptionDescriptions = new Dictionary<string, string> {
-        { "Faster Raging Vulture", "Sets the Raging Vulture's health to a lower amount to make the fight faster." },
+    private Dictionary<string, string> qolOptionDescriptions = new Dictionary<string, string> { 
         { "Easier Mini-UFO", "Disables the ability for the UFO to teleport and zip around the area. Also, sets the amount of hits needed to 20 instead of 40." },
+        { "Faster Raging Vulture", "Sets the Raging Vulture's health to a lower amount to make the fight faster." },
+        { "Dark Baymax Phase 1 Skip", "Skips the on-rails portion of the Dark Baymax Boss fight." },
         { "Faster Lich Sequence", "Skips the in-between fights against the Lich. Only the first and last battle are required." },
 
+        { "Frozen Chase Skip", "Skips the Frozen Slider Minigame, since this is somewhat difficult on Critical." },
+        { "Faster Crab Collection", "Sets the threshold to a lower amount of crabs that needs to be collected in Port Royal." },
+        { "Shugyo Training Skip", "Skips the first flashtracer minigame in San Fransokyo." },
+        { "Big Hero Rescue Skip", "Skips saving the Big Hero 6 members from the Darkubes." },
+        { "Faster Sora Collection", "Sets the threshold from collecting 111, 222 & 333 Soras in The Final World to a smaller amount." },        
+        { "Union χ Skip", "Skips the tornado sequence where you spam triangle in The Keyblade Graveyard." },
+        { "Guardians of Light Skip", "Skips the cutscene fight with all of the Guardians of Light vs the Replica Xehanorts." },
         { "Slow Mickey Skip", "Skips the fight with the Replica Xehanorts and Mickey Mouse." },
-        { "Frozen Slider Skip", "Skips the Frozen Slider Minigame, since this is somewhat difficult on Critical." },
-        { "Faster Sora Collection", "Sets the threshold from collecting 111, 222 & 333 Soras in The Final World to a smaller amount." },
-        { "All Battle Portals Active", "Allows Battle Portals to be available from the start of a world." },
+        { "Faster Remy Cooking", "Skips the fight with the Replica Xehanorts and Mickey Mouse." },
 
         { "All Maps Unlocked", "Gives all of the maps in the game to Sora from the start. (Useful for new players using the Map Mod that shows items and lucky emblems." },
         { "Fully Upgraded Keyblades", "Sets all of the keyblades' levels to max." },
-        { "CK Auto-Highscore", "Set Classic Kingdom highscores when obtained so that on obtaining the last CK game, the reward will be given." }
+        { "CK Auto-Highscore", "Set Classic Kingdom highscores when obtained so that on obtaining the last CK game, the reward will be given." },
+        { "Max Level Leviathan", "Start with your Leviathan boat at the Max Level to give max damage and speed." }
     };
 
     protected override void OnInitialized()
