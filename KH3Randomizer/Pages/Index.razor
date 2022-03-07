@@ -2,28 +2,29 @@
 
 
 @using UE4DataTableInterpreter.Enums
+@using Enums; 
 
 @inject KH3Randomizer.Data.RandomizerService RandomizerService
 
 <div class="randomizer-content">
-    <SectionBar CurrentSection="@this.currentSection"></SectionBar>
+    <SectionBar CurrentSection="@this.currentSection" IsPlando="@this.IsPlando"></SectionBar>
 
     @if (this.currentSection == "Pools")
     {
-        <Pools ContinueTo="@(() => ContinueTo("Options"))" AvailablePools="@this.availablePools"
-               UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))">
+        <Pools ContinueTo="@(() => ContinueTo(this.IsPlando ? "Options" : "QoL"))" AvailablePools="@this.availablePools" IsPlando="@this.IsPlando"
+               UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdatePlando="@(isPlando => UpdatePlandoOption(isPlando))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))">
         </Pools>
     }
-    else if (this.currentSection == "Options")
+    else if (this.currentSection == "Options" && this.IsPlando)
     {
         <Options ContinueTo="@(() => ContinueTo("QoL"))" BackTo="@(() => BackTo("Pools"))"
                  UpdateAvailableOptions="@(options => UpdateAvailableOptions(options))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateModifications="@((option1, option2) => UpdateModifications(option1, option2))"
-                 CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack">
+                 CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePlandoPools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack">
         </Options>
     }
     else if (this.currentSection == "QoL")
     {
-        <QualityOfLife ContinueTo="@(() => ContinueTo("Hints"))" BackTo="@(() => BackTo("Options"))"
+        <QualityOfLife ContinueTo="@(() => ContinueTo("Hints"))" BackTo="@(() => BackTo(this.IsPlando ? "Options" : "Pools"))"
                        UpdateAvailableQoLOptions="@(options => UpdateAvailableQualityOfLifeOptions(options))" AvailableQoLOptions="@this.availableQualityOfLifeOptions">
         </QualityOfLife>
     }
@@ -34,21 +35,41 @@
     else if (this.currentSection == "Review")
     {
         <Review BackTo="@(() => BackTo("Hints"))" CurrentSeed="@this.CurrentSeed" RandomizedOptions="@this.randomizedOptions"
-                AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" Modifications="@this.modifications"
-                AvailableHints="@this.availableHints" HintSelectionType="@this.hintSelectionType"></Review>
+                AvailablePools="@this.availablePools" Modifications="@this.modifications"
+                AvailableHints="@this.availableHints" HintSelectionType="@this.hintSelectionType"
+                AvailableQualityOfLifeSettings="@this.availableQualityOfLifeOptions"></Review>
     }
 </div>
 
 
 @code {
     public string CurrentSeed { get; set; }
+    public bool IsPlando { get; set; } = false;
 
-    private Dictionary<string, bool> availablePools = new Dictionary<string, bool> {
+    private Dictionary<string, bool> availablePlandoPools = new Dictionary<string, bool> {
         { "Treasures", true }, { "Events", true }, { "Starting Stats", true }, { "Lucky Emblems", false }, { "Bonuses", true },
         { "Fullcourse Abilities", true }, { "Level Ups", true }, { "Weapon Upgrades", true }, {"Equippables", true },
         { "Synthesis Items", true },
 
         { "Bosses", false }, { "Enemies", false }, { "General Stats", false }
+    };
+
+    private Dictionary<string, RandomizeOptionEnum> availablePools = new Dictionary<string, RandomizeOptionEnum>
+    {
+        // World Categories - Custom Categories that contain Treasures, Events & Bonuses
+        { "Olympus", RandomizeOptionEnum.Randomize }, { "Twilight Town", RandomizeOptionEnum.Randomize }, { "Toy Box", RandomizeOptionEnum.Randomize },
+        { "Kingdom of Corona", RandomizeOptionEnum.Randomize }, { "Monstropolis", RandomizeOptionEnum.Randomize }, { "100 Acre Wood", RandomizeOptionEnum.Randomize },
+        { "Arendelle", RandomizeOptionEnum.Randomize }, { "San Fransokyo", RandomizeOptionEnum.Randomize }, { "The Caribbean", RandomizeOptionEnum.Randomize },
+        { "Keyblade Graveyard", RandomizeOptionEnum.Randomize }, { "Re:Mind", RandomizeOptionEnum.Randomize }, { "Dark World", RandomizeOptionEnum.Randomize },
+        { "Unreality", RandomizeOptionEnum.Randomize },
+
+        // Miscellaneous Categories
+        { "Sora", RandomizeOptionEnum.Randomize }, { "Equipment Abilities", RandomizeOptionEnum.Replace }, { "Data Battle Rewards", RandomizeOptionEnum.Replace },
+        { "Moogle Workshop", RandomizeOptionEnum.Randomize }, { "Fullcourse Abilities", RandomizeOptionEnum.Vanilla }, { "Lucky Emblems", RandomizeOptionEnum.Randomize }, 
+        { "Flantastic Flans", RandomizeOptionEnum.Replace }, { "Minigames", RandomizeOptionEnum.Replace }, { "Battle Portals", RandomizeOptionEnum.Replace },
+
+        // Always On - Proofs, Oathkeeper, Oblivion, Meow Wow, Gummiphone
+        { "Always On", RandomizeOptionEnum.Replace } 
     };
 
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
@@ -58,8 +79,7 @@
     private List<Tuple<Option, Option>> modifications = new();
 
     private string hintSelectionType = "Verbose";
-    private Dictionary<string, Dictionary<string, bool>> availableHints = new Dictionary<string, Dictionary<string, bool>>
-{
+    private Dictionary<string, Dictionary<string, bool>> availableHints = new Dictionary<string, Dictionary<string, bool>> {
         { "Proofs", new Dictionary<string, bool>
         { { "Proof of Promises", true }, { "Proof of Times Past", true }, { "Proof of Fantasy", true } }
         },
@@ -92,8 +112,7 @@
         },
     };
 
-    private Dictionary<string, Dictionary<string, bool>> availableQualityOfLifeOptions = new Dictionary<string, Dictionary<string, bool>>
-    {
+    private Dictionary<string, Dictionary<string, bool>> availableQualityOfLifeOptions = new Dictionary<string, Dictionary<string, bool>> {
         { "Bosses", new Dictionary<string, bool>
         { { "Easier Mini-UFO", true }, { "Faster Raging Vulture", true }, { "Dark Baymax Phase 1 Skip", true }, { "Faster Lich Sequence", false } }
         },
@@ -114,11 +133,6 @@
     {
         this.currentSection = section;
         this.isGoingBack = false;
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
     }
 
     public void BackTo(string section)
@@ -142,51 +156,26 @@
 
             this.modifications = new();
         }
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
     }
 
     public void UpdateCurrentSeed(string currentSeed)
     {
         this.CurrentSeed = currentSeed;
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
     }
 
-    public void UpdateAvailablePools(Dictionary<string, bool> availablePools)
+    public void UpdateAvailablePools(Dictionary<string, RandomizeOptionEnum> availablePools)
     {
         this.availablePools = availablePools;
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
     }
 
     public void UpdateAvailableOptions(Dictionary<string, Dictionary<string, bool>> availableOptions)
     {
         this.availableOptions = availableOptions;
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
     }
 
     public void UpdateRandomizedOptions(Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions)
     {
         this.randomizedOptions = randomizedOptions;
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
     }
 
     public void UpdateModifications(Option initalOption, Option swapOption)
@@ -195,41 +184,25 @@
             this.modifications = new();
         else
             this.modifications.Add(new Tuple<Option, Option>(initalOption, swapOption));
-
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
     }
 
     public void UpdateHintSelection(string selection)
     {
         this.hintSelectionType = selection;
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
     }
 
     public void UpdateAvailableHints(Dictionary<string, Dictionary<string, bool>> availableHints)
     {
         this.availableHints = availableHints;
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
     }
 
     public void UpdateAvailableQualityOfLifeOptions(Dictionary<string, Dictionary<string, bool>> availableQualityOfLifeOptions)
     {
         this.availableQualityOfLifeOptions = availableQualityOfLifeOptions;
+    }
 
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
+    public void UpdatePlandoOption(bool isPlando)
+    {
+        this.IsPlando = isPlando;
     }
 }

@@ -6,11 +6,19 @@ using System.IO;
 using System.Text.Json;
 using System.Linq;
 using System.IO.Compression;
+using KH3Randomizer.Enums;
 
 namespace KH3Randomizer.Data
 {
     public class RandomizerService
     {
+        // TODO Find out if this is even used now that we've switched to this new system
+        public readonly List<DataTableEnum> FirstPassCategories = new() { DataTableEnum.ChrInit, DataTableEnum.EquipItem, DataTableEnum.VBonus, DataTableEnum.WeaponEnhance, DataTableEnum.Event };
+
+        // Any Ability, Bonus, Armor, Accessory, Map, Weapon, Key Item, Report, CK or Boost Item
+        public readonly List<string> ImportantChecks = new() { "AbilityKind", "VictoryBonusKind", "PRT", "ACC", "MAP", "WEP", "KEY", "REPORT", "LSI", "UP" };
+
+
         public Dictionary<string, Dictionary<string, bool>> GetAvailableOptions(Dictionary<string, bool> availablePools, ref Dictionary<string, Dictionary<string, bool>> availableOptions, 
                                                                                 ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, bool backTo = false)
         {
@@ -138,6 +146,33 @@ namespace KH3Randomizer.Data
                         randomizedOptions.Add(DataTableEnum.SynthesisItem, defaultOptions[DataTableEnum.SynthesisItem]);
 
                         break;
+                    default:
+                        break;
+                }
+            }
+
+            return availableOptions;
+        }
+
+        public Dictionary<string, Dictionary<string, bool>> GetAvailableOptions(Dictionary<string, RandomizeOptionEnum> availablePools, ref Dictionary<string, Dictionary<string, bool>> availableOptions,
+                                                                                ref Dictionary<string, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> randomizedOptions, bool backTo = false)
+        {
+            if (backTo)
+                return availableOptions;
+
+            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot/DefaultKH3.json"));
+            var defaultOptions = JsonSerializer.Deserialize<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(streamReader.ReadToEnd());
+
+            availableOptions = new();
+            randomizedOptions = new();
+
+            foreach (var pool in availablePools)
+            {
+                if (pool.Value != RandomizeOptionEnum.Randomize)
+                    continue;
+
+                switch (pool.Key)
+                {
                     default:
                         break;
                 }
@@ -726,13 +761,992 @@ namespace KH3Randomizer.Data
             }
         }
 
+        public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> Process(string seed, Dictionary<string, RandomizeOptionEnum> pools, bool canUseNone = true)
+        {
+            var randomizedOptions = new Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>();
+
+            // Read in Default KH3 Options
+            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot/DefaultKH3.json"));
+            var defaultOptions = JsonSerializer.Deserialize<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(streamReader.ReadToEnd());
+
+            if (string.IsNullOrEmpty(seed))
+                return defaultOptions;
+
+            var hash = seed.StringToSeed();
+            var random = new Random((int)hash);
+
+            var randomizePools = pools.Where(x => x.Value == RandomizeOptionEnum.Randomize).ToDictionary(x => x.Key, y => y.Value);
+            var replacePools = pools.Where(x => x.Value == RandomizeOptionEnum.Replace).ToDictionary(x => x.Key, y => y.Value);
+
+            var copiedOptions = this.CopyOptions(defaultOptions, randomizePools);
+
+            // Move important items from the replace pools to the randomize pools
+            this.ReplaceOptions(replacePools, randomizePools, ref defaultOptions, random, canUseNone);
+
+            // Randomize all checks within the randomize pools
+            this.RandomizeOptions(randomizePools, defaultOptions, ref randomizedOptions, ref copiedOptions, random, canUseNone);
+
+            // Add some clean-up after the randomization
+            this.CleanUpOptions(ref randomizedOptions, ref copiedOptions, defaultOptions, random, canUseNone);
+
+            return randomizedOptions;
+        }
+
+        public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> ProcessExceptions(string seed, Dictionary<string, bool> excxeptions, bool canUseNone = true)
+        {
+            var randomizedOptions = new Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>();
+            
+            var hash = seed.StringToSeed();
+            var random = new Random((int)hash);
+
+            // TODO Add some more logic on top of this (Probably move this to a different function and send in the randomized options)
+
+            return randomizedOptions;
+        }
+
+        public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> GetOptionsForPool(string pool, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> defaultOptions)
+        {
+            var options = new Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>();
+
+            List<string> events;
+            List<string> vbonuses;
+
+            switch (pool)
+            {
+                case "Olympus":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureHE, defaultOptions[DataTableEnum.TreasureHE]);
+
+                    // Events
+                    events = new List<string> { "EVENT_01", "EVENT_02", "EVENT_03", "EVENT_04", "EVENT_05", "EVENT_06", "EVENT_07", "EVENT_KEYBLADE_001" };
+                    var olympusEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, olympusEvents);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_001", "Vbonus_002", "Vbonus_005", "Vbonus_006", "Vbonus_007", "Vbonus_008", "Vbonus_009", "Vbonus_010", "Vbonus_011", "Vbonus_013", "Vbonus_082" };
+                    var olympusVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, olympusVbonuses);
+
+                    break;
+                case "Twilight Town":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureTT, defaultOptions[DataTableEnum.TreasureTT]);
+
+                    // Events
+                    events = new List<string> { "EVENT_KEYBLADE_002", "EVENT_KEYBLADE_010", "EVENT_CKGAME_001" };
+                    var twilightTownEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, twilightTownEvents);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_014", "Vbonus_015", "Vbonus_016" };
+                    var twilightTownVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, twilightTownVbonuses);
+
+                    break;
+                case "Toy Box":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureTS, defaultOptions[DataTableEnum.TreasureTS]);
+
+                    // Events
+                    events = new List<string> { "EVENT_KEYBLADE_003", "EVENT_HEARTBINDER_002" };
+                    var toyBoxEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, toyBoxEvents);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_017", "Vbonus_018", "Vbonus_019", "Vbonus_020", "Vbonus_021", "Vbonus_022", "Vbonus_023" };
+                    var toyBoxVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, toyBoxVbonuses);
+
+                    break;
+                case "Kingdom of Corona":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureRA, defaultOptions[DataTableEnum.TreasureRA]);
+
+                    // Events
+                    events = new List<string> { "EVENT_KEYBLADE_004" };
+                    var kingdomOfCoronaEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, kingdomOfCoronaEvents);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_024", "Vbonus_025", "Vbonus_026", "Vbonus_027", "Vbonus_028", "Vbonus_029", "Vbonus_030" };
+                    var kingdomOfCoronaVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, kingdomOfCoronaVbonuses);
+
+                    break;
+                case "Monstropolis":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureMI, defaultOptions[DataTableEnum.TreasureMI]);
+
+                    // Events
+                    events = new List<string> { "EVENT_008", "EVENT_KEYBLADE_005", "EVENT_HEARTBINDER_003" };
+                    var monstropolisEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, monstropolisEvents);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_032", "Vbonus_033", "Vbonus_034", "Vbonus_035", "Vbonus_036", "Vbonus_037", "Vbonus_038", "Vbonus_039", "Vbonus_040" };
+                    var monstropolisVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, monstropolisVbonuses);
+
+                    break;
+                case "100 Acre Wood":
+                    // Events
+                    events = new List<string> { "EVENT_KEYBLADE_006" };
+                    var poohEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, poohEvents);
+
+                    break;
+                case "Arendelle":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureFZ, defaultOptions[DataTableEnum.TreasureFZ]);
+
+                    // Events
+                    events = new List<string> { "EVENT_KEYBLADE_007" };
+                    var arendelleEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, arendelleEvents);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_041", "Vbonus_042", "Vbonus_043", "Vbonus_044", "Vbonus_045", "Vbonus_047", "Vbonus_048", "Vbonus_049", "Vbonus_050" };
+                    var arendelleVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, arendelleVbonuses);
+
+                    break;
+                case "San Fransokyo":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureBX, defaultOptions[DataTableEnum.TreasureBX]);
+
+                    // Events
+                    events = new List<string> { "EVENT_009", "EVENT_KEYBLADE_009", "EVENT_HEARTBINDER_004", "EVENT_KEYITEM_002" };
+                    var sanFransokyoEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, sanFransokyoEvents);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_051", "Vbonus_052", "Vbonus_053", "Vbonus_054", "Vbonus_055", "Vbonus_056", "Vbonus_057" };
+                    var sanFransokyoVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, sanFransokyoVbonuses);
+
+                    break;
+                case "The Caribbean":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureCA, defaultOptions[DataTableEnum.TreasureCA]);
+
+                    // Events
+                    events = new List<string> { "EVENT_KEYBLADE_008" };
+                    var caribbeanEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, caribbeanEvents);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_058", "Vbonus_059", "Vbonus_060", "Vbonus_061", "Vbonus_062", "Vbonus_063", "Vbonus_065", "Vbonus_066" };
+                    var caribbeanVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, caribbeanVbonuses);
+
+                    break;
+                case "Keyblade Graveyard":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureKG, defaultOptions[DataTableEnum.TreasureKG]);
+
+                    // Events
+                    events = new List<string> { "EVENT_KEYBLADE_011" };
+                    var kgEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, kgEvents);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_068", "Vbonus_069", "Vbonus_070", "Vbonus_071", "Vbonus_072", "Vbonus_073", "Vbonus_074", "Vbonus_075", "Vbonus_076", "Vbonus_083", "Vbonus_084" };
+                    var kgVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, kgVbonuses);
+
+                    break;
+                case "Re:Mind":
+                    // Treasures
+                    options.Add(DataTableEnum.TreasureBT, defaultOptions[DataTableEnum.TreasureBT]);
+
+                    // VBonuses
+                    vbonuses = new List<string> { "VBonus_DLC_001", "VBonus_DLC_002", "VBonus_DLC_003", "VBonus_DLC_004", "VBonus_DLC_005", "VBonus_DLC_006", "VBonus_DLC_007", "VBonus_DLC_008",
+                                                  "VBonus_DLC_009", "VBonus_DLC_010", "VBonus_DLC_011", "VBonus_DLC_012", "VBonus_DLC_013", "VBonus_DLC_014", "VBonus_DLC_015" };
+                    var remindVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, remindVbonuses);
+
+                    break;
+                case "Dark World":
+                    // VBonuses
+                    vbonuses = new List<string> { "Vbonus_067" };
+                    var darkWorldVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, darkWorldVbonuses);
+
+                    break;
+                case "Unreality":
+                    // Events
+                    events = new List<string> { "EVENT_KEYITEM_005", "EVENT_YOZORA_001" };
+                    var unrealityEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, unrealityEvents);
+
+                    break;
+
+                case "Sora":
+                    // Level Ups
+                    options.Add(DataTableEnum.LevelUp, defaultOptions[DataTableEnum.LevelUp]);
+
+                    // Starting Weapon + Abilities
+                    options.Add(DataTableEnum.ChrInit, defaultOptions[DataTableEnum.ChrInit]);
+
+                    break;
+                case "Equipment Abilities":
+                    options.Add(DataTableEnum.EquipItem, defaultOptions[DataTableEnum.EquipItem]);
+
+                    break;
+                case "Data Battle Rewards":
+                    // Events
+                    events = new List<string> { "EVENT_DATAB_001", "EVENT_DATAB_002", "EVENT_DATAB_003", "EVENT_DATAB_004", "EVENT_DATAB_005", "EVENT_DATAB_006", "EVENT_DATAB_007",
+                                                "EVENT_DATAB_008", "EVENT_DATAB_009", "EVENT_DATAB_010", "EVENT_DATAB_011", "EVENT_DATAB_012", "EVENT_DATAB_013" };
+                    var dataBattleEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, dataBattleEvents);
+
+                    break;
+                case "Moogle Workshop":
+                    // Synthesis Items + Photos
+                    options.Add(DataTableEnum.SynthesisItem, defaultOptions[DataTableEnum.SynthesisItem]);
+
+                    // Weapon Upgrades
+                    options.Add(DataTableEnum.WeaponEnhance, defaultOptions[DataTableEnum.WeaponEnhance]);
+
+                    break;
+                case "Fullcourse Abilities":
+                    options.Add(DataTableEnum.FullcourseAbility, defaultOptions[DataTableEnum.FullcourseAbility]);
+
+                    break;
+                case "Lucky Emblems":
+                    options.Add(DataTableEnum.LuckyMark, defaultOptions[DataTableEnum.LuckyMark]);
+
+                    break;
+                case "Flantastic Flans":
+                    // Events
+                    vbonuses = new List<string> { "VBonus_Minigame007", "VBonus_Minigame008", "VBonus_Minigame009", "VBonus_Minigame010", "VBonus_Minigame011", "VBonus_Minigame012", "VBonus_Minigame013" };
+                    var flanVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, flanVbonuses);
+
+                    break;
+                case "Minigames":
+                    // Events
+                    vbonuses = new List<string> { "VBonus_Minigame001", "VBonus_Minigame002", "VBonus_Minigame003", "VBonus_Minigame004", "VBonus_Minigame005", "VBonus_Minigame006" };
+                    var minigameVbonuses = defaultOptions[DataTableEnum.VBonus].Where(x => vbonuses.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.VBonus, minigameVbonuses);
+
+                    break;
+                case "Battle Portals":
+                    // Events
+                    events = new List<string> { "EVENT_REPORT_001a", "EVENT_REPORT_001b", "EVENT_REPORT_002a", "EVENT_REPORT_002b", "EVENT_REPORT_003a", "EVENT_REPORT_003b", "EVENT_REPORT_004a", "EVENT_REPORT_004b",
+                                                "EVENT_REPORT_005a", "EVENT_REPORT_005b", "EVENT_REPORT_006a", "EVENT_REPORT_006b", "EVENT_REPORT_007a", "EVENT_REPORT_007b", "EVENT_REPORT_008a", "EVENT_REPORT_008b",
+                                                "EVENT_REPORT_009a", "EVENT_REPORT_009b", "EVENT_REPORT_010a", "EVENT_REPORT_010b", "EVENT_REPORT_011a", "EVENT_REPORT_011b", "EVENT_REPORT_012a", "EVENT_REPORT_012b",
+                                                "EVENT_REPORT_013a", "EVENT_REPORT_013b", "EVENT_REPORT_014" };
+                    var portalsEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, portalsEvents);
+
+                    break;
+
+                case "Always On":
+                    // Events
+                    events = new List<string> { "EVENT_KEYBLADE_012", "EVENT_KEYBLADE_013", "EVENT_HEARTBINDER_001", "EVENT_KEYITEM_001", "EVENT_KEYITEM_003", "EVENT_KEYITEM_004" };
+                    var alwaysOnEvents = defaultOptions[DataTableEnum.Event].Where(x => events.Contains(x.Key)).ToDictionary(x => x.Key, y => y.Value);
+
+                    options.Add(DataTableEnum.Event, alwaysOnEvents);
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            return options;
+        }
+
+        public string GetPoolFromOption(DataTableEnum dataTableEnum, string subCategory)
+        {
+            var poolName = "";
+
+            switch (dataTableEnum)
+            {
+                case DataTableEnum.TreasureHE:
+                    poolName = "Olympus";
+                    break;
+                case DataTableEnum.TreasureTT:
+                    poolName = "Twilight Town";
+                    break;
+                case DataTableEnum.TreasureTS:
+                    poolName = "Toy Box";
+                    break;
+                case DataTableEnum.TreasureRA:
+                    poolName = "Kingdom of Corona";
+                    break;
+                case DataTableEnum.TreasureMI:
+                    poolName = "Monstropolis";
+                    break;
+                case DataTableEnum.TreasureFZ:
+                    poolName = "Arendelle";
+                    break;
+                case DataTableEnum.TreasureBX:
+                    poolName = "San Fransokyo";
+                    break;
+                case DataTableEnum.TreasureCA:
+                    poolName = "The Caribbean";
+                    break;
+                case DataTableEnum.TreasureKG:
+                    poolName = "Keyblade Graveyard";
+                    break;
+                case DataTableEnum.TreasureBT:
+                    poolName = "Re:Mind";
+                    break;
+                case DataTableEnum.LevelUp:
+                case DataTableEnum.ChrInit:
+                    poolName = "Sora";
+                    break;
+                case DataTableEnum.EquipItem:
+                    poolName = "Equipment Abilities";
+                    break;
+                case DataTableEnum.SynthesisItem:
+                case DataTableEnum.WeaponEnhance:
+                    poolName = "Moogle Workshop";
+                    break;
+                case DataTableEnum.FullcourseAbility:
+                    poolName = "Fullcourse Abilities";
+                    break;
+                case DataTableEnum.LuckyMark:
+                    poolName = "Lucky Emblems";
+                    break;
+                case DataTableEnum.Event:
+                    switch (subCategory)
+                    {
+                        case "EVENT_01":
+                        case "EVENT_02":
+                        case "EVENT_03":
+                        case "EVENT_04":
+                        case "EVENT_05":
+                        case "EVENT_06":
+                        case "EVENT_07":
+                        case "EVENT_KEYBLADE_001":
+                            poolName = "Olympus";
+                            break;
+                        case "EVENT_KEYBLADE_002":
+                        case "EVENT_KEYBLADE_010":
+                        case "EVENT_CKGAME_001":
+                            poolName = "Twilight Town";
+                            break;
+                        case "EVENT_KEYBLADE_003":
+                        case "EVENT_HEARTBINDER_002":
+                            poolName = "Toy Box";
+                            break;
+                        case "EVENT_KEYBLADE_004":
+                            poolName = "Kingdom of Corona";
+                            break;
+                        case "EVENT_008":
+                        case "EVENT_KEYBLADE_005":
+                        case "EVENT_HEARTBINDER_003":
+                            poolName = "Monstropolis";
+                            break;
+                        case "EVENT_KEYBLADE_006":
+                            poolName = "100 Acre Wood";
+                            break;
+                        case "EVENT_KEYBLADE_007":
+                            poolName = "Arendelle";
+                            break;
+                        case "EVENT_009":
+                        case "EVENT_KEYBLADE_009":
+                        case "EVENT_HEARTBINDER_004":
+                        case "EVENT_KEYITEM_002":
+                            poolName = "San Fransokyo";
+                            break;
+                        case "EVENT_KEYBLADE_008":
+                            poolName = "The Caribbean";
+                            break;
+                        case "EVENT_KEYBLADE_011":
+                            poolName = "Keyblade Graveyard";
+                            break;
+                        case "EVENT_KEYITEM_005":
+                        case "EVENT_YOZORA_001":
+                            poolName = "Unreality";
+                            break;
+                        case "EVENT_DATAB_001":
+                        case "EVENT_DATAB_002":
+                        case "EVENT_DATAB_003":
+                        case "EVENT_DATAB_004":
+                        case "EVENT_DATAB_005":
+                        case "EVENT_DATAB_006":
+                        case "EVENT_DATAB_007":
+                        case "EVENT_DATAB_008":
+                        case "EVENT_DATAB_009":
+                        case "EVENT_DATAB_010":
+                        case "EVENT_DATAB_011":
+                        case "EVENT_DATAB_012":
+                        case "EVENT_DATAB_013":
+                            poolName = "Data Battle Rewards";
+                            break;
+                        case "EVENT_REPORT_001a":
+                        case "EVENT_REPORT_001b":
+                        case "EVENT_REPORT_002a":
+                        case "EVENT_REPORT_002b":
+                        case "EVENT_REPORT_003a":
+                        case "EVENT_REPORT_003b":
+                        case "EVENT_REPORT_004a":
+                        case "EVENT_REPORT_004b":
+                        case "EVENT_REPORT_005a":
+                        case "EVENT_REPORT_005b":
+                        case "EVENT_REPORT_006a":
+                        case "EVENT_REPORT_006b":
+                        case "EVENT_REPORT_007a":
+                        case "EVENT_REPORT_007b":
+                        case "EVENT_REPORT_008a":
+                        case "EVENT_REPORT_008b":
+                        case "EVENT_REPORT_009a":
+                        case "EVENT_REPORT_009b":
+                        case "EVENT_REPORT_010a":
+                        case "EVENT_REPORT_010b":
+                        case "EVENT_REPORT_011a":
+                        case "EVENT_REPORT_011b":
+                        case "EVENT_REPORT_012a":
+                        case "EVENT_REPORT_012b":
+                        case "EVENT_REPORT_013a":
+                        case "EVENT_REPORT_013b":
+                        case "EVENT_REPORT_014":
+                            poolName = "Battle Portals";
+                            break;
+                        case "EVENT_KEYBLADE_012":
+                        case "EVENT_KEYBLADE_013":
+                        case "EVENT_HEARTBINDER_001":
+                        case "EVENT_KEYITEM_001":
+                        case "EVENT_KEYITEM_003":
+                        case "EVENT_KEYITEM_004":
+                            poolName = "Always On";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                case DataTableEnum.VBonus:
+                    switch (subCategory)
+                    {
+                        case "Vbonus_001":
+                        case "Vbonus_002":
+                        case "Vbonus_005":
+                        case "Vbonus_006":
+                        case "Vbonus_007":
+                        case "Vbonus_008":
+                        case "Vbonus_009":
+                        case "Vbonus_010":
+                        case "Vbonus_011":
+                        case "Vbonus_013":
+                        case "Vbonus_082":
+                            poolName = "Olympus";
+                            break;
+                        case "Vbonus_014":
+                        case "Vbonus_015":
+                        case "Vbonus_016":
+                            poolName = "Twilight Town";
+                            break;
+                        case "Vbonus_017":
+                        case "Vbonus_018":
+                        case "Vbonus_019":
+                        case "Vbonus_020":
+                        case "Vbonus_021":
+                        case "Vbonus_022":
+                        case "Vbonus_023":
+                            poolName = "Toy Box";
+                            break;
+                        case "Vbonus_024":
+                        case "Vbonus_025":
+                        case "Vbonus_026":
+                        case "Vbonus_027":
+                        case "Vbonus_028":
+                        case "Vbonus_029":
+                        case "Vbonus_030":
+                            poolName = "Kingdomm of Corona";
+                            break;
+                        case "Vbonus_032":
+                        case "Vbonus_033":
+                        case "Vbonus_034":
+                        case "Vbonus_035":
+                        case "Vbonus_036":
+                        case "Vbonus_037":
+                        case "Vbonus_038":
+                        case "Vbonus_039":
+                        case "Vbonus_040":
+                            poolName = "Monstropolis";
+                            break;
+                        case "Vbonus_041":
+                        case "Vbonus_042":
+                        case "Vbonus_043":
+                        case "Vbonus_044":
+                        case "Vbonus_045":
+                        case "Vbonus_047":
+                        case "Vbonus_048":
+                        case "Vbonus_049":
+                        case "Vbonus_050":
+                            poolName = "Arendelle";
+                            break;
+                        case "Vbonus_051":
+                        case "Vbonus_052":
+                        case "Vbonus_053":
+                        case "Vbonus_054":
+                        case "Vbonus_055":
+                        case "Vbonus_056":
+                        case "Vbonus_057":
+                            poolName = "San Fransokyo";
+                            break;
+                        case "Vbonus_058":
+                        case "Vbonus_059":
+                        case "Vbonus_060":
+                        case "Vbonus_061":
+                        case "Vbonus_062":
+                        case "Vbonus_063":
+                        case "Vbonus_065":
+                        case "Vbonus_066":
+                            poolName = "The Caribbean";
+                            break;
+                        case "Vbonus_068":
+                        case "Vbonus_069":
+                        case "Vbonus_070":
+                        case "Vbonus_071":
+                        case "Vbonus_072":
+                        case "Vbonus_073":
+                        case "Vbonus_074":
+                        case "Vbonus_075":
+                        case "Vbonus_076":
+                        case "Vbonus_083":
+                        case "Vbonus_084":
+                            poolName = "Keyblade Graveyard";
+                            break;
+                        case "VBonus_DLC_001":
+                        case "VBonus_DLC_002":
+                        case "VBonus_DLC_003":
+                        case "VBonus_DLC_004":
+                        case "VBonus_DLC_005":
+                        case "VBonus_DLC_006":
+                        case "VBonus_DLC_007":
+                        case "VBonus_DLC_008":
+                        case "VBonus_DLC_009":
+                        case "VBonus_DLC_010":
+                        case "VBonus_DLC_011":
+                        case "VBonus_DLC_012":
+                        case "VBonus_DLC_013":
+                        case "VBonus_DLC_014":
+                        case "VBonus_DLC_015":
+                            poolName = "Re:Mind";
+                            break;
+                        case "Vbonus_067":
+                            poolName = "Dark World";
+                            break;
+                        case "VBonus_Minigame007":
+                        case "VBonus_Minigame008":
+                        case "VBonus_Minigame009":
+                        case "VBonus_Minigame010":
+                        case "VBonus_Minigame011":
+                        case "VBonus_Minigame012":
+                        case "VBonus_Minigame013":
+                            poolName = "Flantastic Flans";
+                            break;
+                        case "VBonus_Minigame001":
+                        case "VBonus_Minigame002":
+                        case "VBonus_Minigame003":
+                        case "VBonus_Minigame004":
+                        case "VBonus_Minigame005":
+                        case "VBonus_Minigame006":
+                            poolName = "Minigames";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            return poolName;
+        }
+
+        public void ReplaceOptions(Dictionary<string, RandomizeOptionEnum> replacePools, Dictionary<string, RandomizeOptionEnum> randomizePools, ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> defaultOptions, Random random, bool canUseNone)
+        {
+            foreach (var (poolName, randomizeOptionEnum) in replacePools)
+            {
+                var options = this.GetOptionsForPool(poolName, defaultOptions);
+
+                foreach (var (category, subOptions) in options)
+                {
+                    foreach (var (subCategory, subCategoryOptions) in subOptions)
+                    {
+                        foreach (var (name, value) in subCategoryOptions)
+                        {
+                            if (name == "TypeB" || name == "TypeC")
+                                continue;
+
+                            var isImportantCheck = this.VerifyImportantCheck(value);
+
+                            if (!isImportantCheck)
+                                continue;
+
+                            var isRandomImportantCheck = true;
+                            var randomOption = new Option();
+
+                            var categoryNeeded = this.RetrieveCategoryNeeded(category, name);
+
+                            // While we have a random important check, we want to keep looking until we found an unimportant one
+                            while (isRandomImportantCheck)
+                            {
+                                // Use our current randomized options as our base to look from
+                                randomOption = this.RetrieveRandomOption(defaultOptions, random, categoryNeeded, canUseNone);
+
+                                isRandomImportantCheck = this.VerifyImportantCheck(randomOption.Value);
+                            }
+
+                            // Swap these options
+                            var tempValue = value;
+                            defaultOptions[category][subCategory][name] = randomOption.Value;
+                            defaultOptions[randomOption.Category][randomOption.SubCategory][randomOption.Name] = tempValue;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void RandomizeOptions(Dictionary<string, RandomizeOptionEnum> randomizePools, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> defaultOptions, 
+                                     ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> copiedOptions,
+                                     Random random, bool canUseNone)
+        {
+            foreach (var (poolName, randomizeOptionEnum) in randomizePools)
+            {
+                var options = this.GetOptionsForPool(poolName, defaultOptions);
+
+                foreach (var (category, subOptions) in options)
+                {
+                    foreach (var (subCategory, subCategoryOptions) in subOptions)
+                    {
+                        foreach (var (name, value) in subCategoryOptions)
+                        {
+                            if (name == "TypeB" || name == "TypeC")
+                                continue;
+
+                            // Get random option and verify that we can use this option
+                            var categoryNeeded = this.RetrieveCategoryNeeded(category, name);
+
+                            var randomOption = this.RetrieveRandomOption(copiedOptions, random, categoryNeeded, canUseNone);
+
+                            // While we don't have a verified option
+                            while (!randomOption.Found)
+                            {
+                                // Use our current randomized options as our base to look from
+                                var tempRandomOption = this.RetrieveRandomOption(randomizedOptions, random, categoryNeeded, canUseNone);
+
+                                if (tempRandomOption.Found)
+                                {
+                                    randomizedOptions[tempRandomOption.Category][tempRandomOption.SubCategory][tempRandomOption.Name] = value;
+
+                                    randomOption.Value = tempRandomOption.Value;
+                                    break;
+                                }
+                            }
+
+                            if (!randomizedOptions.ContainsKey(category))
+                                randomizedOptions.Add(category, new Dictionary<string, Dictionary<string, string>>());
+
+                            if (!randomizedOptions[category].ContainsKey(subCategory))
+                                randomizedOptions[category].Add(subCategory, new Dictionary<string, string>());
+
+                            // Add to our random options dictionary and remove from our options dictionary
+                            randomizedOptions[category][subCategory].Add(name, randomOption.Value);
+
+                            if (randomOption.Found)
+                                this.RemoveRandomValue(ref copiedOptions, randomOption);
+                        }
+                    }
+                }
+            }
+        }
+
+        public void CleanUpOptions(ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> copiedOptions,
+                                   Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> defaultOptions,  Random random, bool canUseNone)
+        {
+            // Pick up any leftover copied options that weren't used - Usually this means we have canUseNone ticked on
+            // First we want to swap out any NONE ability 
+            foreach (var (category, subOptions) in copiedOptions)
+            {
+                foreach (var (subCategory, subCategoryOptions) in subOptions)
+                {
+                    foreach (var (name, value) in subCategoryOptions)
+                    {
+                        if (name == "TypeB" || name == "TypeC" || value.Contains("NONE"))
+                            continue;
+
+                        var randomOption = this.RetrieveRandomOption(randomizedOptions, random, "None", canUseNone);
+
+                        randomizedOptions[randomOption.Category][randomOption.SubCategory][randomOption.Name] = value;
+                    }
+                }
+            }
+
+            // Distribute TypeB and Type C Level Up Rewards
+            if (randomizedOptions.ContainsKey(DataTableEnum.LevelUp))
+            {
+                for (int i = 2; i <= 50; ++i)
+                {
+                    var levelString = i.ToString();
+                    var levelData = randomizedOptions[DataTableEnum.LevelUp][levelString]["TypeA"];
+
+                    var levels = this.GetLevels(levelString);
+
+                    randomizedOptions[DataTableEnum.LevelUp][levels.Item1]["TypeB"] = levelData;
+                    randomizedOptions[DataTableEnum.LevelUp][levels.Item2]["TypeC"] = levelData;
+                }
+            }
+
+            // Add Keyblade to Sora's Weapon slot
+            if (randomizedOptions.ContainsKey(DataTableEnum.ChrInit))
+            {
+                var weapon = randomizedOptions[DataTableEnum.ChrInit]["m_PlayerSora"]["Weapon"];
+                var randomWeapon = this.RetrieveRandomOption(randomizedOptions, random, "Keyblade", canUseNone);
+
+                randomizedOptions[DataTableEnum.ChrInit]["m_PlayerSora"]["Weapon"] = this.ConvertKeybladeWeaponToDefenseWeaponEnum(randomWeapon.Value);
+                randomizedOptions[randomWeapon.Category][randomWeapon.SubCategory][randomWeapon.Name] = this.ConvertDefenseWeaponEnumToKeybladeWeapon(weapon);
+            }
+
+            // Add rest of default options
+            foreach (var (category, subOptions) in defaultOptions)
+            {
+                foreach (var (subCategory, subCategoryOptions) in subOptions)
+                {
+                    foreach (var (name, value) in subCategoryOptions)
+                    {
+                        if (!randomizedOptions.ContainsKey(category))
+                            randomizedOptions.Add(category, new Dictionary<string, Dictionary<string, string>>());
+
+                        if (!randomizedOptions[category].ContainsKey(subCategory))
+                            randomizedOptions[category].Add(subCategory, new Dictionary<string, string>());
+
+                        if (!randomizedOptions[category][subCategory].ContainsKey(name))
+                        {
+                            randomizedOptions[category][subCategory].Add(name, value);
+
+
+                            if (name == "Weapon" && !value.Contains("ETresItemDefWeapon"))
+                                randomizedOptions[category][subCategory][name] = this.ConvertKeybladeWeaponToDefenseWeaponEnum(value);
+                        }
+                    }
+                }
+            }
+        }
+
+        public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> CopyOptions(Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> defaultOptions, Dictionary<string, RandomizeOptionEnum> pools)
+        {
+            var copiedOptions = new Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>();
+
+            foreach (var (category, subOptions) in defaultOptions)
+            {
+                foreach (var (subCategory, subCategoryOptions) in subOptions)
+                {
+                    var poolName = this.GetPoolFromOption(category, subCategory);
+
+                    if (!pools.ContainsKey(poolName))
+                        continue;
+
+                    foreach (var (name, value) in subCategoryOptions)
+                    {
+                        if (!copiedOptions.ContainsKey(category))
+                            copiedOptions.Add(category, new Dictionary<string, Dictionary<string, string>>());
+                        
+                        if (!copiedOptions[category].ContainsKey(subCategory))
+                            copiedOptions[category].Add(subCategory, new Dictionary<string, string>());
+                        
+                        copiedOptions[category][subCategory].Add(name, value);
+                    }
+                }
+            }
+
+            return copiedOptions;
+        }
+
+        public Option RetrieveRandomOption(Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> options, Random random, string categoryNeeded, bool canUseNone)
+        {
+            var option = new Option();
+            
+            // Only 1000 iterations
+            for (int i = 0; i < 1000; ++i)
+            {
+                option.Category = options.ElementAt(random.Next(0, options.Count)).Key;
+                option.SubCategory = options[option.Category].ElementAt(random.Next(0, options[option.Category].Count)).Key;
+                option.Name = options[option.Category][option.SubCategory].ElementAt(random.Next(0, options[option.Category][option.SubCategory].Count)).Key;
+                option.Value = options[option.Category][option.SubCategory][option.Name];
+
+
+                if (option.SubCategory.Contains("GIVESORA"))
+                    continue;
+                else if (option.Name == "TypeB" || option.Name == "TypeC")
+                    continue;
+                else if (option.Category == DataTableEnum.ChrInit && option.Name == "Weapon")
+                    continue;
+                else if (categoryNeeded == "Ability" && !option.Value.Contains("ETresAbilityKind::"))
+                    continue;
+                else if (categoryNeeded == "Item" && (option.Value.Contains("Ability") || option.Value.Contains("Bonus") || option.Value.Contains("NONE")))
+                    continue;
+                else if (categoryNeeded == "Keyblade" && !option.Value.Contains("KEYBLADE"))
+                    continue;
+                else if (categoryNeeded == "None" && !option.Value.Contains("VictoryBonusKind::NONE"))
+                    continue;
+
+                
+                option.Found = true;
+                break;
+            }
+
+            return option;
+        }
+
+        public void RemoveRandomValue(ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> options, Option option)
+        {
+            options[option.Category][option.SubCategory].Remove(option.Name);
+
+            if (options[option.Category][option.SubCategory].Count == 0)
+                options[option.Category].Remove(option.SubCategory);
+
+            if (options[option.Category].Count == 0)
+                options.Remove(option.Category);
+        }
+
+        public string RetrieveCategoryNeeded(DataTableEnum category, string name)
+        {
+            var categoryNeeded = "";
+
+            switch (category)
+            {
+                case DataTableEnum.ChrInit:
+                    categoryNeeded = (name == "Weapon") ? "Item" : "Ability";
+                    break;
+                case DataTableEnum.EquipItem:
+                case DataTableEnum.FullcourseAbility:
+                case DataTableEnum.WeaponEnhance:
+                    categoryNeeded = "Ability";
+                    break;
+                case DataTableEnum.SynthesisItem:
+                    categoryNeeded = "Item";
+                    break;
+                default:
+                    break;
+            }
+
+            return categoryNeeded;
+        }
+
+        public bool VerifyImportantCheck(string value)
+        {
+            var isAllowed = false;
+
+            foreach (var importantCheck in this.ImportantChecks)
+            {
+                if (value.Contains(importantCheck) && !value.Contains("NONE"))
+                {
+                    isAllowed = true;
+                    break;
+                }
+            }
+
+            return isAllowed;
+        }
+
+        public byte[] CreateZipArchive(Dictionary<string, List<byte>> dataTables, string randomSeed, Dictionary<string, RandomizeOptionEnum> availablePools, List<Tuple<Option, Option>> modifications, byte[] hints)
+        {
+            var zipPath = @$"./Seeds/pakchunk99-randomizer-{randomSeed}/pakchunk99-randomizer-{randomSeed}.zip";
+
+            if (Directory.Exists(@$"./Seeds/pakchunk99-randomizer-{randomSeed}"))
+                Directory.Delete(@$"./Seeds/pakchunk99-randomizer-{randomSeed}", true);
+
+            // Create the ZIP Archive
+            Directory.CreateDirectory(@$"./Seeds/pakchunk99-randomizer-{randomSeed}");
+
+            if (File.Exists(zipPath))
+                File.Delete(zipPath);
+
+            using (var zipFile = new FileStream(zipPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.ReadWrite))
+            {
+                using var archive = new ZipArchive(zipFile, ZipArchiveMode.Update);
+
+                // Create the SpoilerLog file
+                var spoilerEntry = archive.CreateEntry("SpoilerLog.json");
+                using var spoilerWriter = new StreamWriter(spoilerEntry.Open());
+
+                var jsonTupleList = new List<Tuple<Tuple<int, string, string, string>, Tuple<int, string, string, string>>>();
+                foreach (var (initial, swap) in modifications)
+                {
+                    jsonTupleList.Add(new(new Tuple<int, string, string, string>((int)initial.Category, initial.SubCategory, initial.Name, initial.Value),
+                                           new Tuple<int, string, string, string>((int)swap.Category, swap.SubCategory, swap.Name, swap.Value)));
+                }
+
+                var spoilerLogFile = new SpoilerLogFile
+                {
+                    SeedName = randomSeed,
+                    AvailablePools = availablePools,
+                    Modifications = jsonTupleList
+                };
+
+                var jsonSpoiler = JsonSerializer.Serialize(spoilerLogFile);
+
+                spoilerWriter.WriteLine(jsonSpoiler);
+
+
+                // Create Hints
+                var hintEntry = archive.CreateEntry(@"KINGDOM HEARTS III/Content/Localization/Game/en/kh3_mobile.locres");
+                using var hintStream = new MemoryStream(hints);
+                using var hintEntryStream = hintEntry.Open();
+
+                hintStream.CopyTo(hintEntryStream);
+
+
+                // Create the entry from the file path/ name, open the data in a memory stream and copy it to the entry
+                foreach (var (filePathAndName, data) in dataTables)
+                {
+                    var dataTableEntry = archive.CreateEntry(filePathAndName);
+                    using var memoryStream = new MemoryStream(data.ToArray());
+                    using var stream = dataTableEntry.Open();
+
+                    memoryStream.CopyTo(stream);
+                }
+            }
+
+            return this.GetFile(zipPath);
+        }
+
         public byte[] GenerateRandomizerSeed(string currentSeed, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions,
-                                             Dictionary<string, bool> availablePools, Dictionary<string, Dictionary<string, bool>> availableOptions, List<Tuple<Option, Option>> modifications, byte[] hints)
+                                             Dictionary<string, RandomizeOptionEnum> availablePools, List<Tuple<Option, Option>> modifications, byte[] hintBytes, 
+                                             Dictionary<string, List<string>> hintValues, Dictionary<string, bool> qolValues)
         {
             var dataTableManager = new UE4DataTableInterpreter.DataTableManager();
             var dataTables = dataTableManager.RandomizeDataTables(randomizedOptions);
+            var hintDataTable = dataTableManager.GenerateHintDataTable(hintValues);
+            var qolDataTable = dataTableManager.GenerateQualityOfLifeDataTable(qolValues);
 
-            var zipArchive = this.CreateZipArchive(dataTables, currentSeed, availablePools, availableOptions, modifications, hints);
+            var zipArchive = this.CreateZipArchive(currentSeed, dataTables, availablePools, modifications, hintBytes, hintDataTable, qolDataTable);
 
             return zipArchive;
 
@@ -755,7 +1769,9 @@ namespace KH3Randomizer.Data
             //return new List<byte[]> { this.GetFile(@$".\Seeds\pakchunk99-randomizer-{currentSeed}.pak"), this.GetFile(@$"{pakPath}\SpoilerLog.json") };
         }
 
-        public byte[] CreateZipArchive(Dictionary<string, List<byte>> dataTables, string randomSeed, Dictionary<string, bool> availablePools, Dictionary<string, Dictionary<string, bool>> availableOptions, List<Tuple<Option, Option>> modifications, byte[] hints)
+        public byte[] CreateZipArchive(string randomSeed, Dictionary<string, List<byte>> dataTables,
+                                       Dictionary<string, RandomizeOptionEnum> availablePools, List<Tuple<Option, Option>> modifications, byte[] hints, 
+                                       Dictionary<string, List<byte>> hintDataTable, Dictionary<string, List<byte>> qolDataTable)
         {
             var zipPath = @$"./Seeds/pakchunk99-randomizer-{randomSeed}/pakchunk99-randomizer-{randomSeed}.zip";
 
@@ -787,8 +1803,8 @@ namespace KH3Randomizer.Data
                 {
                     SeedName = randomSeed,
                     AvailablePools = availablePools,
-                    AvailableOptions = availableOptions,
-                    Modifications = jsonTupleList
+                    // AvailableOptions = availableOptions,
+                    Modifications = jsonTupleList,
                 };
 
                 var jsonSpoiler = JsonSerializer.Serialize(spoilerLogFile);
@@ -803,6 +1819,26 @@ namespace KH3Randomizer.Data
                 
                 hintStream.CopyTo(hintEntryStream);
 
+                foreach (var (filePathAndName, data) in hintDataTable)
+                {
+                    var dataTableEntry = archive.CreateEntry(filePathAndName);
+                    using var memoryStream = new MemoryStream(data.ToArray());
+                    using var stream = dataTableEntry.Open();
+
+                    memoryStream.CopyTo(stream);
+                }
+
+
+                // Create QoL
+                foreach (var (filePathAndName, data) in qolDataTable)
+                {
+                    var dataTableEntry = archive.CreateEntry(filePathAndName);
+                    using var memoryStream = new MemoryStream(data.ToArray());
+                    using var stream = dataTableEntry.Open();
+
+                    memoryStream.CopyTo(stream);
+                }
+
 
                 // Create the entry from the file path/ name, open the data in a memory stream and copy it to the entry
                 foreach (var (filePathAndName, data) in dataTables)
@@ -813,6 +1849,7 @@ namespace KH3Randomizer.Data
 
                     memoryStream.CopyTo(stream);
                 }
+
             }
 
             return this.GetFile(zipPath);
@@ -836,6 +1873,61 @@ namespace KH3Randomizer.Data
 
 
         #region Helper Methods
+
+        public Dictionary<string, RandomizeOptionEnum> GetPools(Dictionary<string, RandomizeOptionEnum> pools, string category)
+        {
+            Dictionary<string, RandomizeOptionEnum> tempPools = new Dictionary<string, RandomizeOptionEnum>();
+
+            if (category == "World")
+            {
+                tempPools = pools.Where(x => x.Key == "Olympus" || x.Key == "Twilight Town" || x.Key == "Toy Box" || x.Key == "Kingdom of Corona" ||
+                                        x.Key == "Monstropolis" || x.Key == "Arendelle" || x.Key == "The Caribbean" || x.Key == "San Fransokyo" ||
+                                        x.Key == "100 Acre Wood" || x.Key == "Keyblade Graveyard" || x.Key == "Re:Mind" || x.Key == "Dark World" ||
+                                        x.Key == "Unreality")
+                                .ToDictionary(x => x.Key, y => y.Value);
+            }
+            else if (category == "Miscellaneous")
+            {
+                tempPools = pools.Where(x => x.Key == "Sora" || x.Key == "Equipment Abilities" || x.Key == "Data Battle Rewards" || x.Key == "Weapon Upgrades" ||
+                                        x.Key == "Moogle Workshop" || x.Key == "Fullcourse Abilities" || x.Key == "Lucky Emblems" || x.Key == "Flantastic Flans" || 
+                                        x.Key == "Minigames" || x.Key == "Battle Portals" || x.Key == "Always On")
+                                .ToDictionary(x => x.Key, y => y.Value);
+            }
+
+            return tempPools;
+        }
+
+        public Tuple<string, string> GetLevels(string subCategory)
+        {
+            return subCategory switch
+            {
+                "2"  => new Tuple<string, string>("44", "50"),
+                "4"  => new Tuple<string, string>("6",  "26"),
+                "6"  => new Tuple<string, string>("2",  "2"),
+                "9"  => new Tuple<string, string>("14", "36"),
+                "12" => new Tuple<string, string>("18", "6"),
+                "14" => new Tuple<string, string>("28", "4"),
+                "16" => new Tuple<string, string>("4",  "14"),
+                "18" => new Tuple<string, string>("30", "12"),
+                "20" => new Tuple<string, string>("42", "40"),
+                "24" => new Tuple<string, string>("40", "9"),
+                "26" => new Tuple<string, string>("46", "28"),
+                "28" => new Tuple<string, string>("26", "18"),
+                "30" => new Tuple<string, string>("9",  "48"),
+                "32" => new Tuple<string, string>("50", "16"),
+                "34" => new Tuple<string, string>("34", "32"),
+                "36" => new Tuple<string, string>("36", "20"),
+                "38" => new Tuple<string, string>("38", "30"),
+                "40" => new Tuple<string, string>("16", "34"),
+                "42" => new Tuple<string, string>("48", "24"),
+                "44" => new Tuple<string, string>("12", "42"),
+                "46" => new Tuple<string, string>("20", "44"),
+                "48" => new Tuple<string, string>("32", "38"),
+                "50" => new Tuple<string, string>("24", "46"),
+                "3" or "5" or "7" or "8" or "10" or "11" or "13" or "15" or "17" or "19" or "21" or "22" or "23" or "25" or "27" or "29" or "31" or "33" or "35" or "37" or "39" or "41" or "43" or "45" or "47" or "49" => new Tuple<string, string>(subCategory, subCategory),
+                _    => new Tuple<string, string>("", ""),
+            };
+        }
 
         public bool IsPoleSpinDisallowed(DataTableEnum category, string subCategory)
         {

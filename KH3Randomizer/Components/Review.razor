@@ -1,4 +1,5 @@
 ﻿@using UE4DataTableInterpreter.Enums
+@using Enums;
 
 @inject RandomizerService RandomizerService
 @inject HintService HintService
@@ -18,34 +19,30 @@
 
         <div class="review-sub-subsection">
             <div class="review-header">
-                <h3 for="options" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #c9aeff;"></span><b>Pools & Options: </b></h3>
+                <h3 for="options" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #c9aeff;"></span><b>Pools: </b></h3>
             </div>
             <div class="review-content" style="max-height: 600px; overflow-y: auto;">
-                @foreach (var option in options)
+                @foreach (var pool in this.AvailablePools.Where(x => x.Value == RandomizeOptionEnum.Randomize))
                 {
-                    <div style="display: inline-flex; width: 100%">
-                        <label id="@option.Key" name="@option.Key" style="min-width: fit-content; max-width: fit-content; margin-top: 10px;"><span class="pools-options-color" style="@poolColors[option.Key]"></span><b>@(option.Key):</b></label>
+                        <span class="sub-option-bubble" style="@poolColors[pool.Key]">@pool.Key</span>
+                        @*<label id="@pool.Key" name="@pool.Key" style="min-width: fit-content; max-width: fit-content; margin-top: 10px;"><span class="pools-options-color" style="@poolColors[pool.Key]"></span><b>@(pool.Key):</b></label>
 
                         <div id="@(option.Key)_subOptions" style="display: inline;">
                             @foreach (var subOption in option.Value.Split(", "))
                             {
                                 <span class="sub-option-bubble" style="@optionColors[option.Key]">@subOption</span>
                             }
-                        </div>
-                    </div>
+                        </div>*@
 
-                    <br />
                 }
             </div>
         </div>
 
+        @if (this.Modifications.Count != 0)
+        {
         <div class="review-sub-subsection">
             <div class="review-header">
                 <h3 for="modifications" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #f97e94;"></span><b>Modifications: </b></h3>
-                @if (this.Modifications.Count == 0)
-                {
-                    <label id="modifications" name="modifications" style="margin-left: 50px; margin-top: 2px; font-weight: 600;">There are no Modifications.</label>
-                }
             </div>
             <div class="review-content" style="max-height: 500px; overflow-y: auto;">
                 @foreach (var modification in this.Modifications)
@@ -79,6 +76,7 @@
                 }
             </div>
         </div>
+        }
     </div>
 
     <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Hints...</button>
@@ -94,37 +92,65 @@
 
     [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
 
-    [Parameter] public Dictionary<string, bool> AvailablePools { get; set; }
-    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public Dictionary<string, RandomizeOptionEnum> AvailablePools { get; set; }
+    // [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
     [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
     [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableHints { get; set; }
     [Parameter] public string HintSelectionType { get; set; }
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableQualityOfLifeSettings { get; set; }
 
     private List<string> pools { get; set; } = new();
-    private Dictionary<string, string> options { get; set; } = new();
+    private Dictionary<string, List<string>> hintValues = new();
+    private Dictionary<string, bool> qolValues = new();
+    // private Dictionary<string, string> options { get; set; } = new();
     private List<string> modifications { get; set; } = new();
 
-    private Dictionary<string, string> poolColors = new();
+    private Dictionary<string, string> poolColors = new Dictionary<string, string>
+    {
+        { "Olympus", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Twilight Town", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Kingdom of Corona", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Toy Box", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Monstropolis", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "100 Acre Wood", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Arendelle", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "San Fransokyo", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "The Caribbean", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Keyblade Graveyard", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Re:Mind", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Dark World", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Unreality", "background: linear-gradient(to right, #407fbb, #56adff);" },
+
+        { "Sora", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Equipment Abilities", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Data Battle Rewards", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Moogle Workshop", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Fullcourse Abilities", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Lucky Emblems", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Flantastic Flans", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Minigames", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        { "Battle Portals", "background: linear-gradient(to right, #407fbb, #56adff);" }
+    };
     private Dictionary<string, string> optionColors = new();
 
     bool isGeneratingSeed { get; set; }
 
     protected override void OnInitialized()
     {
-        this.pools = this.AvailablePools.Where(x => x.Value).Select(x => x.Key).ToList();
-        this.options = new();
+        //this.pools = this.AvailablePools.Where(x => x.Value == RandomizeOptionEnum.Randomize).Select(x => x.Key).ToList();
+        //this.options = new();
 
-        foreach (var pool in pools)
-        {
-            var listOfOptions = new List<string>();
-            foreach (var option in this.AvailableOptions[pool])
-            {
-                if (option.Value)
-                    listOfOptions.Add(option.Key);
-            }
+        //foreach (var pool in pools)
+        //{
+        //    var listOfOptions = new List<string>();
+        //    foreach (var option in this.AvailableOptions[pool])
+        //    {
+        //        if (option.Value)
+        //            listOfOptions.Add(option.Key);
+        //    }
 
-            this.options.Add(pool, string.Join(", ", listOfOptions));
-        }
+        //    this.options.Add(pool, string.Join(", ", listOfOptions));
+        //}
 
         //foreach (var modification in this.Modifications)
         //{
@@ -134,34 +160,34 @@
         //    this.modifications.Add($"{initial.Category}>{initial.SubCategory}>{initial.Name}>{initial.Value} <-> {swap.Category}>{swap.SubCategory}>{swap.Name}>{swap.Value}");
         //}
 
-        this.poolColors = new()
-        {
-            { "Treasures", "background-color: #00b0f8;" },
-            { "Events", "background-color: #ad70df;" },
-            { "Starting Stats", "background-color: #ff4141;" },
-            { "Lucky Emblems", "background-color: #f19b39;" },
-            { "Bonuses", "background-color: #ff6cf7;" },
-            { "Fullcourse Abilities", "background-color: #f6c00f;" },
-            { "Level Ups", "background-color: #56adff;" },
-            { "Weapon Upgrades", "background-color: #59ed84;" },
-            { "Equippables", "background-color: #df10fd;" },
-            { "Synthesis Items", "background-color: #70c0df;" }
-        };
+        //this.poolColors = new()
+        //{
+        //    { "Treasures", "background-color: #00b0f8;" },
+        //    { "Events", "background-color: #ad70df;" },
+        //    { "Starting Stats", "background-color: #ff4141;" },
+        //    { "Lucky Emblems", "background-color: #f19b39;" },
+        //    { "Bonuses", "background-color: #ff6cf7;" },
+        //    { "Fullcourse Abilities", "background-color: #f6c00f;" },
+        //    { "Level Ups", "background-color: #56adff;" },
+        //    { "Weapon Upgrades", "background-color: #59ed84;" },
+        //    { "Equippables", "background-color: #df10fd;" },
+        //    { "Synthesis Items", "background-color: #70c0df;" }
+        //};
 
 
-        this.optionColors = new()
-        {
-            { "Treasures", "background: linear-gradient(to right, #397e9b, #00b0f8);" },
-            { "Events", "background: linear-gradient(to right, #753da3, #ad70df);" },
-            { "Starting Stats", "background: linear-gradient(to right, #b72e2e, #ff4141);" },
-            { "Lucky Emblems", "background: linear-gradient(to right, #bd782a, #f19b39);" },
-            { "Bonuses", "background: linear-gradient(to right, #b541ae, #ff6cf7);" },
-            { "Fullcourse Abilities", "background: linear-gradient(to right, #b79010, #f6c00f);" },
-            { "Level Ups", "background: linear-gradient(to right, #407fbb, #56adff);" },
-            { "Weapon Upgrades", "background: linear-gradient(to right, #4abd6b, #59ed84);" },
-            { "Equippables", "background: linear-gradient(to right, #b312cb, #df10fd);" },
-            { "Synthesis Items", "background: linear-gradient(to right, #126dcb, #70c0df);" }
-        };
+        //this.optionColors = new()
+        //{
+        //    { "Treasures", "background: linear-gradient(to right, #397e9b, #00b0f8);" },
+        //    { "Events", "background: linear-gradient(to right, #753da3, #ad70df);" },
+        //    { "Starting Stats", "background: linear-gradient(to right, #b72e2e, #ff4141);" },
+        //    { "Lucky Emblems", "background: linear-gradient(to right, #bd782a, #f19b39);" },
+        //    { "Bonuses", "background: linear-gradient(to right, #b541ae, #ff6cf7);" },
+        //    { "Fullcourse Abilities", "background: linear-gradient(to right, #b79010, #f6c00f);" },
+        //    { "Level Ups", "background: linear-gradient(to right, #407fbb, #56adff);" },
+        //    { "Weapon Upgrades", "background: linear-gradient(to right, #4abd6b, #59ed84);" },
+        //    { "Equippables", "background: linear-gradient(to right, #b312cb, #df10fd);" },
+        //    { "Synthesis Items", "background: linear-gradient(to right, #126dcb, #70c0df);" }
+        //};
     }
 
     public async Task GenerateSeed()
@@ -173,20 +199,35 @@
             StateHasChanged();
         });
 
+        // Generate Hints
         byte[] hintResults;
-        var hints = new Dictionary<string, bool>();
+        var availableHints = new Dictionary<string, bool>();
 
         foreach(var hint in this.AvailableHints)
         {
             foreach (var subHint in hint.Value)
             {
-                hints.Add(subHint.Key, subHint.Value);
+                availableHints.Add(subHint.Key, subHint.Value);
             }
         }
 
-        hintResults = this.HintService.GenerateHints(this.CurrentSeed, this.RandomizedOptions, this.HintSelectionType, hints);
+        hintResults = this.HintService.GenerateHints(this.CurrentSeed, this.RandomizedOptions, this.HintSelectionType, availableHints, ref this.hintValues);
 
-        var file = this.RandomizerService.GenerateRandomizerSeed(this.CurrentSeed, this.RandomizedOptions, this.AvailablePools, this.AvailableOptions, this.Modifications, hintResults);
+        // Generate QoL Settings
+        this.qolValues = new();
+
+        foreach (var (category, values) in this.AvailableQualityOfLifeSettings)
+        {
+            foreach (var (name, active) in values)
+            {
+                var id = name.QoLKeyToId();
+
+                qolValues.Add(id, active);
+            }
+        }
+
+        // Generate Randomized Seed
+        var file = this.RandomizerService.GenerateRandomizerSeed(this.CurrentSeed, this.RandomizedOptions, this.AvailablePools, this.Modifications, hintResults, this.hintValues, qolValues);
 
         await js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".zip", Convert.ToBase64String(file));
         // js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".pak", Convert.ToBase64String(files[0]));

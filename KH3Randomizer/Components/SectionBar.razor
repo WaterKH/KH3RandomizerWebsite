@@ -4,11 +4,14 @@
             <h4 class="section-item" style="position: absolute;">Pools</h4>
         </div>
     </div>
+    @if (this.IsPlando)
+    {
     <div class="col-md-2">
         <div class="@(this.CurrentSection == "Options" ? "active-section-marker" : "section-marker")">
             <h4 class="section-item" style="position: absolute;">Options</h4>
         </div>
     </div>
+    }
     <div class="col-md-2">
         <div class="@(this.CurrentSection == "QoL" ? "active-section-marker" : "section-marker")">
             <h4 class="section-item" style="position: absolute;">Quality of Life</h4>
@@ -33,4 +36,5 @@
 
 @code {
     [Parameter] public string CurrentSection { get; set; }
+    [Parameter] public bool IsPlando { get; set; }
 }
