@@ -6,19 +6,10 @@
     background-color: #f2f2f2;
     border-radius: 15px;
     padding: 30px;
-    padding-top: 0px;
+    margin: 25px 0px;
     min-height: 75vh;
-    max-height: 75vh;
-    overflow-y: auto;
 }
 
-.hints-sub-subsection {
-    min-height: unset;
-    background-color: white;
-    padding: 15px 10px;
-    margin: 15px;
-    border-radius: 15px;
-}
 
 .hint-selection {
     display: -webkit-inline-box;
@@ -134,3 +125,7 @@ input:checked + .slider:before {
     .slider.round:before {
         border-radius: 50%;
     }
+
+.slider-disabled {
+    background-color: #93bfe3 !important;
+}

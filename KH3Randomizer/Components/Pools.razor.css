@@ -5,9 +5,9 @@
 .pools-subsection {
     background-color: #f2f2f2;
     border-radius: 15px;
-    padding: 30px;
-    margin: 25px 0px;
-    min-height: 75vh;
+    padding: 30px 30px 10px 30px;
+    margin: 15px 0px;
+    min-height: 70vh;
 }
 
 .kh-button {
@@ -22,6 +22,31 @@
 
 .kh-button:hover {
     opacity: .75;
+}
+
+.kh-input {
+    background: linear-gradient(to right, #015eea, #00c0fa);
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.kh-inputfield {
+    padding: 5px 15px;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: unset;
+    width: 100%;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    text-align: left;
+}
+
+input:focus {
+    border: unset;
 }
 
 /* The switch - the box around the slider */
@@ -87,3 +112,37 @@ input:checked + .slider:before {
     .slider.round:before {
         border-radius: 50%;
     }
+
+.kh-left-switch {
+    border: unset;
+    margin: unset;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 5px 15px;
+    background-color: white;
+    outline: none !important;
+}
+
+.kh-right-switch {
+    border: unset;
+    margin: unset;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 5px 15px;
+    background-color: white;
+    outline: none !important;
+}
+
+.kh-center-switch {
+    border: unset;
+    margin: unset;
+    padding: 5px 15px;
+    background-color: white;
+    outline: none !important;
+}
+
+.kh-switch-active {
+    background-color: #0081ff;
+    color: white;
+    outline: none !important;
+}

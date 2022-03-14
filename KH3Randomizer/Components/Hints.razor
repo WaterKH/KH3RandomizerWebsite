@@ -1,74 +1,74 @@
 ﻿<div class="hints-section">
 
-    <div class="hint-selection">
-        <div class="row" style="width: 100%;">
-            <div class="col-md-2">
-                <label style="margin-top: 8px; font-size: larger; font-weight: 500;">Hint Selection Type: </label>
-            </div>
-            <div class="col-md-2">
-                <a class="rounded-selector a-tag-selector @(selectedHintType == "None" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("None"); })" @onclick:preventDefault>None</a>
-            </div>
-            <div class="col-md-2">
-                <a class="rounded-selector a-tag-selector @(selectedHintType == "Vague" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Vague"); })" @onclick:preventDefault>Vague</a>
-            </div>
-            <div class="col-md-2">
-                <a class="rounded-selector a-tag-selector @(selectedHintType == "Verbose" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Verbose"); })" @onclick:preventDefault>Verbose</a>
+    <div class="hints-subsection">
+        <div class="hint-selection">
+            <div class="row" style="width: 100%;">
+                <div class="col-md-2">
+                    <label style="margin-top: 8px; font-size: larger; font-weight: 500;"><b>Hint Selection Type: </b></label>
+                </div>
+                <div class="col-md-2">
+                    <a class="rounded-selector a-tag-selector @(selectedHintType == "None" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("None"); })" @onclick:preventDefault>None</a>
+                </div>
+                <div class="col-md-2">
+                    <a class="rounded-selector a-tag-selector @(selectedHintType == "Vague" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Vague"); })" @onclick:preventDefault>Vague</a>
+                </div>
+                <div class="col-md-2">
+                    <a class="rounded-selector a-tag-selector @(selectedHintType == "Verbose" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Verbose"); })" @onclick:preventDefault>Verbose</a>
+                </div>
             </div>
         </div>
-    </div>
-
-    @if (selectedHintType != "None")
-    {
-    <Collapsable @ref="@hintCollapsable" CurrentOption="@this.currentHint" ToggleCollapsables="this.ToggleCollapsables" Title="@("Hints")" ActionType="@("Options")">
-        <div class="hints-subsection">
+            
+        <div class="row" style="margin-top: 25px;">
             @foreach (var hint in this.hints)
             {
-                <div class="row" style="margin-top: 50px;">
-                    <div class="col-md-12">
-                        <h3 style="display: inline; margin-right: 15px;"><b>@hint.Key</b></h3>
-
-                        <label class="switch" style="margin-right: 25px;">
-                            <input type="checkbox" @onchange="@((value) => { UpdateHints(hint.Key, (bool)value.Value); })" checked="@this.CheckHints(hint.Key)">
-                            <span class="slider round"></span>
-                        </label>
-
-                        <Tooltip Text="@hintDescriptions[hint.Key]" Style="margin-top: 8px;">
-                            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue; margin-left: 100px;"></i>
-                        </Tooltip>
-                    </div>
-                </div>
-
-
-
-                <div class="row hints-sub-subsection">
-                    @foreach (var subHint in hint.Value)
-                    {
-                        <div class="col-md-4" style="margin: 15px 0px;">
-                            <div class="row">
-                                <div class="col-md-2">
-                                    <label class="switch">
-                                        <input type="checkbox" @onchange="@((value) => { this.hints[hint.Key][subHint.Key] = (bool)value.Value; CheckHints(hint.Key); })" checked="@subHint.Value">
-                                        <span class="slider round"></span>
-                                    </label>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label><b>@subHint.Key</b></label>
-                                </div>
-                            </div>
+                <div class="col-md-4" style="margin: 15px 0px;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="switch">
+                                <input type="checkbox" @onchange="@((value) => { UpdateHints(hint.Key, (bool)value.Value); })" checked="@this.CheckHints(hint.Key)" disabled="@(this.selectedHintType == "None")">
+                                <span class="slider round @(this.selectedHintType == "None" ? "slider-disabled" : "")"></span>
+                            </label>
                         </div>
-                    }
 
-                    <hr />
+                        <div class="col-md-6">
+                            <label><b>@hint.Key</b></label>
+                        </div>
+
+                        <div class="col-md-1">
+                            <Tooltip Text="@hintDescriptions[hint.Key]">
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
+                            </Tooltip>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
-    </Collapsable>
-    }
-    else
-    {
-        <div style="margin-top: 50px"></div>
-    }
+    </div>
+
+
+    @*<div class="row hints-sub-subsection">
+            @foreach (var subHint in hint.Value)
+            {
+                <div class="col-md-4" style="margin: 15px 0px;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="switch">
+                                <input type="checkbox" @onchange="@((value) => { this.hints[hint.Key][subHint.Key] = (bool)value.Value; CheckHints(hint.Key); })" checked="@subHint.Value">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label><b>@subHint.Key</b></label>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <hr />
+        </div>*@
+
+
 
     <br />
 

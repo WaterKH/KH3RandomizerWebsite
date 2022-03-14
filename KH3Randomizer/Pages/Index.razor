@@ -11,15 +11,15 @@
 
     @if (this.currentSection == "Pools")
     {
-        <Pools ContinueTo="@(() => ContinueTo(this.IsPlando ? "Options" : "QoL"))" AvailablePools="@this.availablePools" IsPlando="@this.IsPlando"
-               UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdatePlando="@(isPlando => UpdatePlandoOption(isPlando))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))">
+        <Pools ContinueTo="@(() => ContinueTo(this.IsPlando ? "Options" : "QoL"))" AvailablePools="@this.availablePools" IsPlando="@this.IsPlando" CanBeNone="@this.CanBeNone" CurrentSeed="@this.CurrentSeed"
+               UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdatePlando="@(isPlando => UpdatePlandoOption(isPlando))" UpdateCanBeNone="@(canBeNone => UpdateCanBeNone(canBeNone))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))">
         </Pools>
     }
     else if (this.currentSection == "Options" && this.IsPlando)
     {
         <Options ContinueTo="@(() => ContinueTo("QoL"))" BackTo="@(() => BackTo("Pools"))"
                  UpdateAvailableOptions="@(options => UpdateAvailableOptions(options))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateModifications="@((option1, option2) => UpdateModifications(option1, option2))"
-                 CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePlandoPools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack">
+                 CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack">
         </Options>
     }
     else if (this.currentSection == "QoL")
@@ -45,14 +45,15 @@
 @code {
     public string CurrentSeed { get; set; }
     public bool IsPlando { get; set; } = false;
+    public bool CanBeNone { get; set; } = true;
 
-    private Dictionary<string, bool> availablePlandoPools = new Dictionary<string, bool> {
-        { "Treasures", true }, { "Events", true }, { "Starting Stats", true }, { "Lucky Emblems", false }, { "Bonuses", true },
-        { "Fullcourse Abilities", true }, { "Level Ups", true }, { "Weapon Upgrades", true }, {"Equippables", true },
-        { "Synthesis Items", true },
+    //private Dictionary<string, bool> availablePlandoPools = new Dictionary<string, bool> {
+    //    { "Treasures", true }, { "Events", true }, { "Starting Stats", true }, { "Lucky Emblems", false }, { "Bonuses", true },
+    //    { "Fullcourse Abilities", true }, { "Level Ups", true }, { "Weapon Upgrades", true }, {"Equippables", true },
+    //    { "Synthesis Items", true },
 
-        { "Bosses", false }, { "Enemies", false }, { "General Stats", false }
-    };
+    //    { "Bosses", false }, { "Enemies", false }, { "General Stats", false }
+    //};
 
     private Dictionary<string, RandomizeOptionEnum> availablePools = new Dictionary<string, RandomizeOptionEnum>
     {
@@ -65,11 +66,11 @@
 
         // Miscellaneous Categories
         { "Sora", RandomizeOptionEnum.Randomize }, { "Equipment Abilities", RandomizeOptionEnum.Replace }, { "Data Battle Rewards", RandomizeOptionEnum.Replace },
-        { "Moogle Workshop", RandomizeOptionEnum.Randomize }, { "Fullcourse Abilities", RandomizeOptionEnum.Vanilla }, { "Lucky Emblems", RandomizeOptionEnum.Randomize }, 
+        { "Moogle Workshop", RandomizeOptionEnum.Randomize }, { "Fullcourse Abilities", RandomizeOptionEnum.Vanilla }, { "Lucky Emblems", RandomizeOptionEnum.Randomize },
         { "Flantastic Flans", RandomizeOptionEnum.Replace }, { "Minigames", RandomizeOptionEnum.Replace }, { "Battle Portals", RandomizeOptionEnum.Replace },
 
         // Always On - Proofs, Oathkeeper, Oblivion, Meow Wow, Gummiphone
-        { "Always On", RandomizeOptionEnum.Replace } 
+        { "Always On", RandomizeOptionEnum.Replace }
     };
 
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
@@ -161,21 +162,41 @@
     public void UpdateCurrentSeed(string currentSeed)
     {
         this.CurrentSeed = currentSeed;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
     }
 
     public void UpdateAvailablePools(Dictionary<string, RandomizeOptionEnum> availablePools)
     {
         this.availablePools = availablePools;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
     }
 
     public void UpdateAvailableOptions(Dictionary<string, Dictionary<string, bool>> availableOptions)
     {
         this.availableOptions = availableOptions;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
     }
 
     public void UpdateRandomizedOptions(Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions)
     {
         this.randomizedOptions = randomizedOptions;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
     }
 
     public void UpdateModifications(Option initalOption, Option swapOption)
@@ -204,5 +225,10 @@
     public void UpdatePlandoOption(bool isPlando)
     {
         this.IsPlando = isPlando;
+    }
+
+    public void UpdateCanBeNone(bool canBeNone)
+    {
+        this.CanBeNone = canBeNone;
     }
 }

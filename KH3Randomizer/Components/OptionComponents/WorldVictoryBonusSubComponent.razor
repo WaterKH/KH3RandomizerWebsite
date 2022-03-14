@@ -2,8 +2,6 @@
 
 @inject RandomizerService RandomizerService
 
-<h2><span class="selector" style="background-color: #ff6cf7;"></span>@this.BonusName</h2>
-
 <Table Items="this.Bonuses" Context="Bonus" CurrentPage="1">
     <TableHeader>
         <th>Event Name</th>
@@ -37,7 +35,6 @@
 
 @code {
     [CascadingParameter] public IModalService Modal { get; set; }
-    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
 
     [Parameter] public string BonusName { get; set; }
 
@@ -64,7 +61,7 @@
         if (parameters.TryGetValue<string>(nameof(this.BonusName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
         {
             this.randomizedOptions = options;
-            this.Bonuses = this.RandomizerService.GetAvailableBonuses(value, ref this.randomizedOptions);
+            this.Bonuses = this.RandomizerService.GetAvailableVictoryBonusesForWorld(value, ref this.randomizedOptions);
         }
 
         if (parameters.TryGetValue<Dictionary<string, Dictionary<string, bool>>>(nameof(AvailableOptions), out var availableOptions))

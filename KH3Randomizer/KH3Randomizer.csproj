@@ -212,13 +212,14 @@
     <PackageReference Include="Blazored.Modal" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageReference Include="UE4DataTableInterpreter" Version="1.1.2" />
+    <PackageReference Include="UE4DataTableInterpreter" Version="1.1.6" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Components\SpoilerLog\" />
     <Folder Include="Components\Review\" />
     <Folder Include="Components\Pools\" />
+    <Folder Include="Content\Blueprints\Gimmick\ts\" />
     <Folder Include="Seeds\" />
     <Folder Include="wwwroot\pak\Seeds\" />
   </ItemGroup>
@@ -245,6 +246,33 @@
     <Content Update="wwwroot\pak\UnrealPak.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Content\Blueprints\Gimmick\ts\g_ts_UFO\g_ts_UFO.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Blueprints\Gimmick\ts\g_ts_UFO\g_ts_UFO.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\DataTable\Enemy\Base\e_ex021_BaseDataTable.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\DataTable\Enemy\Base\e_ex021_BaseDataTable.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Load\Tres\QualityOfLifeTable.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Load\Tres\QualityOfLifeTable.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Load\Tres\SecretReportInfoTable.uasset">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Content\Load\Tres\SecretReportInfoTable.uexp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

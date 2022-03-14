@@ -59,6 +59,55 @@ namespace KH3Randomizer.Data
             return hash;
         }
 
+        public static string QoLKeyToId(this string input)
+        {
+            var result = "";
+
+            switch (input)
+            {
+                case "Easier Mini-UFO":
+                    result = "BOSS_001";
+                    break;
+                case "Faster Raging Vulture":
+                    result = "BOSS_002";
+                    break;
+                case "Dark Baymax Phase 1 Skip":
+                    result = "BOSS_003";
+                    break;
+                case "Faster Lich Sequence":
+                    result = "BOSS_004";
+                    break;
+
+                case "Frozen Chase Skip":
+                    result = "EVENT_001";
+                    break;
+                case "Faster Crab Collection":
+                    result = "EVENT_002";
+                    break;
+                case "Big Hero Rescue Skip":
+                    result = "EVENT_003";
+                    break;
+                case "Faster Sora Collection":
+                    result = "EVENT_004";
+                    break;
+                case "Union χ Skip":
+                    result = "EVENT_005";
+                    break;
+                case "Guardians of Light Skip":
+                    result = "EVENT_006";
+                    break;
+                case "Slow Mickey Skip":
+                    result = "EVENT_007";
+                    break;
+
+                case "All Maps Unlocked":
+                    result = "ITEM_003";
+                    break;
+            }
+
+            return result;
+        }
+
         public static string KeyIdToDisplay(this string input)
         {
             var inputSplit = input.Replace("\u0000", "").Split('_');

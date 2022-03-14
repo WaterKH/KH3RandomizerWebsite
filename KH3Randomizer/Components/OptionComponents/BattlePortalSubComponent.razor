@@ -2,24 +2,24 @@
 
 @inject RandomizerService RandomizerService
 
-<h2><span class="selector" style="background-color: #59ed84;"></span>@this.WeaponUpgradeName</h2>
+<h2><span class="selector" style="background-color: #ad70df;"></span>@this.BattlePortalName</h2>
 
-<Table Items="this.WeaponUpgrades" Context="WeaponUpgrade" CurrentPage="1">
+<Table Items="this.Events" Context="EventContext" CurrentPage="1">
     <TableHeader>
-        <th>Level</th>
-        <th>Name</th>
+        <th>Event</th>
+        <th>Reward</th>
         <th>Action</th>
     </TableHeader>
     <RowTemplate>
-        <td>@WeaponUpgrade.Id.KeyIdToDisplay()</td>
-        <td>@WeaponUpgrade.Name.ValueIdToDisplay()</td>
+        <td>@EventContext.Id.KeyIdToDisplay()</td>
+        <td>@EventContext.Reward.ValueIdToDisplay()</td>
         @if (this.actionType == "Options")
         {
-            <td><a href="#" @onclick="() => OpenModal(WeaponUpgrade)" @onclick:preventDefault>Change</a></td>
+            <td><a href="#" @onclick="() => OpenModal(EventContext)" @onclick:preventDefault>Change</a></td>
         }
         else if (this.actionType == "Modal")
         {
-            <td><a href="#" @onclick="@(() => SwapOptions.Invoke(DataTableEnum.WeaponEnhance, WeaponUpgrade.Id, "Ability", WeaponUpgrade.Name))" @onclick:preventDefault>Swap</a></td>
+            <td><a href="#" @onclick="@(() => SwapOptions.Invoke(DataTableEnum.Event, EventContext.Id, EventContext.Id == "TresUIMobilePortalDataAsset" ? "Reward" : "RandomizedItem", EventContext.Reward))" @onclick:preventDefault>Swap</a></td>
         }
     </RowTemplate>
 </Table>
@@ -27,7 +27,7 @@
 @code {
     [CascadingParameter] public IModalService Modal { get; set; }
 
-    [Parameter] public string WeaponUpgradeName { get; set; }
+    [Parameter] public string BattlePortalName { get; set; }
 
     [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
     [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
@@ -41,7 +41,7 @@
 
     [Parameter] public Action<DataTableEnum, string, string, string> SwapOptions { get; set; }
 
-    private List<WeaponUpgrade> WeaponUpgrades { get; set; }
+    private List<Event> Events { get; set; }
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
     private string actionType;
@@ -49,10 +49,10 @@
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
-        if (parameters.TryGetValue<string>(nameof(this.WeaponUpgradeName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
+        if (parameters.TryGetValue<string>(nameof(this.BattlePortalName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
         {
             this.randomizedOptions = options;
-            this.WeaponUpgrades = this.RandomizerService.GetAvailableWeaponUpgrades(value, ref this.randomizedOptions);
+            this.Events = this.RandomizerService.GetAvailableBattlePortalEvents(value, ref this.randomizedOptions);
         }
 
         if (parameters.TryGetValue<Dictionary<string, Dictionary<string, bool>>>(nameof(AvailableOptions), out var availableOptions))
@@ -73,14 +73,16 @@
         await base.SetParametersAsync(parameters);
     }
 
-    private void OpenModal(WeaponUpgrade weaponUpgrade)
+    private void OpenModal(Event khEvent)
     {
         var parameters = new ModalParameters();
 
-        parameters.Add("Category", DataTableEnum.WeaponEnhance);
-        parameters.Add("SubCategory", weaponUpgrade.Id);
-        parameters.Add("Name", "Ability");
-        parameters.Add("Value", weaponUpgrade.Name);
+        var name = khEvent.Id == "TresUIMobilePortalDataAsset" ? "Reward" : "RandomizedItem";
+
+        parameters.Add("Category", DataTableEnum.Event);
+        parameters.Add("SubCategory", khEvent.Id);
+        parameters.Add("Name", name);
+        parameters.Add("Value", khEvent.Reward);
         parameters.Add("CurrentSeed", this.currentSeed);
         parameters.Add("ActionType", "Modal");
 
@@ -89,10 +91,10 @@
 
         parameters.Add("AvailableOptions", this.availableOptions);
         parameters.Add("RandomizedOptions", this.randomizedOptions);
-        
-        var options = new ModalOptions { Class = "modal-custom" };
-        var displayValue = string.IsNullOrEmpty(weaponUpgrade.Name.ValueIdToDisplay()) ? "" : weaponUpgrade.Name.ValueIdToDisplay();
 
-        Modal.Show<ChangeOption>($"Change {this.WeaponUpgradeName} - {weaponUpgrade.Id.KeyIdToDisplay()} - {displayValue}", parameters, options);
+        var options = new ModalOptions { Class = "modal-custom" };
+        var displayValue = string.IsNullOrEmpty(khEvent.Reward.ValueIdToDisplay()) ? "" : khEvent.Reward.ValueIdToDisplay();
+
+        Modal.Show<ChangeOption>($"Change {this.BattlePortalName} {khEvent.Id.KeyIdToDisplay()} - {displayValue}", parameters, options);
     }
 }

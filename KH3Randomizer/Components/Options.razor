@@ -1,4 +1,5 @@
 ﻿@using UE4DataTableInterpreter.Enums
+@using Enums;
 
 @inject KH3Randomizer.Data.RandomizerService RandomizerService
 
@@ -42,7 +43,7 @@
         <br />
 
         <OptionsSubsection UpdateAvailableOptions="@this.UpdateAvailableOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                           CurrentSeed="@this.currentSeed" AvailableOptions="@this.tempOptions" RandomizedOptions="@this.randomizedOptions"
+                           CurrentSeed="@this.currentSeed" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions"
                            SpoilerChecked="@this.isSpoilerChecked" />
     </div>
 
@@ -62,16 +63,16 @@
     [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
 
     [Parameter] public string CurrentSeed { get; set; }
-    [Parameter] public Dictionary<string, bool> AvailablePools { get; set; }
+    [Parameter] public Dictionary<string, RandomizeOptionEnum> AvailablePools { get; set; }
     [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
     [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
     [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
     [Parameter] public bool IsGoingBack { get; set; }
 
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> tempRandomizedItems = new();
-    private Dictionary<string, Dictionary<string, bool>> tempOptions = new();
+    // private Dictionary<string, Dictionary<string, bool>> tempOptions = new();
 
-    private Dictionary<string, bool> availablePools = new();
+    private Dictionary<string, RandomizeOptionEnum> availablePools = new();
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
     private List<Tuple<Option, Option>> modifications = new();
@@ -83,11 +84,12 @@
     protected override void OnInitialized()
     {
         this.currentSeed = this.CurrentSeed;
+        this.availablePools = this.AvailablePools;
         this.availableOptions = this.AvailableOptions;
         this.randomizedOptions = this.RandomizedOptions;
         this.modifications = this.Modifications;
 
-        this.tempOptions = this.RandomizerService.GetAvailableOptions(this.AvailablePools, ref this.availableOptions, ref this.randomizedOptions, this.IsGoingBack);
+        this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, this.IsGoingBack);
         //this.tempRandomizedItems = this.RandomizerService.GetRandomizedItems();
         this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
         this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
@@ -101,6 +103,7 @@
     protected override void OnParametersSet()
     {
         this.currentSeed = this.CurrentSeed;
+        this.availablePools = this.AvailablePools;
         this.availableOptions = this.AvailableOptions;
         this.randomizedOptions = this.RandomizedOptions;
         this.modifications = this.Modifications;
@@ -130,7 +133,7 @@
         this.UpdateCurrentSeed.InvokeAsync(this.currentSeed);
 
         //this.RandomizerService.SetAvailableOptions(this.tempOptions);
-        this.RandomizerService.RandomizeItems(this.currentSeed, ref this.availableOptions, ref this.randomizedOptions);
+        // this.RandomizerService.RandomizeItems(this.currentSeed, ref this.availableOptions, ref this.randomizedOptions);
 
         this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
         this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);

@@ -1,0 +1,65 @@
+﻿@using UE4DataTableInterpreter.Enums
+
+@inject RandomizerService RandomizerService
+
+<h2><span class="selector" style="background-color: #00b0f8;"></span>@this.WorldName - @this.SubSelection</h2>
+
+@if (this.SubSelection == "Treasures")
+{
+    if (this.SwapOptions != null)
+    {
+        <WorldTreasureSubComponent WorldName="@this.WorldName" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                   AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></WorldTreasureSubComponent>
+    }
+    else
+    {
+        <WorldTreasureSubComponent WorldName="@this.WorldName" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                   AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></WorldTreasureSubComponent>
+    }
+}
+else if (this.SubSelection == "Bonuses")
+{
+    if (this.SwapOptions != null)
+    {
+        <WorldVictoryBonusSubComponent BonusName="@this.WorldName" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                       AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></WorldVictoryBonusSubComponent>
+    }
+    else
+    {
+        <WorldVictoryBonusSubComponent BonusName="@this.WorldName" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                       AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></WorldVictoryBonusSubComponent>
+    }
+}
+else if (this.SubSelection == "Events")
+{
+    if (this.SwapOptions != null)
+    {
+        <WorldEventSubComponent EventName="@this.WorldName" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></WorldEventSubComponent>
+    }
+    else
+    {
+        <WorldEventSubComponent EventName="@this.WorldName" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></WorldEventSubComponent>
+    }
+}
+
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public string WorldName { get; set; }
+    [Parameter] public string SubSelection { get; set; }
+
+    [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
+    [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
+
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    [Parameter] public string ActionType { get; set; } = "Options"; // Options, Modal, Spoiler
+    [Parameter] public string CurrentSeed { get; set; }
+
+
+    [Parameter] public Action<DataTableEnum, string, string, string> SwapOptions { get; set; }
+}

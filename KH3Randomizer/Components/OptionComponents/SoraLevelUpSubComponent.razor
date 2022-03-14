@@ -1,0 +1,133 @@
+﻿@using UE4DataTableInterpreter.Enums 
+
+@inject RandomizerService RandomizerService
+
+<Table Items="this.LevelUps" Context="LevelUp" CurrentPage="1">
+    <TableHeader>
+        <th>Level</th>
+        <th>Type A</th>
+        <th>Type B</th>
+        <th>Type C</th>
+        <th>Action</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@LevelUp.Milestone.KeyIdToDisplay()</td>
+        <td>@LevelUp.TypeAReward.ValueIdToDisplay()</td>
+        <td>@LevelUp.TypeBReward.ValueIdToDisplay()</td>
+        <td>@LevelUp.TypeCReward.ValueIdToDisplay()</td>
+        @if (this.actionType == "Options")
+        {
+            <td><a href="#" @onclick="() => OpenModal(LevelUp)" @onclick:preventDefault>Change</a></td>
+        }
+        else if (this.actionType == "Modal")
+        {
+            <td><a href="#" @onclick="() => MakeDecision(LevelUp, true)" @onclick:preventDefault>Swap</a></td>
+        }
+    </RowTemplate>
+</Table>
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter] public string LevelUpName { get; set; }
+
+    [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
+    [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
+
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    [Parameter] public string ActionType { get; set; } = "Options"; // Options, Modal, Spoiler
+    [Parameter] public string CurrentSeed { get; set; }
+
+
+    [Parameter] public Action<DataTableEnum, string, string, string> SwapOptions { get; set; }
+
+    private List<LevelUp> LevelUps { get; set; }
+    private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+    private string actionType;
+    private string currentSeed;
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<string>(nameof(this.LevelUpName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
+        {
+            this.randomizedOptions = options;
+            this.LevelUps = this.RandomizerService.GetAvailableLevelUps(value, ref this.randomizedOptions);
+        }
+
+        if (parameters.TryGetValue<Dictionary<string, Dictionary<string, bool>>>(nameof(AvailableOptions), out var availableOptions))
+        {
+            this.availableOptions = availableOptions;
+        }
+
+        if (parameters.TryGetValue<string>(nameof(ActionType), out var actionType))
+        {
+            this.actionType = actionType;
+        }
+
+        if (parameters.TryGetValue<string>(nameof(CurrentSeed), out var currentSeed))
+        {
+            this.currentSeed = currentSeed;
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    private async Task OpenModal(LevelUp levelUp)
+    {
+        var decision = await MakeDecision(levelUp, false);
+
+        if (decision == null)
+            return;
+
+        var parameters = new ModalParameters();
+
+        parameters.Add("Category", DataTableEnum.LevelUp);
+        parameters.Add("SubCategory", levelUp.Milestone);
+        parameters.Add("Name", decision.Item1);
+        parameters.Add("Value", decision.Item2);
+        parameters.Add("CurrentSeed", this.currentSeed);
+        parameters.Add("ActionType", "Modal");
+
+        parameters.Add("UpdateRandomizedOptions", this.UpdateRandomizedOptions);
+        parameters.Add("UpdateModifications", this.UpdateModifications);
+
+        parameters.Add("AvailableOptions", this.availableOptions);
+        parameters.Add("RandomizedOptions", this.randomizedOptions);
+
+        var options = new ModalOptions { Class = "modal-custom" };
+        var displayValue = string.IsNullOrEmpty(decision.Item2.ValueIdToDisplay()) ? "" : decision.Item2.ValueIdToDisplay();
+
+        Modal.Show<ChangeOption>($"Change Level {levelUp.Milestone.KeyIdToDisplay()} - {displayValue}", parameters, options);
+    }
+
+    private async Task<Tuple<string, string>> MakeDecision(LevelUp levelUp, bool swap)
+    {
+        var decisions = new List<Tuple<string, string>>() { new Tuple<string, string>("TypeA", levelUp.TypeAReward), new Tuple<string, string>("TypeB", levelUp.TypeBReward),
+                                                            new Tuple<string, string>("TypeC", levelUp.TypeCReward)};
+
+        var decisionParms = new ModalParameters();
+
+        decisionParms.Add("Decisions", decisions);
+
+        //if (ModalInstance != null)
+        //    await ModalInstance.CloseAsync(); // TODO Find some other way to handle two modals but not able to open them on the existing modal
+
+        var options = new ModalOptions { Class = "modal-custom" };
+
+        var decisionModal = Modal.Show<DecisionModal>("Please select one of the following:", decisionParms, options);
+        var result = await decisionModal.Result;
+
+        if (result.Cancelled)
+            return null;
+
+        var decision = (Tuple<string, string>)result.Data;
+        if (swap)
+            this.SwapOptions.Invoke(DataTableEnum.LevelUp, levelUp.Milestone, decision.Item1, decision.Item2);
+
+        return decision;
+    }
+}
