@@ -8,7 +8,7 @@ namespace KH3Randomizer.Data
 {
     public class HintService
     {
-        public byte[] GenerateHints(string seed, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, string hintType, Dictionary<string, bool> availableHints)
+        public byte[] GenerateHints(string seed, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, string hintType, Dictionary<string, bool> availableHints, ref Dictionary<string, List<string>> hintValues)
         {
             var hints = new byte[0];
             var hintList = new List<string>();
@@ -104,6 +104,17 @@ namespace KH3Randomizer.Data
 
             var mobile = new Mobile();
             hints = mobile.Process(hintList).ToArray();
+            var hintNames = new List<string> { "SecretReport02", "SecretReport03", "SecretReport04", "SecretReport05", "SecretReport06", "SecretReport07", "SecretReport08", 
+                                               "SecretReport09", "SecretReport10", "SecretReport11", "SecretReport12", "SecretReport13", "SecretReport14", };
+            for (int i = 0; i < hintList.Count; ++i)
+            {
+                int index = (i / 4);
+
+                if (!hintValues.ContainsKey(hintNames[index]))
+                    hintValues.Add(hintNames[index], new List<string>());
+
+                hintValues[hintNames[index]].Add(hintList[i]);
+            }
 
             return hints;
         }

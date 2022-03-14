@@ -45,7 +45,7 @@
         </div>
     </div>
 
-    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Options...</button>
+    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to @(this.IsPlando ? "Options" : "Pools")...</button>
     <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to Hints...</button>
 </div>
 
@@ -54,6 +54,7 @@
     [Parameter] public EventCallback<string> ContinueTo { get; set; }
     [Parameter] public EventCallback<Dictionary<string, Dictionary<string, bool>>> UpdateAvailableQoLOptions { get; set; }
 
+    [Parameter] public bool IsPlando { get; set; }
     [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableQoLOptions { get; set; }
 
     private bool isOn { get; set; } = false;
@@ -61,7 +62,7 @@
 
     private Dictionary<string, Dictionary<string, bool>> qolOptions = new Dictionary<string, Dictionary<string, bool>>();
 
-    private Dictionary<string, string> qolOptionDescriptions = new Dictionary<string, string> { 
+    private Dictionary<string, string> qolOptionDescriptions = new Dictionary<string, string> {
         { "Easier Mini-UFO", "Disables the ability for the UFO to teleport and zip around the area. Also, sets the amount of hits needed to 20 instead of 40." },
         { "Faster Raging Vulture", "Sets the Raging Vulture's health to a lower amount to make the fight faster." },
         { "Dark Baymax Phase 1 Skip", "Skips the on-rails portion of the Dark Baymax Boss fight." },
@@ -71,7 +72,7 @@
         { "Faster Crab Collection", "Sets the threshold to a lower amount of crabs that needs to be collected in Port Royal." },
         { "Shugyo Training Skip", "Skips the first flashtracer minigame in San Fransokyo." },
         { "Big Hero Rescue Skip", "Skips saving the Big Hero 6 members from the Darkubes." },
-        { "Faster Sora Collection", "Sets the threshold from collecting 111, 222 & 333 Soras in The Final World to a smaller amount." },        
+        { "Faster Sora Collection", "Sets the threshold from collecting 111, 222 & 333 Soras in The Final World to a smaller amount." },
         { "Union χ Skip", "Skips the tornado sequence where you spam triangle in The Keyblade Graveyard." },
         { "Guardians of Light Skip", "Skips the cutscene fight with all of the Guardians of Light vs the Replica Xehanorts." },
         { "Slow Mickey Skip", "Skips the fight with the Replica Xehanorts and Mickey Mouse." },

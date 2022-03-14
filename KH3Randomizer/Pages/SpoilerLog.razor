@@ -3,6 +3,7 @@
 @using UE4DataTableInterpreter.Enums;
 @using System.Text.Json;
 @using System.IO;
+@using Enums;
 
 @inject RandomizerService RandomizerService
 
@@ -45,12 +46,12 @@
             <div class="row">
                 @foreach (var pool in this.availablePools)
                 {
-                    if (pool.Key != "Bosses" && pool.Key != "Enemies" && pool.Key != "Room Transitions" && pool.Key != "General Stats")
+                    @*if (pool.Key != "Bosses" && pool.Key != "Enemies" && pool.Key != "Room Transitions" && pool.Key != "General Stats")
                     { 
                         <div class="col-md-2">
                             <a class="rounded-selector a-tag-selector @(pool.Value ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { availablePools[pool.Key] = !pool.Value; this.UpdateAvailablePools(); })" @onclick:preventDefault>@pool.Key</a>
                         </div>
-                    }
+                    }*@
                 }
             </div>
         </div>
@@ -168,7 +169,8 @@
         if (availablePools != null)
             this.availablePools = availablePools;
 
-        this.tempOptions = this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, ref this.randomizedOptions);
+        // TODO Come back and update this logic
+        //this.tempOptions = this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, ref this.randomizedOptions);
 
         InvokeAsync(() =>
         {
@@ -221,7 +223,8 @@
 
         if (spoilerLogFile != null)
         {
-            this.UpdateAvailablePools(spoilerLogFile.AvailablePools);
+            // TODO Come back and update this logic
+            //this.UpdateAvailablePools(spoilerLogFile.AvailablePools);
             this.UpdateAvailableOptions(spoilerLogFile.AvailableOptions);
             this.UpdateCurrentSeed(spoilerLogFile.SeedName);
 

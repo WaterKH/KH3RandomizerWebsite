@@ -2,24 +2,22 @@
 
 @inject RandomizerService RandomizerService
 
-<h2><span class="selector" style="background-color: #ad70df;"></span>@this.EventName</h2>
-
-<Table Items="this.Events" Context="EventContext" CurrentPage="1">
+<Table Items="this.ChrInits" Context="ChrInit" CurrentPage="1">
     <TableHeader>
-        <th>Event</th>
-        <th>Reward</th>
+        <th>Player</th>
+        <th>@(this.ChrInitName == "Weapons" ? "Weapon" : "Ability")</th>
         <th>Action</th>
     </TableHeader>
     <RowTemplate>
-        <td>@EventContext.Id.KeyIdToDisplay()</td>
-        <td>@EventContext.Reward.ValueIdToDisplay()</td>
+        <td>@ChrInit.Player.KeyIdToDisplay()</td>
+        <td>@ChrInit.Value.ValueIdToDisplay()</td>
         @if (this.actionType == "Options")
         {
-            <td><a href="#" @onclick="() => OpenModal(EventContext)" @onclick:preventDefault>Change</a></td>
+            <td><a href="#" @onclick="() => OpenModal(ChrInit)" @onclick:preventDefault>Change</a></td>
         }
         else if (this.actionType == "Modal")
         {
-            <td><a href="#" @onclick="@(() => SwapOptions.Invoke(DataTableEnum.Event, EventContext.Id, EventContext.Id == "TresUIMobilePortalDataAsset" ? "Reward" : "RandomizedItem", EventContext.Reward))" @onclick:preventDefault>Swap</a></td>
+            <td><a href="#" @onclick="@(() => SwapOptions.Invoke(DataTableEnum.ChrInit, ChrInit.Player, ChrInit.Name, ChrInit.Value))" @onclick:preventDefault>Swap</a></td>
         }
     </RowTemplate>
 </Table>
@@ -27,7 +25,7 @@
 @code {
     [CascadingParameter] public IModalService Modal { get; set; }
 
-    [Parameter] public string EventName { get; set; }
+    [Parameter] public string ChrInitName { get; set; }
 
     [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
     [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
@@ -41,7 +39,7 @@
 
     [Parameter] public Action<DataTableEnum, string, string, string> SwapOptions { get; set; }
 
-    private List<Event> Events { get; set; }
+    private List<ChrInit> ChrInits { get; set; }
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
     private string actionType;
@@ -49,10 +47,10 @@
 
     public override async Task SetParametersAsync(ParameterView parameters)
     {
-        if (parameters.TryGetValue<string>(nameof(this.EventName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
+        if (parameters.TryGetValue<string>(nameof(this.ChrInitName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
         {
             this.randomizedOptions = options;
-            this.Events = this.RandomizerService.GetAvailableEvents(value, ref this.randomizedOptions);
+            this.ChrInits = this.RandomizerService.GetAvailableChrInits(value, ref this.randomizedOptions);
         }
 
         if (parameters.TryGetValue<Dictionary<string, Dictionary<string, bool>>>(nameof(AvailableOptions), out var availableOptions))
@@ -73,16 +71,14 @@
         await base.SetParametersAsync(parameters);
     }
 
-    private void OpenModal(Event khEvent)
+    private void OpenModal(ChrInit chrInit)
     {
         var parameters = new ModalParameters();
 
-        var name = khEvent.Id == "TresUIMobilePortalDataAsset" ? "Reward" : "RandomizedItem";
-
-        parameters.Add("Category", DataTableEnum.Event);
-        parameters.Add("SubCategory", khEvent.Id);
-        parameters.Add("Name", name);
-        parameters.Add("Value", khEvent.Reward);
+        parameters.Add("Category", DataTableEnum.ChrInit);
+        parameters.Add("SubCategory", chrInit.Player);
+        parameters.Add("Name", chrInit.Name);
+        parameters.Add("Value", chrInit.Value);
         parameters.Add("CurrentSeed", this.currentSeed);
         parameters.Add("ActionType", "Modal");
 
@@ -93,8 +89,8 @@
         parameters.Add("RandomizedOptions", this.randomizedOptions);
 
         var options = new ModalOptions { Class = "modal-custom" };
-        var displayValue = string.IsNullOrEmpty(khEvent.Reward.ValueIdToDisplay()) ? "" : khEvent.Reward.ValueIdToDisplay();
+        var displayValue = string.IsNullOrEmpty(chrInit.Value.ValueIdToDisplay()) ? "" : chrInit.Value.ValueIdToDisplay();
 
-        Modal.Show<ChangeOption>($"Change {this.EventName} {khEvent.Id.KeyIdToDisplay()} - {displayValue}", parameters, options);
+        Modal.Show<ChangeOption>($"Change {this.ChrInitName} {this.ChrInitName.KeyIdToDisplay()} - {displayValue}", parameters, options);
     }
 }

@@ -14,10 +14,10 @@
             @if (option.Value.Count > 0)
             {
                 <div class="col-md-3 suboption-section">
-                    @foreach (var subOption in option.Value)
+                    @foreach (var subOption in option.Value.Where(x => !x.Key.Contains(":")))
                     {
                         <div class="row">
-                            <div class="@(currentSelection == subOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSelection(subOption.Key)">
+                            <div class="@(currentSelection == subOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")"  @onclick="() => UpdateCurrentSelection(subOption.Key)">
                                 <div class="col-md-12">
                                     <label class="switch" id="switch@(subOption.Key)" name="switch@(subOption.Key)">
                                         <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key, (bool)value.Value))" checked="@subOption.Value" disabled="@IsDisabled">
@@ -29,25 +29,62 @@
                                 </div>
                             </div>
                         </div>
+                                
+                        @if (extraSubOptions.ContainsKey(subOption.Key) && this.currentSelection == subOption.Key)
+                        {
+                            @foreach (var extraSubOption in extraSubOptions[subOption.Key])
+                            { 
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+
+                                    <div class="col-md-10">
+                                        <div class="@(currentSubSelection == extraSubOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSubSelection(extraSubOption.Key)">
+                                            <label class="switch" id="switch@(subOption.Key + ": " + extraSubOption.Key)" name="switch@(subOption.Key + ": " + extraSubOption.Key)">
+                                                <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key + ": " + extraSubOption.Key, (bool)value.Value))" checked="@extraSubOption.Value" disabled="@IsDisabled">
+                                                <span class="slider round"></span>
+                                            </label>
+
+
+                                            <label for="switch@(subOption.Key + ": " + extraSubOption.Key)" style="padding-left: 20px;"><b>@extraSubOption.Key</b></label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-1"></div>
+                                </div>
+                            }
+                        }
                     }
                 </div>
 
                 <div class="col-md-9" style="overflow-y: auto; max-height: 700px;">
                     <div style="border-radius: 10px; padding: 20px; @(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" class="@(this.SpoilerChecked ? "spoiler-overlay" : "")">
-                        @if (option.Key == "Treasures")
+                        @if (option.Key == "Worlds")
                         {
                             if (this.SwapOptions != null)
                             {
-                                <TreasureSubComponent WorldName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                      AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></TreasureSubComponent>
+                                <WorldSubComponent WorldName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></WorldSubComponent>
                             }
                             else
                             {
-                                <TreasureSubComponent WorldName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                      AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></TreasureSubComponent>
+                                <WorldSubComponent WorldName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></WorldSubComponent>
                             }
                         }
-                        else if (option.Key == "Equippables")
+                        else if (option.Key == "Sora")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <SoraSubComponent SoraName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                  AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></SoraSubComponent>
+                            }
+                            else
+                            {
+                                <SoraSubComponent SoraName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                  AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></SoraSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Equipment Abilities")
                         {
                             if (this.SwapOptions != null)
                             {
@@ -60,56 +97,30 @@
                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></EquippableSubComponent>
                             }
                         }
-                        else if (option.Key == "Starting Stats")
+                        else if (option.Key == "Data Battle Rewards")
                         {
                             if (this.SwapOptions != null)
                             {
-                                <ChrInitSubComponent ChrInitName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                     AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></ChrInitSubComponent>
+                                <DataBattleRewardSubComponent DataBattleRewardName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                              AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></DataBattleRewardSubComponent>
                             }
                             else
                             {
-                                <ChrInitSubComponent ChrInitName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                     AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></ChrInitSubComponent>
+                                <DataBattleRewardSubComponent DataBattleRewardName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                              AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></DataBattleRewardSubComponent>
                             }
                         }
-                        else if (option.Key == "Bonuses")
+                        else if (option.Key == "Moogle Workshop")
                         {
                             if (this.SwapOptions != null)
                             {
-                                <BonusSubComponent BonusName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></BonusSubComponent>
+                                <MoogleWorkshopSubComponent MoogleWorkshopName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></MoogleWorkshopSubComponent>
                             }
                             else
                             {
-                                <BonusSubComponent BonusName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></BonusSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Weapon Upgrades")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <WeaponUpgradeSubComponent WeaponUpgradeName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                           AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></WeaponUpgradeSubComponent>
-                            }
-                            else
-                            {
-                                <WeaponUpgradeSubComponent WeaponUpgradeName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                           AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></WeaponUpgradeSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Lucky Emblems")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <LuckyEmblemSubComponent LuckyEmblemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></LuckyEmblemSubComponent>
-                            }
-                            else
-                            {
-                                <LuckyEmblemSubComponent LuckyEmblemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></LuckyEmblemSubComponent>
+                                <MoogleWorkshopSubComponent MoogleWorkshopName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></MoogleWorkshopSubComponent>
                             }
                         }
                         else if (option.Key == "Fullcourse Abilities")
@@ -125,43 +136,56 @@
                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></FullcourseSubComponent>
                             }
                         }
-                        else if (option.Key == "Level Ups")
+                        else if (option.Key == "Lucky Emblems")
                         {
                             if (this.SwapOptions != null)
                             {
-                                <LevelUpSubComponent LevelUpName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                     AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></LevelUpSubComponent>
+                                <LuckyEmblemSubComponent LuckyEmblemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></LuckyEmblemSubComponent>
                             }
                             else
                             {
-                                <LevelUpSubComponent LevelUpName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                     AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></LevelUpSubComponent>
+                                <LuckyEmblemSubComponent LuckyEmblemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></LuckyEmblemSubComponent>
                             }
                         }
-                        else if (option.Key == "Events")
+                        else if (option.Key == "Flantastic Flans")
                         {
                             if (this.SwapOptions != null)
                             {
-                                <EventSubComponent EventName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></EventSubComponent>
+                                <FlantasticFlanSubComponent FlantasticFlanName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></FlantasticFlanSubComponent>
                             }
                             else
                             {
-                                <EventSubComponent EventName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></EventSubComponent>
+                                <FlantasticFlanSubComponent FlantasticFlanName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></FlantasticFlanSubComponent>
                             }
                         }
-                        else if (option.Key == "Synthesis Items")
+                        else if (option.Key == "Minigames")
                         {
                             if (this.SwapOptions != null)
                             {
-                                <SynthesisItemSubComponent SynthesisItemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></SynthesisItemSubComponent>
+                                <MinigameSubComponent MinigameName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                      AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></MinigameSubComponent>
                             }
                             else
                             {
-                                <SynthesisItemSubComponent SynthesisItemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></SynthesisItemSubComponent>
+                                <MinigameSubComponent MinigameName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                      AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></MinigameSubComponent>
+                            }
+                        }
+                        else if (option.Key == "Battle Portals")
+                        {
+                            if (this.SwapOptions != null)
+                            {
+                                <BattlePortalSubComponent BattlePortalName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                          AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></BattlePortalSubComponent>
+                            }
+                            else
+                            {
+                                <BattlePortalSubComponent BattlePortalName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                          AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></BattlePortalSubComponent>
                             }
                         }
                     </div>
@@ -196,6 +220,7 @@
     private List<Tuple<Option, Option>> modifications = new();
 
     private string currentSelection = "";
+    private string currentSubSelection = "";
     private string currentOption = "";
 
     private Dictionary<string, Collapsable> collapsableDictionary = new Dictionary<string, Collapsable>();
@@ -209,6 +234,60 @@
     private Dictionary<string, Dictionary<string, bool>> displayAvailableOptions = new();
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> displayRandomizedOptions = new();
 
+
+    private Dictionary<string, Dictionary<string, bool>> extraSubOptions = new Dictionary<string, Dictionary<string, bool>>
+    {
+        // Worlds
+        { "Olympus", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Events", true }, { "Bonuses", true }
+        } },
+        { "Twilight Town", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Events", true }, { "Bonuses", true }
+        } },
+        { "Toy Box", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Events", true }, { "Bonuses", true }
+        } },
+        { "Kingdom of Corona", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Events", true }, { "Bonuses", true }
+        } },
+        { "Monstropolis", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Events", true }, { "Bonuses", true }
+        } },
+        { "Arendelle", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Events", true }, { "Bonuses", true }
+        } },
+        { "San Fransokyo", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Events", true }, { "Bonuses", true }
+        } },
+        { "The Caribbean", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Events", true }, { "Bonuses", true }
+        } },
+        { "Keyblade Graveyard", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Events", true }, { "Bonuses", true }
+        } },
+
+        { "100 Acre Wood", new Dictionary<string, bool> {
+            { "Events", true }
+        } },
+        { "Re:Mind", new Dictionary<string, bool> {
+            { "Treasures", true }, { "Bonuses", true }
+        } },
+        { "Dark World", new Dictionary<string, bool> {
+            { "Bonuses", true }
+        } },
+        { "Unreality", new Dictionary<string, bool> {
+            { "Events", true }
+        } },
+
+        // Weapon Upgrades
+        { "Weapon Upgrades", new Dictionary<string, bool> {
+            { "Kingdom Key", true }, { "Hero's Origin", true }, { "Shooting Star", true }, { "Favorite Deputy", true },
+            { "Ever After", true }, { "Happy Gear", true }, { "Crystal Snow", true }, { "Hunny Spout", true },
+            { "Wheel of Fate", true }, { "Nano Gear", true }, { "Starlight", true }, { "Grand Chef", true },
+            { "Classic Tone", true }, { "Ultima Weapon", true }, { "Elemental Encoder", true }, { "Oblivion", true },
+            { "Oathkeeper", true }
+        } }
+    };
 
     protected override void OnParametersSet()
     {
@@ -229,6 +308,17 @@
 
         this.searchValue = "";
 
+        foreach (var option in this.availableOptions.Where(x => x.Key == "Worlds" || x.Key == "Moogle Workshop"))
+        {
+            foreach (var subOption in option.Value.Where(x => x.Key.Contains(":")))
+            {
+                var splitSubOption = subOption.Key.Split(": ");
+
+                if (splitSubOption.Length > 1)
+                    this.extraSubOptions[splitSubOption[0]][splitSubOption[1]] = subOption.Value;
+            }
+        }
+
         base.OnParametersSet();
     }
 
@@ -237,13 +327,18 @@
         this.currentSelection = selection;
     }
 
+    private void UpdateCurrentSubSelection(string selection)
+    {
+        this.currentSubSelection = selection;
+    }
+
     private void UpdateSwitch(string option, string subOption, bool value)
     {
         this.availableOptions[option][subOption] = value;
 
-        if (!string.IsNullOrEmpty(this.CurrentSeed))
-            this.RandomizerService.RandomizeItems(this.CurrentSeed, ref this.availableOptions, ref this.randomizedOptions);
-        
+        // if (!string.IsNullOrEmpty(this.CurrentSeed))
+        //    this.RandomizerService.RandomizeItems(this.CurrentSeed, ref this.availableOptions, ref this.randomizedOptions);
+
 
         this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
         this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
@@ -307,18 +402,21 @@
                     }
 
 
-                    if (isFound)
-                    {
-                        if (!this.searchAvailableOptions.ContainsKey(categoryConverted))
-                            this.searchAvailableOptions.Add(categoryConverted, new Dictionary<string, bool>());
+                    //if (isFound)
+                    //{
 
-                        if (!this.searchAvailableOptions[categoryConverted].ContainsKey(subCategoryConverted))
-                            this.searchAvailableOptions[categoryConverted].Add(subCategoryConverted, true);
-                    }
+
+                    //    if (!this.searchAvailableOptions.ContainsKey(categoryConverted))
+                    //        this.searchAvailableOptions.Add(categoryConverted, new Dictionary<string, bool>());
+
+                    //    if (!this.searchAvailableOptions[categoryConverted].ContainsKey(subCategoryConverted))
+                    //        this.searchAvailableOptions[categoryConverted].Add(subCategoryConverted, true);
+                    //}
                 }
             }
 
-            this.displayAvailableOptions = this.searchAvailableOptions;
+            //this.displayAvailableOptions = this.searchAvailableOptions;
+            this.displayAvailableOptions = this.availableOptions;
             this.displayRandomizedOptions = this.searchRandomizedOptions;
         }
         else

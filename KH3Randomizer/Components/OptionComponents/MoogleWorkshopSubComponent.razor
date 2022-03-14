@@ -1,0 +1,52 @@
+﻿@using UE4DataTableInterpreter.Enums
+
+@inject RandomizerService RandomizerService
+
+<h2><span class="selector" style="background-color: #00b0f8;"></span>@this.MoogleWorkshopName@(this.SubSelection.Length > 0 ? $" - {this.SubSelection}" : "")</h2>
+
+@if (this.MoogleWorkshopName == "Weapon Upgrades")
+{
+    if (this.SwapOptions != null)
+    {
+        <MoogleWorkshopWeaponUpgradeSubComponent WeaponUpgradeName="@this.SubSelection" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                   AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></MoogleWorkshopWeaponUpgradeSubComponent>
+    }
+    else
+    {
+        <MoogleWorkshopWeaponUpgradeSubComponent WeaponUpgradeName="@this.SubSelection" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                   AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></MoogleWorkshopWeaponUpgradeSubComponent>
+    }
+}
+else
+{
+    if (this.SwapOptions != null)
+    {
+        <MoogleWorkshopSynthesisItemSubComponent SynthesisItemName="@this.MoogleWorkshopName" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                   AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></MoogleWorkshopSynthesisItemSubComponent>
+    }
+    else
+    {
+        <MoogleWorkshopSynthesisItemSubComponent SynthesisItemName="@this.MoogleWorkshopName" RandomizedOptions="@this.RandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                   AvailableOptions="@this.AvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></MoogleWorkshopSynthesisItemSubComponent>
+    }
+}
+
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public string MoogleWorkshopName { get; set; }
+    [Parameter] public string SubSelection { get; set; }
+
+    [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
+    [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
+
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    [Parameter] public string ActionType { get; set; } = "Options"; // Options, Modal, Spoiler
+    [Parameter] public string CurrentSeed { get; set; }
+
+
+    [Parameter] public Action<DataTableEnum, string, string, string> SwapOptions { get; set; }
+}

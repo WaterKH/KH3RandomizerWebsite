@@ -25,9 +25,6 @@
     }
   },
   "EquipItem": {
-    "I03000": {
-
-    },
     "I03001": {
       "Ability0": "ETresAbilityKind::PRIZE_DRAW\u0000"
     },
@@ -82,267 +79,11 @@
       "Ability0": "ETresAbilityKind::LUCK_UP\u0000",
       "Ability1": "ETresAbilityKind::MAGIC_ROULETTE\u0000"
     },
-    "I03021": {
-
-    },
-    "I03022": {
-      
-    },
-    "I03023": {
-
-    },
-    "I03024": {
-      
-    },
-    "I03025": {
-
-    },
-    "I03026": {
-      
-    },
-    "I03027": {
-
-    },
-    "I03028": {
-      
-    },
-    "I03029": {
-      
-    },
-    "I03030": {
-      
-    },
-    "I03031": {
-      
-    },
-    "I03032": {
-      
-    },
-    "I03033": {
-      
-    },
-    "I03034": {
-      
-    },
-    "I03041": {
-
-    },
-    "I03042": {
-      
-    },
-    "I03043": {
-
-    },
-    "I03044": {
-      
-    },
-    "I03045": {
-
-    },
-    "I03046": {
-      
-    },
-    "I03047": {
-
-    },
-    "I03048": {
-      
-    },
-    "I03049": {
-      
-    },
-    "I03050": {
-      
-    },
-    "I03051": {
-      
-    },
-    "I03052": {
-      
-    },
-    "I03053": {
-      
-    },
-    "I03054": {
-      
-    },
-    "I03061": {
-
-    },
-    "I03062": {
-
-    },
-    "I03065": {
-
-    },
-    "I03066": {
-
-    },
-    "I03067": {
-
-    },
-    "I03069": {
-
-    },
-    "I03070": {
-
-    },
-    "I03071": {
-
-    },
-    "I03072": {
-
-    },
-    "I03073": {
-
-    },
-    "I03074": {
-
-    },
-    "I03075": {
-
-    },
-    "I03076": {
-
-    },
-    "I03077": {
-
-    },
-    "I03078": {
-
-    },
-    "I03079": {
-
-    },
-    "I03080": {
-
-    },
-    "I03083": {
-
-    },
-    "I03084": {
-
-    },
-    "I03085": {
-
-    },
-    "I03086": {
-
-    },
-    "I03087": {
-
-    },
-    "I03088": {
-
-    },
-    "I03089": {
-
-    },
     "I04001": {
       "Ability0": "ETresAbilityKind::BATTLE_GRAPHER\u0000"
     },
     "I04002": {
       "Ability0": "ETresAbilityKind::ITEM_UP\u0000"
-    },
-    "I04003": {
-
-    },
-    "I04004": {
-
-    },
-    "I04005": {
-
-    },
-    "I04006": {
-
-    },
-    "I04007": {
-
-    },
-    "I04008": {
-
-    },
-    "I04009": {
-
-    },
-    "I04010": {
-
-    },
-    "I04011": {
-    },
-    "I04012": {
-    },
-    "I04013": {
-    },
-    "I04014": {
-    },
-    "I04015": {
-    },
-    "I04016": {
-    },
-    "I04017": {
-    },
-    "I04018": {
-    },
-    "I04019": {
-    },
-    "I04020": {
-    },
-    "I04021": {
-    },
-    "I04022": {
-    },
-    "I04023": {
-    },
-    "I04024": {
-    },
-    "I04025": {
-    },
-    "I04026": {
-    },
-    "I04027": {
-    },
-    "I04028": {
-    },
-    "I04029": {
-    },
-    "I04030": {
-    },
-    "I04031": {
-    },
-    "I04032": {
-    },
-    "I04033": {
-
-    },
-    "I04034": {
-
-    },
-    "I04035": {
-
-    },
-    "I04036": {
-
-    },
-    "I04037": {
-
-    },
-    "I04038": {
-    },
-    "I04039": {
-    },
-    "I04040": {
-    },
-    "I04041": {
-    },
-    "I04042": {
-
-    },
-    "I04043": {
-
-    },
-    "I04044": {
-
     },
     "I04045": {
       "Ability0": "ETresAbilityKind::BURN_GUARD\u0000"
@@ -359,50 +100,11 @@
     "I04049": {
       "Ability0": "ETresAbilityKind::DISCHARGE_GUARD\u0000"
     },
-    "I04050": {
-
-    },
-    "I04051": {
-
-    },
-    "I04052": {
-
-    },
     "I05001": {
       "Ability0": "ETresAbilityKind::WALK_REGENE\u0000"
     },
     "I05002": {
       "Ability0": "ETresAbilityKind::WALK_HEALING\u0000"
-    },
-    "I05003": {
-
-    },
-    "I05004": {
-
-    },
-    "I05005": {
-
-    },
-    "I05006": {
-
-    },
-    "I05007": {
-
-    },
-    "I05008": {
-
-    },
-    "I05009": {
-
-    },
-    "I05010": {
-
-    },
-    "I05011": {
-
-    },
-    "I05012": {
-
     },
     "I05013": {
       "Ability0": "ETresAbilityKind::POWER_CURE\u0000"
@@ -415,9 +117,6 @@
     },
     "I05016": {
       "Ability0": "ETresAbilityKind::POWER_CURE\u0000"
-    },
-    "I05017": {
-
     },
     "I05018": {
       "Ability0": "ETresAbilityKind::MP_LEAVE\u0000"
@@ -1657,10 +1356,6 @@
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::AERIAL_SWEEP\u0000"
     },
-    "Vbonus_003": {
-    },
-    "Vbonus_004": {
-    },
     "Vbonus_005": {
       "Sora_Bonus1": "ETresVictoryBonusKind::HP_UP10\u0000",
       "Sora_Ability1": "ETresAbilityKind::AERIAL_DIVE\u0000",
@@ -1696,8 +1391,6 @@
       "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
-    },
-    "Vbonus_012": {
     },
     "Vbonus_013": {
       "Sora_Bonus1": "ETresVictoryBonusKind::HP_UP10\u0000",
@@ -1807,8 +1500,6 @@
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
-    "Vbonus_031": {
-    },
     "Vbonus_032": {
       "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability1": "ETresAbilityKind::REVENGEIMPACT\u0000",
@@ -1892,8 +1583,6 @@
       "Sora_Ability1": "ETresAbilityKind::RISKDODGE\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
-    },
-    "Vbonus_046": {
     },
     "Vbonus_047": {
       "Sora_Bonus1": "ETresVictoryBonusKind::MELEM_BLIZZARD\u0000",
@@ -2074,16 +1763,6 @@
       "Sora_Ability1": "ETresAbilityKind::GLIDE\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
-    },
-    "Vbonus_077": {
-    },
-    "Vbonus_078": {
-    },
-    "Vbonus_079": {
-    },
-    "Vbonus_080": {
-    },
-    "Vbonus_081": {
     },
     "Vbonus_082": {
       "Sora_Bonus1": "ETresVictoryBonusKind::MELEM_FIRE\u0000",
