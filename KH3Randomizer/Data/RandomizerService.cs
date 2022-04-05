@@ -21,6 +21,9 @@ namespace KH3Randomizer.Data
                                                                "DOUBLEFLIGHT", "LAST_LEAVE", "COMBO_LEAVE",
                                                                "MELEM" };
 
+        public readonly List<string> VBonusCriticalAbilities = new() { "Vbonus_017", "Vbonus_026", "Vbonus_028", "Vbonus_032", "Vbonus_036", "Vbonus_041",
+                                                                       "Vbonus_045", "Vbonus_049", "Vbonus_050", "Vbonus_055", "Vbonus_058", "Vbonus_060", "Vbonus_069" };
+
         // OBSELETE
         public Dictionary<string, Dictionary<string, bool>> GetAvailableOptions(Dictionary<string, RandomizeOptionEnum> availablePools, ref Dictionary<string, Dictionary<string, bool>> availableOptions, bool backTo = false)
         {
@@ -825,7 +828,7 @@ namespace KH3Randomizer.Data
             {
                 foreach (var (name, value) in randomizedOptions[DataTableEnum.ChrInit]["m_PlayerSora"])
                 {
-                    if (name == "Weapon")
+                    if (name == "Weapon" || name.Contains("Crit"))
                         continue;
 
                     var defaultAbility = this.GetDefaultAbility(name);
@@ -837,6 +840,51 @@ namespace KH3Randomizer.Data
                     // Swap these options
                     randomizedOptions[DataTableEnum.ChrInit]["m_PlayerSora"][name] = ability.Value;
                     randomizedOptions[abilityCategory][abilitySubCategory][ability.Key] = value;
+                }
+            }
+
+            if (exceptions["Default Critical Abilities"])
+            {
+                foreach (var (name, value) in randomizedOptions[DataTableEnum.ChrInit]["m_PlayerSora"])
+                {
+                    if (name == "Weapon" || !name.Contains("Crit"))
+                        continue;
+
+                    var defaultAbility = this.GetDefaultAbility(name);
+
+                    var abilityCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == defaultAbility))).Key;
+                    var abilitySubCategory = randomizedOptions[abilityCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == defaultAbility)).Key;
+                    var ability = randomizedOptions[abilityCategory][abilitySubCategory].FirstOrDefault(z => z.Value == defaultAbility);
+
+                    // Swap these options
+                    randomizedOptions[DataTableEnum.ChrInit]["m_PlayerSora"][name] = ability.Value;
+                    randomizedOptions[abilityCategory][abilitySubCategory][ability.Key] = value;
+                }
+            }
+
+            if (exceptions["Early Critical Abilities"])
+            {
+                foreach (var (subCategory, subCategoryOptions) in randomizedOptions[DataTableEnum.VBonus])
+                {
+                    if (!this.VBonusCriticalAbilities.Contains(subCategory))
+                        continue;
+
+                    var results = this.GetDefaultAbilitiesBonusesForVBonus(subCategory);
+
+                    foreach (var result in results)
+                    {
+                        var abilityBonusCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == result.Value))).Key;
+                        var abilityBonusSubCategory = randomizedOptions[abilityBonusCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == result.Value)).Key;
+                        var abilityBonus = randomizedOptions[abilityBonusCategory][abilityBonusSubCategory].FirstOrDefault(z => z.Value == result.Value);
+
+                        // Swap these options
+                        randomizedOptions[DataTableEnum.VBonus][subCategory][result.Key] = abilityBonus.Value;
+                        randomizedOptions[abilityBonusCategory][abilityBonusSubCategory][abilityBonus.Key] = result.Value;
+                    }
+
+                    // Once we hit this, we've reached the end of our list
+                    if (subCategory == "Vbonus_069")
+                        break;
                 }
             }
         }
@@ -1638,6 +1686,24 @@ namespace KH3Randomizer.Data
                 }
             }
 
+            // Account for early abilities for Critical Mode
+            foreach (var vbonus in this.VBonusCriticalAbilities)
+            {
+                var results = this.GetDefaultAbilitiesBonusesForVBonus(vbonus);
+
+                foreach (var result in results)
+                {
+                    var vbonusCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == result.Value))).Key;
+                    var vbonusSubCategory = randomizedOptions[vbonusCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == result.Value)).Key;
+                    var vbonusFound = randomizedOptions[vbonusCategory][vbonusSubCategory].FirstOrDefault(z => z.Value == result.Value);
+                    var poleSpinOption = new Option { Category = vbonusCategory, SubCategory = vbonusSubCategory, Name = vbonusFound.Key, Value = vbonusFound.Value };
+
+                    var vbonusCategoryNeeded = this.RetrieveCategoryNeeded(vbonusCategory, vbonusFound.Key);
+
+                    this.SwapRandomOption(ref randomizedOptions, random, vbonusCategoryNeeded, poleSpinOption, canUseNone);
+                }
+            }
+
             // Account for Pole Spin
             var poleSpinCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => y.Key != "GIVESORA_POLE_SPIN" && y.Value.Any(z => z.Value.Contains("POLE_SPIN")))).Key;
             var poleSpinSubCategory = randomizedOptions[poleSpinCategory].FirstOrDefault(y => y.Key != "GIVESORA_POLE_SPIN" && y.Value.Any(z => z.Value.Contains("POLE_SPIN"))).Key;
@@ -2239,6 +2305,61 @@ namespace KH3Randomizer.Data
             }
 
             return ability;
+        }
+
+        public Dictionary<string, string> GetDefaultAbilitiesBonusesForVBonus(string vbonus)
+        {
+            var results = new Dictionary<string, string>();
+
+            switch (vbonus)
+            {
+                case "Vbonus_017":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::AIR_RECOVERY\u0000");
+                    break;
+                case "Vbonus_026":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::GUARD_COUNTER\u0000");
+                    break;
+                case "Vbonus_028":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::SLASH_UPPER\u0000");
+                    break;
+                case "Vbonus_032":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::REVENGEIMPACT\u0000");
+                    break;
+                case "Vbonus_036":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::COMBO_MASTER\u0000");
+                    break;
+                case "Vbonus_041":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::AIR_ROLL_BEAT\u0000");
+                    break;
+                case "Vbonus_045":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::RISKDODGE\u0000");
+                    break;
+                case "Vbonus_049":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::AIRSLIDE\u0000");
+                    results.Add("Sora_Bonus2", "ETresVictoryBonusKind::ACC_SLOT_UP1\u0000");
+                    break;
+                case "Vbonus_050":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::SUPERSLIDE\u0000");
+                    results.Add("Sora_Bonus2", "ETresVictoryBonusKind::MP_UP5\u0000");
+                    break;
+                case "Vbonus_055":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::SUPERSLIDE\u0000");
+                    break;
+                case "Vbonus_058":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::REVENGEDIVE\u0000");
+                    break;
+                case "Vbonus_060":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::AIRSLIDE\u0000");
+                    break;
+                case "Vbonus_069":
+                    results.Add("Sora_Ability1", "ETresAbilityKind::REVENGE_EX\u0000");
+                    results.Add("Sora_Bonus2", "ETresVictoryBonusKind::ITEM_SLOT_UP1\u0000");
+                    break;
+                default:
+                    break;
+            }
+
+            return results;
         }
 
         #region World Options
