@@ -37,8 +37,14 @@ namespace KH3Randomizer.Data
                 {
                     foreach (var searchSubCategory in searchCategory.Value)
                     {
+                        if (searchSubCategory.Key.Contains("GIVESORA"))
+                            continue;
+
                         foreach (var (searchName, searchValue) in searchSubCategory.Value)
                         {
+                            if (searchName.Contains("TypeB") || searchName.Contains("TypeC"))
+                                continue;
+
                             if (searchValue == this.GetDisplayToId(hintName) || (searchCategory.Key == DataTableEnum.ChrInit && searchValue == this.GetDisplayToDefKeyblade(hintName)))
                             {
                                 if (searchCategory.Key == DataTableEnum.LevelUp)
@@ -102,9 +108,7 @@ namespace KH3Randomizer.Data
 
             hintList.Shuffle(rng);
 
-            var mobile = new Mobile();
-            hints = mobile.Process(hintList).ToArray();
-            var hintNames = new List<string> { "SecretReport02", "SecretReport03", "SecretReport04", "SecretReport05", "SecretReport06", "SecretReport07", "SecretReport08", 
+            var hintNames = new List<string> { "SecretReport02", "SecretReport03", "SecretReport04", "SecretReport05", "SecretReport06", "SecretReport07", "SecretReport08",
                                                "SecretReport09", "SecretReport10", "SecretReport11", "SecretReport12", "SecretReport13", "SecretReport14", };
             for (int i = 0; i < hintList.Count; ++i)
             {
@@ -116,6 +120,9 @@ namespace KH3Randomizer.Data
                 hintValues[hintNames[index]].Add(hintList[i]);
             }
 
+            var mobile = new Mobile();
+            hints = mobile.Process(hintList).ToArray();
+            
             return hints;
         }
 
@@ -1642,10 +1649,10 @@ namespace KH3Randomizer.Data
                 if (levelUp.Value["TypeA"].Equals(value))
                     levelUpTexts.Add($"{levelUp.Key} (TypeA)");
 
-                if (levelUp.Value["TypeB"].Equals(value))
+                if (levelUp.Value.ContainsKey("TypeB") && levelUp.Value["TypeB"].Equals(value))
                     levelUpTexts.Add($"{levelUp.Key} (TypeB)");
-                
-                if (levelUp.Value["TypeC"].Equals(value))
+
+                if (levelUp.Value.ContainsKey("TypeC") && levelUp.Value["TypeC"].Equals(value))
                     levelUpTexts.Add($"{levelUp.Key} (TypeC)");
 
                 if (levelUpTexts.Count == 3)

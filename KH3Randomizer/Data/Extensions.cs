@@ -1298,6 +1298,8 @@ namespace KH3Randomizer.Data
                     return "Fire Bangle";
                 case "PRT_ITEM12":
                     return "Firaga Bangle";
+                case "PRT_ITEM13":
+                    return "Firagun Bangle";
 
                 case "PRT_ITEM14":
                     return "Fire Chain";
@@ -1360,6 +1362,8 @@ namespace KH3Randomizer.Data
                     return "Ribbon";
                 case "PRT_ITEM38":
                     return "Fira Bangle";
+                case "PRT_ITEM39":
+                    return "Blizzaza Choker";
 
                 case "PRT_ITEM40":
                     return "Thundaza Trinket";

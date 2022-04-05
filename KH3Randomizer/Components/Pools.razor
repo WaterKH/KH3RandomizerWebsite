@@ -101,6 +101,62 @@
         </div>
     </div>
 
+    <div class="pools-subsection">
+        <h3 style="display: inline;">Exceptions</h3>
+
+        <div class="row">
+            @* This is because canBeNone was developed outside of the exception framework and re-designing the entire structure again is too much right now *@
+            <div class="col-md-4" style="margin: 15px 0px;">
+                <div class="row">
+                    <div class="col-md-2">
+                        <label class="switch">
+                            <input type="checkbox" @onchange="@(() => { this.CanBeNone = !this.CanBeNone; this.UpdateCanBeNone.InvokeAsync(this.CanBeNone); 
+                                                                    this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed }); })" checked="@this.CanBeNone">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label><b>Can Be None</b></label>
+                    </div>
+
+                    <div class="col-md-1">
+                        <Tooltip Text="Allows None to appear in all Pools. For instance, opening a chest may have nothing in it.">
+                            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
+                        </Tooltip>
+                    </div>
+                </div>
+            </div>
+
+            @foreach (var (name, value) in this.exceptions)
+            {
+                <div class="col-md-4" style="margin: 15px 0px;">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="switch">
+                                <input type="checkbox" @onchange="@((value) => { this.exceptions[name] = (bool)value.Value; this.UpdateExceptions.InvokeAsync(this.exceptions);
+                                                                        this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed }); })" checked="@value">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label><b>@name</b></label>
+                        </div>
+
+                        <div class="col-md-1">
+                            <Tooltip Text="@this.exceptionDescriptions[name]">
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
+                            </Tooltip>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (!this.IsSpoilerLog)
+    {
     <b>Is Plandomizer: </b>
 
     <label class="switch">
@@ -109,17 +165,9 @@
     </label>
 
     <label style="margin-left: 10px;"><i>This feature is active but not supported for the 1.1 release.</i></label>
-
-
-
-    <label class="switch" style="margin-left: 50px;">
-        <input type="checkbox" @onchange="@(() => { this.CanBeNone = !this.CanBeNone; this.UpdateCanBeNone.InvokeAsync(this.CanBeNone); })" checked="@this.CanBeNone">
-        <span class="slider round"></span>
-    </label>
-
-    <label style="margin-left: 10px;"><b>Can Be None</b></label>
-
-    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to @(this.IsPlando ? "Options" : "QoL")...</button>
+    
+    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to @(this.IsPlando ? "Options" : "Quality of Life")...</button>
+    }
 </div>
 
 @code {
@@ -129,9 +177,12 @@
     [Parameter] public EventCallback<bool> UpdateCanBeNone { get; set; }
     [Parameter] public EventCallback<string> UpdateCurrentSeed { get; set; }
     [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, bool>> UpdateExceptions { get; set; }
 
     [Parameter] public Dictionary<string, RandomizeOptionEnum> AvailablePools { get; set; }
+    [Parameter] public Dictionary<string, bool> Exceptions { get; set; }
     [Parameter] public bool IsPlando { get; set; }
+    [Parameter] public bool IsSpoilerLog { get; set; } = false;
     [Parameter] public bool CanBeNone { get; set; }
     [Parameter] public string CurrentSeed { get; set; }
 
@@ -140,6 +191,12 @@
 
     private Dictionary<string, RandomizeOptionEnum> worldPools = new Dictionary<string, RandomizeOptionEnum>();
     private Dictionary<string, RandomizeOptionEnum> miscellaneousPools = new Dictionary<string, RandomizeOptionEnum>();
+    private Dictionary<string, bool> exceptions { get; set; }
+
+    private Dictionary<string, string> exceptionDescriptions = new Dictionary<string, string>
+    {
+        { "Default Abilities", "Keeps Sora's base abilities from being randomized, like Pole Spin, Dodge, Block, etc." }
+    };
 
     private Dictionary<string, string> optionDescriptions = new Dictionary<string, string> {
         { "Treasures", "The treasure chests in each world." },
@@ -162,8 +219,20 @@
     {
         this.worldPools = this.RandomizerService.GetPools(this.AvailablePools, "World");
         this.miscellaneousPools = this.RandomizerService.GetPools(this.AvailablePools, "Miscellaneous");
+        this.exceptions = this.Exceptions;
 
         this.currentSeed = this.CurrentSeed ?? "";
+    }
+
+    protected override void OnParametersSet()
+    {
+        this.worldPools = this.RandomizerService.GetPools(this.AvailablePools, "World");
+        this.miscellaneousPools = this.RandomizerService.GetPools(this.AvailablePools, "Miscellaneous");
+        this.exceptions = this.Exceptions;
+
+        this.currentSeed = this.CurrentSeed ?? "";
+
+        base.OnParametersSet();
     }
 
     private void UpdateWorldPool(string key, RandomizeOptionEnum randomizeOptionEnum)
@@ -208,7 +277,7 @@
 
         this.UpdateAvailablePools.InvokeAsync(combinedDictionary);
 
-        var randomizedItems = this.RandomizerService.Process(this.currentSeed, combinedDictionary, this.CanBeNone);
+        var randomizedItems = this.RandomizerService.Process(this.currentSeed, combinedDictionary, this.exceptions, this.CanBeNone);
 
         this.UpdateRandomizedOptions.InvokeAsync(randomizedItems);
     }

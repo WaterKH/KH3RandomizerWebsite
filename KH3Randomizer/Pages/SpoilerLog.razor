@@ -44,21 +44,25 @@
     <div class="spoiler-log-options">
         <div class="spoiler-log-pools">
             <div class="row">
-                @foreach (var pool in this.availablePools)
-                {
-                    @*if (pool.Key != "Bosses" && pool.Key != "Enemies" && pool.Key != "Room Transitions" && pool.Key != "General Stats")
-                    { 
-                        <div class="col-md-2">
-                            <a class="rounded-selector a-tag-selector @(pool.Value ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { availablePools[pool.Key] = !pool.Value; this.UpdateAvailablePools(); })" @onclick:preventDefault>@pool.Key</a>
-                        </div>
-                    }*@
-                }
+                <Pools AvailablePools="@this.availablePools" CanBeNone="@this.canBeNone" CurrentSeed="@this.currentSeed" IsSpoilerLog="true" Exceptions="@this.exceptions"
+                       UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdateCanBeNone="@(canBeNone => UpdateCanBeNone(canBeNone))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" 
+                       UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateExceptions="@(exceptions => UpdateExceptions(exceptions))">
+                </Pools>
             </div>
         </div>
 
+        @if (this.randomizedOptions.Count > 0)
+        {
         <hr />
 
-        <div class="row">
+        <div class="kh-modification-button">
+            @if (this.modifications.Count > 0)
+            {
+                <button class="btn btn-danger" @onclick="ResetModifications">Reset Modifications</button>
+            }
+        </div>
+
+        @*<div class="row">
             <div class="kh-input col-md-10">
                 <div class="row">
                     <div class="col-md-2">
@@ -81,37 +85,54 @@
                     <button class="btn btn-danger" @onclick="ResetModifications">Reset Modifications</button>
                 }
             </div>
-        </div>
+        </div>*@
 
         <div style="margin-top: 25px;"></div>
 
         <OptionsSubsection UpdateAvailableOptions="@this.UpdateAvailableOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                           CurrentSeed="@this.currentSeed" AvailableOptions="@this.tempOptions" RandomizedOptions="@this.randomizedOptions"
-                           ActionType="Modal" SpoilerChecked="false" />
+                           CurrentSeed="@this.currentSeed" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions"
+                           ActionType="Options" SpoilerChecked="false" />
+        }
     </div>
 </div>
 
 
 @code {
     private string currentSeed { get; set; }
+    private bool canBeNone { get; set; }
 
-    private Dictionary<string, bool> allPools = new Dictionary<string, bool> {
-        { "Treasures", true }, { "Events", true }, { "Starting Stats", true }, { "Lucky Emblems", false }, { "Bonuses", true },
-        { "Fullcourse Abilities", true }, { "Level Ups", true }, { "Weapon Upgrades", true }, {"Equippables", true }
+    private Dictionary<string, RandomizeOptionEnum> availablePools = new Dictionary<string, RandomizeOptionEnum>
+    {
+        // World Categories - Custom Categories that contain Treasures, Events & Bonuses
+        { "Olympus", RandomizeOptionEnum.Randomize }, { "Twilight Town", RandomizeOptionEnum.Randomize }, { "Toy Box", RandomizeOptionEnum.Randomize },
+        { "Kingdom of Corona", RandomizeOptionEnum.Randomize }, { "Monstropolis", RandomizeOptionEnum.Randomize }, { "100 Acre Wood", RandomizeOptionEnum.Randomize },
+        { "Arendelle", RandomizeOptionEnum.Randomize }, { "San Fransokyo", RandomizeOptionEnum.Randomize }, { "The Caribbean", RandomizeOptionEnum.Randomize },
+        { "Keyblade Graveyard", RandomizeOptionEnum.Randomize }, { "Re:Mind", RandomizeOptionEnum.Randomize }, { "Dark World", RandomizeOptionEnum.Randomize },
+        { "Unreality", RandomizeOptionEnum.Randomize },
+
+        // Miscellaneous Categories
+        { "Sora", RandomizeOptionEnum.Randomize }, { "Equipment Abilities", RandomizeOptionEnum.Replace }, { "Data Battle Rewards", RandomizeOptionEnum.Replace },
+        { "Moogle Workshop", RandomizeOptionEnum.Randomize }, { "Fullcourse Abilities", RandomizeOptionEnum.Vanilla }, { "Lucky Emblems", RandomizeOptionEnum.Randomize },
+        { "Flantastic Flans", RandomizeOptionEnum.Replace }, { "Minigames", RandomizeOptionEnum.Replace }, { "Battle Portals", RandomizeOptionEnum.Replace },
+
+        // Always On - Proofs, Oathkeeper, Oblivion, Meow Wow, Gummiphone
+        { "Always On", RandomizeOptionEnum.Replace }
     };
 
-    private Dictionary<string, bool> availablePools = new();
+    private Dictionary<string, bool> exceptions = new Dictionary<string, bool>
+    {
+        { "Default Abilities", false }
+    };
+
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
 
-    private Dictionary<string, Dictionary<string, bool>> tempOptions = new();
+    //private Dictionary<string, Dictionary<string, bool>> tempOptions = new();
 
     private List<Tuple<Option, Option>> modifications = new();
 
     protected override void OnInitialized()
     {
-        this.UpdateAvailablePools(this.allPools);
-
         InvokeAsync(() =>
         {
             StateHasChanged();
@@ -164,13 +185,30 @@
         });
     }
 
-    public void UpdateAvailablePools(Dictionary<string, bool> availablePools = null)
+    public void UpdateCanBeNone(bool canBeNone)
     {
-        if (availablePools != null)
-            this.availablePools = availablePools;
+        this.canBeNone = canBeNone;
 
-        // TODO Come back and update this logic
-        //this.tempOptions = this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, ref this.randomizedOptions);
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateAvailablePools(Dictionary<string, RandomizeOptionEnum> availablePools)
+    {
+        this.availablePools = availablePools;
+
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateExceptions(Dictionary<string, bool> exceptions)
+    {
+        this.exceptions = exceptions;
 
         InvokeAsync(() =>
         {
@@ -181,7 +219,7 @@
     public void UpdateAvailableOptions(Dictionary<string, Dictionary<string, bool>> availableOptions)
     {
         this.availableOptions = availableOptions;
-        this.tempOptions = availableOptions;
+        //this.tempOptions = availableOptions;
 
         InvokeAsync(() =>
         {
@@ -192,6 +230,9 @@
     public void UpdateRandomizedOptions(Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions)
     {
         this.randomizedOptions = randomizedOptions;
+
+        this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, false);
+        this.UpdateAvailableOptions(this.availableOptions);
 
         InvokeAsync(() =>
         {
@@ -223,12 +264,15 @@
 
         if (spoilerLogFile != null)
         {
-            // TODO Come back and update this logic
-            //this.UpdateAvailablePools(spoilerLogFile.AvailablePools);
-            this.UpdateAvailableOptions(spoilerLogFile.AvailableOptions);
             this.UpdateCurrentSeed(spoilerLogFile.SeedName);
+            this.UpdateAvailablePools(spoilerLogFile.AvailablePools);
+            this.UpdateExceptions(spoilerLogFile.Exceptions);
 
-            this.RandomizerService.RandomizeItems(this.currentSeed, ref this.availableOptions, ref this.randomizedOptions);
+            this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, false);
+            this.UpdateAvailableOptions(this.availableOptions);
+
+            this.randomizedOptions = this.RandomizerService.Process(this.currentSeed, this.availablePools, this.exceptions, this.canBeNone);
+            this.UpdateRandomizedOptions(this.randomizedOptions);
 
             foreach (var item in spoilerLogFile.Modifications)
             {

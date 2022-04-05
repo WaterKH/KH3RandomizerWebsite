@@ -12,7 +12,7 @@
                         <label for="seed" style="font-size: 1.3rem; padding: 5px 0px 0px 0px;">Seed Name: </label>
                     </div>
                     <div class="col-md-6">
-                        <input id="seed" name="seed" class="kh-inputfield" @onchange="RandomizeOptions" placeholder="Enter a seed name..." value="@(string.IsNullOrEmpty(this.currentSeed) ? "" : this.currentSeed)" disabled="@(!this.isSpoilerChecked)" />
+                        <input id="seed" name="seed" class="kh-inputfield" @onchange="RandomizeOptions" placeholder="Enter a seed name..." value="@(string.IsNullOrEmpty(this.currentSeed) ? "" : this.currentSeed)" disabled="@(!this.isSpoilerChecked || this.isDisabled)" />
                     </div>
                     <div class="col-md-1" style="margin-top: 8px; float: right;">
                         <Tooltip Text="This is what is used to randomize the items. You can generate a duplicate seed if the same name is used.">
@@ -68,6 +68,7 @@
     [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
     [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
     [Parameter] public bool IsGoingBack { get; set; }
+    [Parameter] public bool IsDisabled { get; set; }
 
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> tempRandomizedItems = new();
     // private Dictionary<string, Dictionary<string, bool>> tempOptions = new();
@@ -80,6 +81,7 @@
     private string currentSelection = "";
     private string currentSeed = "";
     private bool isSpoilerChecked = true;
+    private bool isDisabled = false;
 
     protected override void OnInitialized()
     {
@@ -88,6 +90,7 @@
         this.availableOptions = this.AvailableOptions;
         this.randomizedOptions = this.RandomizedOptions;
         this.modifications = this.Modifications;
+        this.isDisabled = this.IsDisabled;
 
         this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, this.IsGoingBack);
         //this.tempRandomizedItems = this.RandomizerService.GetRandomizedItems();

@@ -2,6 +2,9 @@
 
 <div class="qol-section">
     <div class="qol-subsection">
+        <h3>Quality of Life</h3>
+
+
         <button class="btn kh-button" @onclick="ToggleOptions">All Options: @(this.allOptionText)</button>
 
         <br />
@@ -22,13 +25,20 @@
                                 <div class="row">
                                     <div class="col-md-2">
                                         <label class="switch">
-                                            <input type="checkbox" @onchange="@((value) => { qolOptions[category][name] = (bool)value.Value; this.UpdateQoLOptionsText(); })" checked="@value">
+                                            <input type="checkbox" @onchange="@((value) => { qolOptions[category][name] = (bool)value.Value; this.UpdateQoLOptionsText(); })" checked="@value" disabled="@(name == "Faster Crab Collection" || name == "Faster Sora Collection")">
                                             <span class="slider round"></span>
                                         </label>
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label><b>@name</b></label>
+                                        @if (name == "Faster Crab Collection" || name == "Faster Sora Collection")
+                                        {
+                                            <label><s><b>@name</b></s></label>
+                                        }
+                                        else
+                                        {
+                                            <label><b>@name</b></label>
+                                        }
                                     </div>
 
                                     <div class="col-md-1">
@@ -76,9 +86,8 @@
         { "Union χ Skip", "Skips the tornado sequence where you spam triangle in The Keyblade Graveyard." },
         { "Guardians of Light Skip", "Skips the cutscene fight with all of the Guardians of Light vs the Replica Xehanorts." },
         { "Slow Mickey Skip", "Skips the fight with the Replica Xehanorts and Mickey Mouse." },
-        { "Faster Remy Cooking", "Skips the fight with the Replica Xehanorts and Mickey Mouse." },
 
-        { "All Maps Unlocked", "Gives all of the maps in the game to Sora from the start. (Useful for new players using the Map Mod that shows items and lucky emblems." },
+        { "All Maps Unlocked", "Gives all of the maps in the game to Sora from the start." },
         { "Fully Upgraded Keyblades", "Sets all of the keyblades' levels to max." },
         { "CK Auto-Highscore", "Set Classic Kingdom highscores when obtained so that on obtaining the last CK game, the reward will be given." },
         { "Max Level Leviathan", "Start with your Leviathan boat at the Max Level to give max damage and speed." }

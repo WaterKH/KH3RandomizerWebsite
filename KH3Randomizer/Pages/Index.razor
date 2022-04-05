@@ -11,15 +11,16 @@
 
     @if (this.currentSection == "Pools")
     {
-        <Pools ContinueTo="@(() => ContinueTo(this.IsPlando ? "Options" : "QoL"))" AvailablePools="@this.availablePools" IsPlando="@this.IsPlando" CanBeNone="@this.CanBeNone" CurrentSeed="@this.CurrentSeed"
-               UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdatePlando="@(isPlando => UpdatePlandoOption(isPlando))" UpdateCanBeNone="@(canBeNone => UpdateCanBeNone(canBeNone))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))">
+        <Pools ContinueTo="@(() => ContinueTo(this.IsPlando ? "Options" : "QoL"))" AvailablePools="@this.availablePools" IsPlando="@this.IsPlando" CanBeNone="@this.CanBeNone" CurrentSeed="@this.CurrentSeed" Exceptions="@this.exceptions"
+               UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdatePlando="@(isPlando => UpdatePlandoOption(isPlando))" UpdateCanBeNone="@(canBeNone => UpdateCanBeNone(canBeNone))" 
+               UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateExceptions="@(exceptions => UpdateExceptions(exceptions))">
         </Pools>
     }
     else if (this.currentSection == "Options" && this.IsPlando)
     {
         <Options ContinueTo="@(() => ContinueTo("QoL"))" BackTo="@(() => BackTo("Pools"))"
                  UpdateAvailableOptions="@(options => UpdateAvailableOptions(options))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateModifications="@((option1, option2) => UpdateModifications(option1, option2))"
-                 CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack">
+                 CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack" IsDisabled="true">
         </Options>
     }
     else if (this.currentSection == "QoL")
@@ -35,8 +36,8 @@
     else if (this.currentSection == "Review")
     {
         <Review BackTo="@(() => BackTo("Hints"))" CurrentSeed="@this.CurrentSeed" RandomizedOptions="@this.randomizedOptions"
-                AvailablePools="@this.availablePools" Modifications="@this.modifications"
-                AvailableHints="@this.availableHints" HintSelectionType="@this.hintSelectionType"
+                AvailablePools="@this.availablePools" Exceptions="this.exceptions" Modifications="@this.modifications"
+                AvailableHints="@this.availableHints" HintSelectionType="@this.hintSelectionType" CanBeNone="@this.CanBeNone"
                 AvailableQualityOfLifeSettings="@this.availableQualityOfLifeOptions"></Review>
     }
 </div>
@@ -71,6 +72,11 @@
 
         // Always On - Proofs, Oathkeeper, Oblivion, Meow Wow, Gummiphone
         { "Always On", RandomizeOptionEnum.Replace }
+    };
+
+    private Dictionary<string, bool> exceptions = new Dictionary<string, bool>
+    {
+        { "Default Abilities", false }
     };
 
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
@@ -119,7 +125,7 @@
         },
         { "Events", new Dictionary<string, bool>
         { { "Frozen Chase Skip", true },  { "Faster Crab Collection", false }, { "Big Hero Rescue Skip", false },
-            { "Faster Sora Collection", true }, { "Union χ Skip", false }, { "Guardians of Light Skip", false }, { "Slow Mickey Skip", true } }
+            { "Faster Sora Collection", false }, { "Union χ Skip", false }, { "Guardians of Light Skip", false }, { "Slow Mickey Skip", true } }
         },
         { "Items", new Dictionary<string, bool>
         { { "All Maps Unlocked", false } }
@@ -172,6 +178,16 @@
     public void UpdateAvailablePools(Dictionary<string, RandomizeOptionEnum> availablePools)
     {
         this.availablePools = availablePools;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateExceptions(Dictionary<string, bool> exceptions)
+    {
+        this.exceptions = exceptions;
 
         InvokeAsync(() =>
         {
