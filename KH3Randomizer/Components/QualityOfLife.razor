@@ -30,7 +30,7 @@
                                         </label>
                                     </div>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-5" style="padding: unset;">
                                         @if (name == "Faster Crab Collection" || name == "Faster Sora Collection")
                                         {
                                             <label><s><b>@name</b></s></label>
@@ -38,6 +38,15 @@
                                         else
                                         {
                                             <label><b>@name</b></label>
+                                        }
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        @if (this.qolOptionDisclaimers.ContainsKey(name))
+                                        {
+                                            <Tooltip Text="@this.qolOptionDisclaimers[name]">
+                                                <i class="bi bi-exclamation-triangle" style="font-size: 1.2rem; color: #ff9900;"></i>
+                                            </Tooltip>
                                         }
                                     </div>
 
@@ -93,6 +102,14 @@
         { "Max Level Leviathan", "Start with your Leviathan boat at the Max Level to give max damage and speed." }
     };
 
+    private Dictionary<string, string> qolOptionDisclaimers = new Dictionary<string, string>
+    {
+        { "Frozen Chase Skip", "This skip will cause music to stop playing during this particular fight. Finish the fight or die and retry to restore audio." },
+        { "Union χ Skip", "This skip spawns Sora back at the beginning of The Keyblade Graveyard. To progress, walk past the Guardians of Light to the next area." },
+        { "Guardians of Light Skip", "This skip will cause music to stop playing during this particular fight. Finish the fight or die and retry to restore audio." },
+        { "Slow Mickey Skip", "This skip will cause music to stop playing during this particular fight. Finish the fight or die and retry to restore audio." },
+    };
+
     protected override void OnInitialized()
     {
         this.qolOptions = this.AvailableQoLOptions;
@@ -110,7 +127,7 @@
 
         foreach (var (category, subOptions) in this.qolOptions)
         {
-            foreach (var (name, value) in subOptions)
+            foreach (var (name, value) in subOptions.Where(x => x.Key != "Faster Crab Collection" && x.Key != "Faster Sora Collection"))
                 this.qolOptions[category][name] = this.isOn;
         }
 

@@ -91,13 +91,13 @@
                         </div>
                         <div class="col-md-8">
                             <div id="poolOptionEnums" style="display: inline-flex; float: right;">
-                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Vanilla); })">
+                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Vanilla); })" disabled="@(pool.Key == "Battle Portals")">
                                     Vanilla
                                 </button>
-                                <button class="kh-center-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Randomize); })">
+                                <button class="kh-center-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Randomize); })" disabled="@(pool.Key == "Battle Portals")">
                                     Randomize
                                 </button>
-                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Replace ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Replace); })">
+                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Replace ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Replace); })" disabled="@(pool.Key == "Battle Portals")">
                                     Replace
                                 </button>
                             </div>
@@ -262,7 +262,7 @@
         foreach (var pool in this.worldPools)
             this.worldPools[pool.Key] = randomizeOptionEnum;
 
-        foreach (var pool in this.miscellaneousPools.Where(x => x.Key != "Always On"))
+        foreach (var pool in this.miscellaneousPools.Where(x => x.Key != "Always On" && x.Key != "Battle Portals"))
             this.miscellaneousPools[pool.Key] = randomizeOptionEnum;
 
 
