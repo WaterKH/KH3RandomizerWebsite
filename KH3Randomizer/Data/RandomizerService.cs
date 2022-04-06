@@ -1753,14 +1753,21 @@ namespace KH3Randomizer.Data
 
                 foreach (var result in results)
                 {
-                    var vbonusCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Key != vbonus && y.Value.Any(z => z.Value == result.Value))).Key;
-                    var vbonusSubCategory = randomizedOptions[vbonusCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Key != vbonus && y.Value.Any(z => z.Value == result.Value)).Key;
-                    var vbonusFound = randomizedOptions[vbonusCategory][vbonusSubCategory].FirstOrDefault(z => z.Value == result.Value);
-                    var vbonusOption = new Option { Category = vbonusCategory, SubCategory = vbonusSubCategory, Name = vbonusFound.Key, Value = vbonusFound.Value };
+                    try
+                    {
+                        var vbonusCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Key != vbonus && y.Value.Any(z => z.Value == result.Value))).Key;
+                        var vbonusSubCategory = randomizedOptions[vbonusCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Key != vbonus && y.Value.Any(z => z.Value == result.Value)).Key;
+                        var vbonusFound = randomizedOptions[vbonusCategory][vbonusSubCategory].FirstOrDefault(z => z.Value == result.Value);
+                        var vbonusOption = new Option { Category = vbonusCategory, SubCategory = vbonusSubCategory, Name = vbonusFound.Key, Value = vbonusFound.Value };
 
-                    var vbonusCategoryNeeded = this.RetrieveCategoryNeeded(vbonusCategory, vbonusFound.Key);
+                        var vbonusCategoryNeeded = this.RetrieveCategoryNeeded(vbonusCategory, vbonusFound.Key);
 
-                    this.SwapRandomOption(ref randomizedOptions, random, vbonusCategoryNeeded, vbonusOption, canUseNone);
+                        this.SwapRandomOption(ref randomizedOptions, random, vbonusCategoryNeeded, vbonusOption, canUseNone);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                    }
                 }
             }
 
