@@ -819,6 +819,17 @@ namespace KH3Randomizer.Data
             // Process exceptions like start with default abilities, etc.
             this.ProcessExceptions(ref randomizedOptions, exceptions, random, canUseNone);
 
+            //foreach (var (category, categoryOptions) in randomizedOptions.Where(x => x.Value.Any(y => y.Value.Any(z => z.Value.ValueIdToDisplay().Contains("Proof")))))
+            //{
+            //    foreach (var (subCategory, subCategoryOptions) in categoryOptions.Where(y => y.Value.Any(z => z.Value.ValueIdToDisplay().Contains("Proof"))))
+            //    {
+            //        foreach (var (name, value) in subCategoryOptions.Where(z => z.Value.ValueIdToDisplay().Contains("Proof")))
+            //        {
+            //            Console.WriteLine();
+            //        }
+            //    }
+            //}
+
             return randomizedOptions;
         }
 
@@ -839,7 +850,13 @@ namespace KH3Randomizer.Data
 
                     // Swap these options
                     randomizedOptions[DataTableEnum.ChrInit]["m_PlayerSora"][name] = ability.Value;
-                    randomizedOptions[abilityCategory][abilitySubCategory][ability.Key] = value;
+
+                    // Extra precaution to verify we swap this into a correct spot
+                    var swapOption = new Option { Category = abilityCategory, SubCategory = abilitySubCategory, Name = ability.Key, Value = value };
+
+                    var swapCategoryNeeded = this.RetrieveCategoryNeeded(abilityCategory, ability.Key);
+
+                    this.SwapRandomOption(ref randomizedOptions, random, swapCategoryNeeded, swapOption, canUseNone);
                 }
             }
 
@@ -858,7 +875,13 @@ namespace KH3Randomizer.Data
 
                     // Swap these options
                     randomizedOptions[DataTableEnum.ChrInit]["m_PlayerSora"][name] = ability.Value;
-                    randomizedOptions[abilityCategory][abilitySubCategory][ability.Key] = value;
+
+                    // Extra precaution to verify we swap this into a correct spot
+                    var swapOption = new Option { Category = abilityCategory, SubCategory = abilitySubCategory, Name = ability.Key, Value = value };
+
+                    var swapCategoryNeeded = this.RetrieveCategoryNeeded(abilityCategory, ability.Key);
+
+                    this.SwapRandomOption(ref randomizedOptions, random, swapCategoryNeeded, swapOption, canUseNone);
                 }
             }
 
@@ -878,8 +901,15 @@ namespace KH3Randomizer.Data
                         var abilityBonus = randomizedOptions[abilityBonusCategory][abilityBonusSubCategory].FirstOrDefault(z => z.Value == result.Value);
 
                         // Swap these options
+                        var temp = randomizedOptions[DataTableEnum.VBonus][subCategory][result.Key];
                         randomizedOptions[DataTableEnum.VBonus][subCategory][result.Key] = abilityBonus.Value;
-                        randomizedOptions[abilityBonusCategory][abilityBonusSubCategory][abilityBonus.Key] = result.Value;
+
+                        // Extra precaution to verify we swap this into a correct spot
+                        var swapOption = new Option { Category = abilityBonusCategory, SubCategory = abilityBonusSubCategory, Name = abilityBonus.Key, Value = temp };
+
+                        var swapCategoryNeeded = this.RetrieveCategoryNeeded(abilityBonusCategory, abilityBonus.Key);
+
+                        this.SwapRandomOption(ref randomizedOptions, random, swapCategoryNeeded, swapOption, canUseNone);
                     }
 
                     // Once we hit this, we've reached the end of our list

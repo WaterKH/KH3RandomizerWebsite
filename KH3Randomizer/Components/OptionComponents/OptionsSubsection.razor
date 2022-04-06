@@ -379,17 +379,17 @@
         {
             foreach (var category in this.randomizedOptions)
             {
-                var categoryConverted = category.Key.DataTableEnumToKey();
+                //var categoryConverted = category.Key.DataTableEnumToKey();
                 foreach (var subCategory in category.Value)
                 {
-                    var subCategoryConverted = subCategory.Key.CategoryToKey(category.Key);
-                    var isFound = false;
+                    //var subCategoryConverted = subCategory.Key.CategoryToKey(category.Key);
+                    //var isFound = false;
 
                     foreach (var option in subCategory.Value)
                     {
                         if (option.Key.KeyIdToDisplay().ToLower().Contains(this.searchValue.ToLower()) || option.Value.ValueIdToDisplay().ToLower().Contains(this.searchValue.ToLower()))
                         {
-                            isFound = true;
+                            //isFound = true;
 
                             if (!this.searchRandomizedOptions.ContainsKey(category.Key))
                                 this.searchRandomizedOptions.Add(category.Key, new Dictionary<string, Dictionary<string, string>>());
@@ -398,24 +398,26 @@
                                 this.searchRandomizedOptions[category.Key].Add(subCategory.Key, new Dictionary<string, string>());
 
                             this.searchRandomizedOptions[category.Key][subCategory.Key].Add(option.Key, option.Value);
+
+
+                            //var pool = this.RandomizerService.GetPoolFromOption(category.Key, subCategory.Key);
+                            //var temp = this.RandomizerService.GetOptionsForPool(pool, this.searchRandomizedOptions);
                         }
                     }
 
 
                     //if (isFound)
                     //{
+                    //if (!this.searchAvailableOptions.ContainsKey(categoryConverted))
+                    //    this.searchAvailableOptions.Add(categoryConverted, new Dictionary<string, bool>());
 
-
-                    //    if (!this.searchAvailableOptions.ContainsKey(categoryConverted))
-                    //        this.searchAvailableOptions.Add(categoryConverted, new Dictionary<string, bool>());
-
-                    //    if (!this.searchAvailableOptions[categoryConverted].ContainsKey(subCategoryConverted))
-                    //        this.searchAvailableOptions[categoryConverted].Add(subCategoryConverted, true);
+                    //if (!this.searchAvailableOptions[categoryConverted].ContainsKey(subCategoryConverted))
+                    //    this.searchAvailableOptions[categoryConverted].Add(subCategoryConverted, true);
                     //}
                 }
             }
 
-            //this.displayAvailableOptions = this.searchAvailableOptions;
+            //this.displayAvailableOptions = this.RandomizerService.GetOptionsForPool();
             this.displayAvailableOptions = this.availableOptions;
             this.displayRandomizedOptions = this.searchRandomizedOptions;
         }

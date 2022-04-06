@@ -1,7 +1,8 @@
-﻿@using UE4DataTableInterpreter.Enums
-@using Enums;
+﻿@inject KH3Randomizer.Data.RandomizerService RandomizerService
 
-@inject KH3Randomizer.Data.RandomizerService RandomizerService
+@using UE4DataTableInterpreter.Enums
+@using Enums;
+@using System.Text.RegularExpressions; 
 
 <div class="options-section">
     <div class="options-subsection">
@@ -133,6 +134,8 @@
     {
         this.currentSeed = e.Value.ToString();
 
+        this.currentSeed = Regex.Replace(this.currentSeed, @"[^\w\-]", "");
+
         this.UpdateCurrentSeed.InvokeAsync(this.currentSeed);
 
         //this.RandomizerService.SetAvailableOptions(this.tempOptions);
@@ -154,7 +157,6 @@
     private void ToggleSpoilerChecked(ChangeEventArgs e)
     {
         this.isSpoilerChecked = !this.isSpoilerChecked;
-        this.
 
         InvokeAsync(() =>
         {
