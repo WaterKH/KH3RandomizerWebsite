@@ -4,6 +4,7 @@
 @using System.Text.Json;
 @using System.IO;
 @using Enums;
+@using System.Text.RegularExpressions; 
 
 @inject RandomizerService RandomizerService
 
@@ -142,6 +143,8 @@
     private void RandomizeOptions(ChangeEventArgs e)
     {
         this.currentSeed = e.Value.ToString();
+
+        this.currentSeed = Regex.Replace(this.currentSeed, @"[^\w\-]", "");
 
         this.UpdateCurrentSeed(this.currentSeed);
 
