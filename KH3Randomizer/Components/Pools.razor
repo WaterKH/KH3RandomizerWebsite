@@ -44,7 +44,7 @@
     <div class="pools-subsection">
         <h3 style="display: inline;">World Pools</h3>
         <Tooltip Text="All of these categories contain Treasures, Events & Bonuses">
-            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
+            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue; padding-left: 30px;"></i>
         </Tooltip>
 
         <div class="row">
@@ -81,9 +81,15 @@
             {
                 <div class="col-md-4" style="margin: 15px 0px;">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-3">
                             <label style="margin-top: 5px;"><b>@pool.Key:</b></label>
-
+                        </div>
+                        <div class="col-md-1">
+                            <Tooltip Text="@this.poolDescriptions[pool.Key]">
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue; padding-right: 5px;"></i>
+                            </Tooltip>
+                        </div>
+                        <div class="col-md-8">
                             <div id="poolOptionEnums" style="display: inline-flex; float: right;">
                                 <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Vanilla); })">
                                     Vanilla
@@ -201,21 +207,16 @@
         { "Early Critical Abilities", "Keeps Sora's early critical abilities earned from being randomized, like Air Slide, Superslide, etc." },
     };
 
-    private Dictionary<string, string> optionDescriptions = new Dictionary<string, string> {
-        { "Treasures", "The treasure chests in each world." },
-        { "Starting Stats", "Starting abilities and keyblade." },
+    private Dictionary<string, string> poolDescriptions = new Dictionary<string, string> {
+        { "Sora", "Starting Abilities, Starting Keyblade and Sora's Level Up Rewards." },
+        { "Equipment Abilities", "Abilities found on Armor, Accessories and base Keyblades." },
+        { "Data Battle Rewards", "Rewards given to Sora after defeating a Data Battle, like Data Young Xehanort." },
+        { "Moogle Workshop", "Synthesis Items, Photo Mission Rewards and Abilities gained from leveling up Keyblades." },
+        { "Fullcourse Abilities", "Abilities gained for a limited amount of time from eating fullcourse meals." },
         { "Lucky Emblems", "Rewards earned for finding Lucky Emblems." },
-        { "Bonuses", "Abilities, Magic and Status Boosts earned through specific events." },
-        { "Fullcourse Abilities", "Abilities earned through eating a fullcourse meal." },
-        { "Level Ups", "Abilities earned through leveling up Sora." },
-        { "Events", "Certain key items earned through cutscenes." },
-        { "Weapon Upgrades", "Abilities earned through leveling up keyblades" },
-        { "Equippables", "Items such as accessories, armor and keyblades." },
-        { "Synthesis Items", "Items that are synthesized through Moogle Shops." },
-
-        { "Bosses", "Bosses such as Xehanort, Data-Xehanort and Replica Xehanort." },
-        { "Enemies", "Base mob enemies such as shadows, flame cores, etc." },
-        { "General Stats", "Keyblade, Accessory and Armor stats, along with Health, Attack and Magic upgrades. Bosses and Enemies included potentially." }
+        { "Flantastic Flans", "Rewards earned for max completing a Flan Missions." },
+        { "Minigames", "Rewards earned for obtaining an A-Rank in a Minigame." },
+        { "Battle Portals", "Rewards earned for completing a Battle Portal." },
     };
 
     protected override void OnInitialized()

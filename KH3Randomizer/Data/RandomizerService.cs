@@ -856,7 +856,7 @@ namespace KH3Randomizer.Data
 
                     var swapCategoryNeeded = this.RetrieveCategoryNeeded(abilityCategory, ability.Key);
 
-                    this.SwapRandomOption(ref randomizedOptions, random, swapCategoryNeeded, swapOption, canUseNone);
+                    this.SwapRandomOption(ref randomizedOptions, random, swapCategoryNeeded, swapOption, canUseNone, false);
                 }
             }
 
@@ -881,12 +881,14 @@ namespace KH3Randomizer.Data
 
                     var swapCategoryNeeded = this.RetrieveCategoryNeeded(abilityCategory, ability.Key);
 
-                    this.SwapRandomOption(ref randomizedOptions, random, swapCategoryNeeded, swapOption, canUseNone);
+                    this.SwapRandomOption(ref randomizedOptions, random, swapCategoryNeeded, swapOption, canUseNone, false);
                 }
             }
 
             if (exceptions["Early Critical Abilities"])
             {
+                var airSlidesSeen = new List<string>();
+
                 foreach (var (subCategory, subCategoryOptions) in randomizedOptions[DataTableEnum.VBonus])
                 {
                     if (!this.VBonusCriticalAbilities.Contains(subCategory))
@@ -896,20 +898,47 @@ namespace KH3Randomizer.Data
 
                     foreach (var result in results)
                     {
-                        var abilityBonusCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == result.Value))).Key;
-                        var abilityBonusSubCategory = randomizedOptions[abilityBonusCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == result.Value)).Key;
-                        var abilityBonus = randomizedOptions[abilityBonusCategory][abilityBonusSubCategory].FirstOrDefault(z => z.Value == result.Value);
+                        var abilityBonusCategory = DataTableEnum.None;
+                        var abilityBonusSubCategory = string.Empty;
+                        var abilityBonus = new KeyValuePair<string, string>();
 
-                        // Swap these options
-                        var temp = randomizedOptions[DataTableEnum.VBonus][subCategory][result.Key];
-                        randomizedOptions[DataTableEnum.VBonus][subCategory][result.Key] = abilityBonus.Value;
+                        if (result.Value.Contains("AIRSLIDE"))
+                        {
+                            abilityBonusCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Key != subCategory && !airSlidesSeen.Contains(y.Key) && y.Value.Any(z => z.Key != "EquipAbility2" && z.Value == result.Value))).Key;
+                            
+                            if (abilityBonusCategory != DataTableEnum.None)
+                            {
+                                abilityBonusSubCategory = randomizedOptions[abilityBonusCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Key != subCategory && y.Value.Any(z => z.Key != "EquipAbility2" && z.Value == result.Value)).Key;
+                                abilityBonus = randomizedOptions[abilityBonusCategory][abilityBonusSubCategory].FirstOrDefault(z => z.Key != "EquipAbility2" && z.Value == result.Value);
 
-                        // Extra precaution to verify we swap this into a correct spot
-                        var swapOption = new Option { Category = abilityBonusCategory, SubCategory = abilityBonusSubCategory, Name = abilityBonus.Key, Value = temp };
+                                airSlidesSeen.Add(subCategory);
+                            }
+                        }
+                        else
+                        {
+                            abilityBonusCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Key != subCategory && y.Value.Any(z => z.Value == result.Value))).Key;
 
-                        var swapCategoryNeeded = this.RetrieveCategoryNeeded(abilityBonusCategory, abilityBonus.Key);
+                            if (abilityBonusCategory != DataTableEnum.None)
+                            {
+                                abilityBonusSubCategory = randomizedOptions[abilityBonusCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Key != subCategory && y.Value.Any(z => z.Value == result.Value)).Key;
+                                abilityBonus = randomizedOptions[abilityBonusCategory][abilityBonusSubCategory].FirstOrDefault(z => z.Value == result.Value);
+                            }
+                        }
 
-                        this.SwapRandomOption(ref randomizedOptions, random, swapCategoryNeeded, swapOption, canUseNone);
+                        if (abilityBonusCategory != DataTableEnum.None)
+                        {
+
+                            // Swap these options
+                            var temp = randomizedOptions[DataTableEnum.VBonus][subCategory][result.Key];
+                            randomizedOptions[DataTableEnum.VBonus][subCategory][result.Key] = abilityBonus.Value;
+
+                            // Extra precaution to verify we swap this into a correct spot
+                            var swapOption = new Option { Category = abilityBonusCategory, SubCategory = abilityBonusSubCategory, Name = abilityBonus.Key, Value = temp };
+
+                            var swapCategoryNeeded = this.RetrieveCategoryNeeded(abilityBonusCategory, abilityBonus.Key);
+
+                            this.SwapRandomOption(ref randomizedOptions, random, swapCategoryNeeded, swapOption, canUseNone, false);
+                        }
                     }
 
                     // Once we hit this, we've reached the end of our list
@@ -1576,9 +1605,6 @@ namespace KH3Randomizer.Data
                 {
                     foreach (var (subCategory, subCategoryOptions) in subOptions)
                     {
-                        if (category == DataTableEnum.LevelUp)
-                            Console.WriteLine();
-
                         foreach (var (name, value) in subCategoryOptions)
                         {
                             if (name == "TypeB" || name == "TypeC")
@@ -1642,7 +1668,7 @@ namespace KH3Randomizer.Data
             }
         }
 
-        public void SwapRandomOption(ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> options, Random random, string categoryNeeded, Option swapOption, bool canUseNone)
+        public void SwapRandomOption(ref Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> options, Random random, string categoryNeeded, Option swapOption, bool canUseNone, bool canSwapImportant = true)
         {
             var option = new Option();
 
@@ -1678,6 +1704,10 @@ namespace KH3Randomizer.Data
                     continue;
                 else if (altCategoryNeeded == "Item" && (swapOption.Value.Contains("Ability") || swapOption.Value.Contains("Bonus")))
                     continue;
+
+                if (!canSwapImportant && this.VerifyImportantCheck(option.Value))
+                    continue;
+
 
                 option.Found = true;
                 break;
@@ -1723,14 +1753,14 @@ namespace KH3Randomizer.Data
 
                 foreach (var result in results)
                 {
-                    var vbonusCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == result.Value))).Key;
-                    var vbonusSubCategory = randomizedOptions[vbonusCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Value.Any(z => z.Value == result.Value)).Key;
+                    var vbonusCategory = randomizedOptions.FirstOrDefault(x => x.Value.Any(y => !y.Key.Contains("GIVESORA") && y.Key != vbonus && y.Value.Any(z => z.Value == result.Value))).Key;
+                    var vbonusSubCategory = randomizedOptions[vbonusCategory].FirstOrDefault(y => !y.Key.Contains("GIVESORA") && y.Key != vbonus && y.Value.Any(z => z.Value == result.Value)).Key;
                     var vbonusFound = randomizedOptions[vbonusCategory][vbonusSubCategory].FirstOrDefault(z => z.Value == result.Value);
-                    var poleSpinOption = new Option { Category = vbonusCategory, SubCategory = vbonusSubCategory, Name = vbonusFound.Key, Value = vbonusFound.Value };
+                    var vbonusOption = new Option { Category = vbonusCategory, SubCategory = vbonusSubCategory, Name = vbonusFound.Key, Value = vbonusFound.Value };
 
                     var vbonusCategoryNeeded = this.RetrieveCategoryNeeded(vbonusCategory, vbonusFound.Key);
 
-                    this.SwapRandomOption(ref randomizedOptions, random, vbonusCategoryNeeded, poleSpinOption, canUseNone);
+                    this.SwapRandomOption(ref randomizedOptions, random, vbonusCategoryNeeded, vbonusOption, canUseNone);
                 }
             }
 
@@ -2029,17 +2059,17 @@ namespace KH3Randomizer.Data
                                              Dictionary<string, RandomizeOptionEnum> availablePools, List<Tuple<Option, Option>> modifications, Dictionary<string, bool> exceptions,
                                              byte[] hintBytes, Dictionary<string, List<string>> hintValues, Dictionary<string, bool> qolValues)
         {
-            foreach(var (topKey, topValue) in randomizedOptions)
-            {
-                foreach(var (midKey, midValue) in topValue)
-                {
-                    foreach(var (lowKey, lowValue) in midValue)
-                    {
-                        if (lowValue == "")
-                            Console.WriteLine();
-                    }
-                }
-            }
+            //foreach(var (topKey, topValue) in randomizedOptions)
+            //{
+            //    foreach(var (midKey, midValue) in topValue)
+            //    {
+            //        foreach(var (lowKey, lowValue) in midValue)
+            //        {
+            //            if (lowValue == "")
+            //                Console.WriteLine();
+            //        }
+            //    }
+            //}
 
             var dataTableManager = new UE4DataTableInterpreter.DataTableManager();
             var dataTables = dataTableManager.RandomizeDataTables(randomizedOptions);
@@ -2188,8 +2218,8 @@ namespace KH3Randomizer.Data
             }
             else if (category == "Miscellaneous")
             {
-                tempPools = pools.Where(x => x.Key == "Sora" || x.Key == "Equipment Abilities" || x.Key == "Data Battle Rewards" || x.Key == "Weapon Upgrades" ||
-                                        x.Key == "Moogle Workshop" || x.Key == "Fullcourse Abilities" || x.Key == "Lucky Emblems" || x.Key == "Flantastic Flans" || 
+                tempPools = pools.Where(x => x.Key == "Sora" || x.Key == "Equipment Abilities" || x.Key == "Data Battle Rewards" || x.Key == "Moogle Workshop" || 
+                                        x.Key == "Fullcourse Abilities" || x.Key == "Lucky Emblems" || x.Key == "Flantastic Flans" || 
                                         x.Key == "Minigames" || x.Key == "Battle Portals" || x.Key == "Always On")
                                 .ToDictionary(x => x.Key, y => y.Value);
             }
@@ -2669,9 +2699,9 @@ namespace KH3Randomizer.Data
                 var synthesisItemSubsets = new Dictionary<string, Dictionary<string, string>>();
 
                 if (currentSelection.Equals("Synthesis Items"))
-                    synthesisItemSubsets = randomizedOptions[DataTableEnum.SynthesisItem].Where(x => int.Parse(x.Key.Split('_')[1]) < 61).ToDictionary(x => x.Key, y => y.Value);
+                    synthesisItemSubsets = randomizedOptions[DataTableEnum.SynthesisItem].Where(x => int.Parse(x.Key.Split('_')[1]) < 61 || int.Parse(x.Key.Split('_')[1]) > 80).ToDictionary(x => x.Key, y => y.Value);
                 else if (currentSelection.Equals("Photo Missions"))
-                    synthesisItemSubsets = randomizedOptions[DataTableEnum.SynthesisItem].Where(x => int.Parse(x.Key.Split('_')[1]) >= 61).ToDictionary(x => x.Key, y => y.Value);
+                    synthesisItemSubsets = randomizedOptions[DataTableEnum.SynthesisItem].Where(x => int.Parse(x.Key.Split('_')[1]) >= 61 || int.Parse(x.Key.Split('_')[1]) <= 80).ToDictionary(x => x.Key, y => y.Value);
 
                 foreach (var tempSynthesisItem in synthesisItemSubsets)
                 {

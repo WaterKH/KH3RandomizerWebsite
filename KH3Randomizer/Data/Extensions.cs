@@ -909,6 +909,8 @@ namespace KH3Randomizer.Data
         {
             switch (input.Replace("\u0000", ""))
             {
+                #region VBonus
+
                 case "Vbonus_001":
                     return "After the first battle in the clearing in Olympus";
                 case "Vbonus_002":
@@ -1129,6 +1131,190 @@ namespace KH3Randomizer.Data
                     return "After connecting all the keyholes in Re:Mind";
                 case "VBonus_DLC_015":
                     return "After the Replica-Xehanort boss battle in Re:Mind";
+                #endregion VBonus
+
+                #region Synthesis Items
+
+                case "IS_0":
+                    return "Originally Ether";
+                case "IS_1":
+                    return "Originally Fire Bangle";
+                case "IS_2":
+                    return "Originally Fira Bangle";
+                case "IS_3":
+                    return "Originally Shadow Anklet";
+                case "IS_4":
+                    return "Originally Ability Ring+";
+                case "IS_5":
+                    return "Originally Elven Bandanna";
+                case "IS_6":
+                    return "Originally Thunder Trinket";
+                case "IS_7":
+                    return "Originally Thundara Trinket";
+                case "IS_8":
+                    return "Originally Refocuser";
+                case "IS_9":
+                    return "Originally Mythril Shard";
+                case "IS_10":
+                    return "Originally Wind Fan";
+                case "IS_11":
+                    return "Originally AP Boost";
+                case "IS_12":
+                    return "Originally Warhammer+";
+                case "IS_13":
+                    return "Originally Clockwork Shield+";
+                case "IS_14":
+                    return "Originally Technician's Ring+";
+                case "IS_15":
+                    return "Originally Ether";
+                case "IS_16":
+                    return "Originally Mega-Potion";
+                case "IS_17":
+                    return "Originally Dark Anklet";
+                case "IS_18":
+                    return "Originally Mythril Stone";
+                case "IS_19":
+                    return "Originally Aegis Shield+";
+                case "IS_20":
+                    return "Originally Blizzard Choker";
+                case "IS_21":
+                    return "Originally Blizzara Choker";
+                case "IS_22":
+                    return "Originally Skill Ring+";
+                case "IS_23":
+                    return "Originally Mega-Ether";
+                case "IS_24":
+                    return "Originally Strength Boost";
+                case "IS_25":
+                    return "Originally Magic Boost";
+                case "IS_26":
+                    return "Originally Defense Boost";
+                case "IS_27":
+                    return "Originally Firaga Bangle";
+                case "IS_28":
+                    return "Originally Blizzaga Choker";
+                case "IS_29":
+                    return "Originally Thundaga Trinket";
+                case "IS_30":
+                    return "Originally Divine Bandanna";
+                case "IS_31":
+                    return "Originally Storm Fan";
+                case "IS_32":
+                    return "Originally Midnight Anklet";
+                case "IS_33":
+                    return "Originally Astrolabe+";
+                case "IS_34":
+                    return "Originally Hi-Refocuser";
+                case "IS_35":
+                    return "Originally Mythril Gem";
+                case "IS_36":
+                    return "Originally Phantom Ring";
+                case "IS_37":
+                    return "Originally Sorcerer's Ring";
+                case "IS_38":
+                    return "Originally Firagun Bangle";
+                case "IS_39":
+                    return "Originally Blizzaza Choker";
+                case "IS_40":
+                    return "Originally Thundaza Trinket";
+                case "IS_41":
+                    return "Originally Chaos Anklet";
+                case "IS_42":
+                    return "Originally Acrisius";
+                case "IS_43":
+                    return "Originally Elixir";
+                case "IS_44":
+                    return "Originally Mythril Crystal";
+                case "IS_45":
+                    return "Originally Buster Band";
+                case "IS_46":
+                    return "Originally Orichalcum Ring";
+                case "IS_47":
+                    return "Originally Wisdom Ring";
+                case "IS_48":
+                    return "Originally Heartless Maul";
+                case "IS_49":
+                    return "Originally Nobody Guard";
+                case "IS_50":
+                    return "Originally Buster Band+";
+                case "IS_51":
+                    return "Originally Acrisius+";
+                case "IS_52":
+                    return "Originally Megalixir";
+                case "IS_53":
+                    return "Originally Heartless Maul+";
+                case "IS_54":
+                    return "Originally Nobody Guard+";
+                case "IS_55":
+                    return "Originally Save the Queen";
+                case "IS_56":
+                    return "Originally Save the King";
+                case "IS_57":
+                    return "Originally Cosmic Chain";
+                case "IS_58":
+                    return "Originally Ultima Weapon";
+                case "IS_59":
+                    return "Originally Save the Queen+";
+                case "IS_60":
+                    return "Originally Save the King+";
+                
+                case "IS_61":
+                    return "Originally Recipe for Firefighter Rosette";
+                case "IS_62":
+                    return "Originally Recipe for Umbrella Rosette";
+                case "IS_63":
+                    return "Originally Recipe for Soldier's Earring";
+                case "IS_64":
+                    return "Originally Recipe for Mage's Earring";
+                case "IS_65":
+                    return "Originally Recipe for Mask Rosette";
+                case "IS_66":
+                    return "Originally Recipe for Insulator Rosette";
+                case "IS_67":
+                    return "Originally Recipe for Cosmic Ring";
+                case "IS_68":
+                    return "Originally Recipe for Moon Amulet";
+                case "IS_69":
+                    return "Originally Recipe for Fire Chain";
+                case "IS_70":
+                    return "Originally Recipe for Blizzard Chain";
+                case "IS_71":
+                    return "Originally Recipe for Thunder Chain";
+                case "IS_72":
+                    return "Originally Recipe for Snowman Rosette";
+                case "IS_73":
+                    return "Originally Recipe for Star Charm";
+                case "IS_74":
+                    return "Originally Recipe for Draw Ring";
+                case "IS_75":
+                    return "Originally Recipe for Aqua Chaplet";
+                case "IS_76":
+                    return "Originally Recipe for Aero Armlet";
+                case "IS_77":
+                    return "Originally Recipe for Fencer's Earring";
+                case "IS_78":
+                    return "Originally Recipe for Slayer's Earring";
+                case "IS_79":
+                    return "Originally Recipe for Dark Chain";
+                case "IS_80":
+                    return "Originally Recipe for Petite Ribbon";
+                
+                case "IS_81":
+                    return "Originally Lucid Crystal";
+                case "IS_82":
+                    return "Originally Soothing Crystal";
+                case "IS_83":
+                    return "Originally Writhing Crystal";
+                case "IS_84":
+                    return "Originally Pulsing Crystal";
+                case "IS_85":
+                    return "Originally Blazing Crystal";
+                case "IS_86":
+                    return "Originally Frost Crystal";
+                case "IS_87":
+                    return "Originally Lightning Crystal";
+
+                #endregion Synthesis Items
 
                 default:
                     return input;
@@ -1317,9 +1503,9 @@ namespace KH3Randomizer.Data
                 case "PRT_ITEM19":
                     return "Thunder Trinket";
                 case "PRT_ITEM20":
-                    return "Thundara Trinket";
-                case "PRT_ITEM21":
                     return "Thundaga Trinket";
+                case "PRT_ITEM21":
+                    return "Thundaza Trinket";
 
                 case "PRT_ITEM22":
                     return "Thunder Chain";
@@ -1360,15 +1546,16 @@ namespace KH3Randomizer.Data
                     return "Petite Ribbon";
                 case "PRT_ITEM37":
                     return "Ribbon";
+
                 case "PRT_ITEM38":
                     return "Fira Bangle";
                 case "PRT_ITEM39":
                     return "Blizzaza Choker";
-
                 case "PRT_ITEM40":
-                    return "Thundaza Trinket";
+                    return "Thundara Trinket";
                 case "PRT_ITEM41":
                     return "Shadow Anklet";
+
                 case "PRT_ITEM42":
                     return "Abas Chain";
                 case "PRT_ITEM43":
