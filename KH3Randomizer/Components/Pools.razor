@@ -300,14 +300,12 @@
             var unnamedSeedModal = Modal.Show<UnnamedSeedModal>("Unnamed Seed", parameters, options);
             var result = await unnamedSeedModal.Result;
 
-            if (!result.Cancelled && result.Data != null && (string)result.Data == "User closed modal")
+            if (result.Cancelled || result.Data == null || (string)result.Data != "User closed modal")
             {
-                await this.ContinueTo.InvokeAsync(section);
+                return;
             }
         }
-        else
-        {
-            await this.ContinueTo.InvokeAsync(section);
-        }
+        
+        await this.ContinueTo.InvokeAsync(section);
     }
 }
