@@ -173,11 +173,13 @@
 
     <label style="margin-left: 10px;"><i>This feature is active but not supported for the 1.1 release.</i></label>
     
-    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to @(this.IsPlando ? "Options" : "Quality of Life")...</button>
+    <button class="btn kh-button" @onclick="@(() => { string section = this.IsPlando ? "Options" : "Quality of Life"; this.ContinueToNext(section); })" style="float: right;">Continue to @(this.IsPlando ? "Options" : "Quality of Life")...</button>
     }
 </div>
 
 @code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
     [Parameter] public EventCallback<string> ContinueTo { get; set; }
     [Parameter] public EventCallback<Dictionary<string, RandomizeOptionEnum>> UpdateAvailablePools { get; set; }
     [Parameter] public EventCallback<bool> UpdatePlando { get; set; }
@@ -286,5 +288,26 @@
         var randomizedItems = this.RandomizerService.Process(this.currentSeed, combinedDictionary, this.exceptions, this.CanBeNone);
 
         this.UpdateRandomizedOptions.InvokeAsync(randomizedItems);
+    }
+
+    private async void ContinueToNext(string section)
+    {
+        if (string.IsNullOrEmpty(this.CurrentSeed))
+        {
+            var parameters = new ModalParameters();
+            var options = new ModalOptions { Class = "modal-custom" };
+
+            var unnamedSeedModal = Modal.Show<UnnamedSeedModal>("Unnamed Seed", parameters, options);
+            var result = await unnamedSeedModal.Result;
+
+            if (!result.Cancelled && result.Data != null && (string)result.Data == "User closed modal")
+            {
+                await this.ContinueTo.InvokeAsync(section);
+            }
+        }
+        else
+        {
+            await this.ContinueTo.InvokeAsync(section);
+        }
     }
 }

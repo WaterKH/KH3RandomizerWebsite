@@ -1,0 +1,24 @@
+﻿<div class="simple-form redirect-modal" style="min-width: 60vw; background-color: #F2F2F2;">
+    <p>
+        You did not enter a name for your seed! The seed name is what is used to randomize items, and without a seed name nothing would be randomized.
+        If you wish to go back and enter a seed name, please either click the Go Back button on the bottom left or close this modal.
+    </p>
+    <p>
+        Otherwise, if you intended to leave your seed name blank, feel free to continue.
+    </p>
+
+    <button @onclick="ModalInstance.CancelAsync" class="btn kh-button" style="margin-left: 15px;">Go Back</button>
+    <button @onclick="CloseModal" class="btn kh-button-cancel" style="margin-left: 15px;">Continue Without a Seed Name</button>
+
+
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    private void CloseModal()
+    {
+        ModalInstance.CloseAsync(ModalResult.Ok($"User closed modal"));
+    }
+}
