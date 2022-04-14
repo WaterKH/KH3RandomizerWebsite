@@ -3,127 +3,252 @@ using System.Collections.Generic;
 using UE4DataTableInterpreter.Enums;
 using System.Linq;
 using UE4DataTableInterpreter.DataTables;
+using KH3Randomizer.Models;
+using KH3Randomizer.Enums;
 
 namespace KH3Randomizer.Data
 {
     public class HintService
     {
-        public byte[] GenerateHints(string seed, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, string hintType, Dictionary<string, bool> availableHints, ref Dictionary<string, List<string>> hintValues)
+        // Don't provide empty hints for these pools
+        List<string> blockedEmptyPools = new List<string>()
+            {
+                "Equipment Abilities", "Fullcourse Abilities", "Flantastic Flans", "Minigames", "Battle Portals", "Always On"
+            };
+
+        public byte[] GenerateHints(string seed, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, Dictionary<string, RandomizeOptionEnum> availablePools, string hintType, List<string> importantChecks, ref Dictionary<string, List<string>> hintValues)
         {
             var hints = new byte[0];
-            var hintList = new List<string>();
+            var mobile = new Mobile();
 
-            if (hintType.Equals("Off"))
+            Dictionary<string, List<string>> hintDictionary = new Dictionary<string, List<string>>();
+            List<SecretReport> reports = new List<SecretReport>();
+
+            if (hintType.Equals("None"))
                 return hints;
 
             var levelUpTracker = new List<string>();
-            foreach (var (hintName, available) in availableHints)
+
+            foreach (var searchCategory in randomizedOptions)
             {
-                if (!available)
-                    continue;
-
-                var skipAmount = 0;
-                if (hintName.EndsWith("ra"))
-                    skipAmount = 1;
-                else if (hintName.EndsWith("ga"))
-                    skipAmount = 2;
-                else
-                    levelUpTracker = new List<string>();
-
-                var hintLocation = string.Empty;
-                var tempSkipAmount = levelUpTracker.Count;
-
-                foreach (var searchCategory in randomizedOptions)
+                foreach (var searchSubCategory in searchCategory.Value)
                 {
-                    foreach (var searchSubCategory in searchCategory.Value)
+                    if (searchSubCategory.Key.Contains("GIVESORA"))
+                        continue;
+
+                    foreach (var (searchName, searchValue) in searchSubCategory.Value)
                     {
-                        if (searchSubCategory.Key.Contains("GIVESORA"))
-                            continue;
-
-                        foreach (var (searchName, searchValue) in searchSubCategory.Value)
+                        if (importantChecks.Contains(searchValue.ValueIdToDisplay()))
                         {
-                            if (searchName.Contains("TypeB") || searchName.Contains("TypeC"))
-                                continue;
-
-                            if (searchValue == this.GetDisplayToId(hintName) || (searchCategory.Key == DataTableEnum.ChrInit && searchValue == this.GetDisplayToDefKeyblade(hintName)))
+                            if (searchCategory.Key == DataTableEnum.LevelUp)
                             {
-                                if (searchCategory.Key == DataTableEnum.LevelUp)
+                                var contained = false;
+                                foreach (var levelUpItem in levelUpTracker)
                                 {
-                                    var contained = false;
-                                    foreach (var levelUpItem in levelUpTracker)
+                                    if (levelUpItem.Contains($"{searchSubCategory.Key} ({searchName.ToLevelUpRoute()})"))
                                     {
-                                        if (levelUpItem.Contains($"{searchSubCategory.Key} ({searchName})"))
-                                        {
-                                            contained = true;
+                                        contained = true;
 
-                                            break;
-                                        }
-                                    }
-
-                                    var tempAltLevelUps = this.GetLevelUpAlternatives(randomizedOptions, searchSubCategory.Key, searchName, searchValue);
-
-                                    if (!levelUpTracker.Contains(tempAltLevelUps))
-                                    {
-                                        levelUpTracker.Add(tempAltLevelUps);
-                                    }
-                                    else if (contained)
-                                    {
-                                        continue;
+                                        break;
                                     }
                                 }
 
-                                if (tempSkipAmount < skipAmount)
-                                {
-                                    ++tempSkipAmount;
+                                var tempAltLevelUps = this.GetLevelUpAlternatives(randomizedOptions, searchSubCategory.Key, searchName, searchValue);
 
+                                if (!levelUpTracker.Contains(tempAltLevelUps))
+                                {
+                                    levelUpTracker.Add(tempAltLevelUps);
+                                }
+                                else if (contained)
+                                {
                                     continue;
                                 }
-
-                                hintLocation = this.GetHintItemLocation(randomizedOptions, searchCategory.Key, searchSubCategory.Key, searchName, searchValue, hintType);
-                                
-                                break;
                             }
+
+                            var hintLocation = this.GetHintItemLocation(randomizedOptions, searchCategory.Key, searchSubCategory.Key, searchName, searchValue, hintType);
+                            var hintText = string.Empty;
+                            var hintName = CleanHintName(searchValue.ValueIdToDisplay());
+
+                            if (hintType.Equals("Verbose"))
+                                hintText = $"{hintName} is {hintLocation}";
+                            else if (hintType.Equals("Vague"))
+                                hintText = $"There is 1 check {hintLocation}";
+                            else if (hintType.Equals("Category"))
+                                hintText = hintLocation;
+
+                            if (hintDictionary.ContainsKey(hintText))
+                                hintDictionary[hintText].Add(hintName);
+                            else
+                                hintDictionary.Add(hintText, new List<string> { hintName });
+
                         }
-
-                        if (!string.IsNullOrEmpty(hintLocation))
-                            break;
                     }
-
-                    if (!string.IsNullOrEmpty(hintLocation))
-                        break;
                 }
-
-                var hintText = string.Empty;
-
-                if (hintType.Equals("Verbose"))
-                    hintText = $"{hintName.ValueIdToDisplay()} is {hintLocation}";
-                else if (hintType.Equals("Vague"))
-                    hintText = $"There is 1 check {hintLocation}";
-
-                hintList.Add(hintText);
             }
 
             var hash = seed.StringToSeed();
             var rng = new Random((int)hash);
 
-            hintList.Shuffle(rng);
-
-            var hintNames = new List<string> { "SecretReport02", "SecretReport03", "SecretReport04", "SecretReport05", "SecretReport06", "SecretReport07", "SecretReport08",
-                                               "SecretReport09", "SecretReport10", "SecretReport11", "SecretReport12", "SecretReport13", "SecretReport14", };
-            for (int i = 0; i < hintList.Count; ++i)
+            if (hintType.Equals("Category"))
             {
-                int index = (i / 4);
-
-                if (!hintValues.ContainsKey(hintNames[index]))
-                    hintValues.Add(hintNames[index], new List<string>());
-
-                hintValues[hintNames[index]].Add(hintList[i]);
+                // Add empty hints if there are not enough to fill reports
+                while (hintDictionary.Count < 13)
+                {
+                    hintDictionary.Add(GetEmptyHintCategory(availablePools, hintDictionary, rng), new List<string>());
+                }
             }
 
-            var mobile = new Mobile();
-            hints = mobile.Process(hintList).ToArray();
-            
+            // Instead of just shuffling, make sure reports don't hint themselves
+            int totalHintCount = hintType.Equals("Category") ? 13 * ((hintDictionary.Count() - 1) / 13 + 1) : 13 * ((hintDictionary.Sum(x => x.Value.Count) - 1) / 13 + 1);
+            int hintsPerReport = totalHintCount / 13;
+            int hintPass = 1;
+            List<string> shuffledHints = new List<string>();
+
+            bool allHintsPlaced = false;
+            while (!allHintsPlaced)
+            {
+                allHintsPlaced = true;
+                // Initialize the list of SecretReports
+                reports.Clear();
+                for (int i = 1; i < 14; i++)
+                {
+                    reports.Add(new SecretReport { Name = $"Secret Report {i}", Id = $"SecretReport{(i + 1).ToString("00")}", Hints = new List<string>() });
+                }
+
+                foreach (var hint in hintDictionary)
+                {
+                    // Parse the hint for a report number
+                    // If it has one, make sure that the hint for this report is outside the bounds this report hints
+                    List<string> hintedReports = new List<string>();
+
+                    foreach (var hintName in hint.Value)
+                    {
+                        if (hintName.Contains("Secret Report"))
+                            hintedReports.Add(hintName);
+                    }
+
+                    bool isReportHint = hintedReports.Count > 0;
+                    int hintTotal = hintType.Equals("Category") ? 1 : hint.Value.Count;
+
+                    for (int i = 0; i < hintTotal; i++)
+                    {
+                        var usableReports = reports.Where(x => x.Hints.Count < hintPass).ToList();
+                        if (usableReports.Count == 0)
+                        {
+                            hintPass++;
+                            usableReports = reports.Where(x => x.Hints.Count < hintPass).ToList();
+                        }
+
+                        bool hintPlaced = false;
+                        do
+                        {
+                            int reportIndex = rng.Next(0, usableReports.Count());
+
+                            // Only use this report if it's not being hinted
+                            if (!hintedReports.Contains(usableReports.ElementAt(reportIndex).Name))
+                            {
+                                if (hintType.Equals("Category"))
+                                    usableReports.ElementAt(reportIndex).Hints.Add(GetCategoryHint(hint.Key, hint.Value));
+                                else
+                                    usableReports.ElementAt(reportIndex).Hints.Add(hint.Key);
+                                hintPlaced = true;
+                            }
+                            else
+                            {
+                                usableReports.RemoveAt(reportIndex);
+                                if (usableReports.Count == 0)
+                                {
+                                    break;
+                                }
+                            }
+                        } while (!hintPlaced);
+
+                        if (!hintPlaced)
+                        {
+                            allHintsPlaced = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Reports that only hold a "Sora's Initial Setup" or "Moogle Synthesis" hint on Category hints are pretty useless
+            // Add an empty hint to these reports if they don't already have one
+            if (hintType.Equals("Category"))
+            {
+                foreach (var report in reports)
+                {
+                    if (report.Hints.Where(hint => hint.Contains("Sora's Initial Setup") || hint.Contains("Moogle Synthesis")).Count() > 0)
+                    {
+                        if (report.Hints.Count == 1)
+                        {
+                            string emptyHintCategory = GetEmptyHintCategory(availablePools, hintDictionary, rng);
+                            hintDictionary.Add(emptyHintCategory, new List<string>());
+                            report.Hints.Add(GetCategoryHint(emptyHintCategory, new List<string>()));
+
+                            if (report.Hints.Count > hintsPerReport)
+                                hintsPerReport = report.Hints.Count;
+                        }
+                    }
+                }
+            }
+
+            foreach (var sr in reports)
+            {
+                sr.ShuffleHintList(hintsPerReport, rng);
+                shuffledHints.AddRange(sr.Hints);
+                hintValues.Add(sr.Id, sr.Hints);
+            }
+
+            hints = mobile.Process(shuffledHints, hintsPerReport).ToArray();
+
             return hints;
+        }
+
+        /// <summary>
+        /// Method for getting a hint string when using the Category hintType
+        /// </summary>
+        /// <returns>String used for hints</returns>
+        public string GetCategoryHint(string hintKey, List<string> hintValue)
+        {
+            return hintValue.Count == 1 ? $"There is {hintValue.Count} check {hintKey}" : $"There are {hintValue.Count} checks {hintKey}";
+        }
+
+        /// <summary>
+        /// Method for getting a hint category that has no checks on it
+        /// This is used for getting 0 check hints with the Category hintType
+        /// </summary>
+        /// <returns>String of a category that has no checks on it</returns>
+        public string GetEmptyHintCategory(Dictionary<string, RandomizeOptionEnum> availablePools, Dictionary<string, List<string>> hintDictionary, Random rng)
+        {
+            // Prioritize pools that are being randomized and unhinted. Take any available unhinted pools if that isn't possible
+            List<string> hintCategories = availablePools.Where(x => !this.blockedEmptyPools.Contains(x.Key) && x.Value.Equals(RandomizeOptionEnum.Randomize) && !hintDictionary.ContainsKey(GetCategoryHintKey(x.Key))).Select(x => GetCategoryHintKey(x.Key)).ToList();
+            if (hintCategories.Count == 0)
+                hintCategories = availablePools.Where(x => !this.blockedEmptyPools.Contains(x.Key) && !hintDictionary.ContainsKey(GetCategoryHintKey(x.Key))).Select(x => GetCategoryHintKey(x.Key)).ToList();
+
+            return hintCategories.Count > 0 ? hintCategories[rng.Next(0, hintCategories.Count)] : "";
+        }
+
+        /// <summary>
+        /// Method for getting a category hint key to be used based on a given pool
+        /// This is used when generating an empty hint for the given pool
+        /// </summary>
+        /// <returns>String of a category that could be used for hints</returns>
+        public string GetCategoryHintKey(string pool)
+        {
+            switch (pool)
+            {
+                case "Sora":
+                    return "on Sora's Level Ups.";
+                case "Data Battle Rewards":
+                    return "in Radiant Garden.";
+                case "Moogle Workshop":
+                    return "in the Moogle Synthesis Shop.";
+                case "Lucky Emblems":
+                    return "on Lucky Emblem Milestones.";
+                default: 
+                    return $"in {pool}.";
+            }
         }
 
         public string GetHintItemLocation(Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, DataTableEnum category, string subCategory, string name, string value, string hintType)
@@ -139,21 +264,21 @@ namespace KH3Randomizer.Data
                 case DataTableEnum.FullcourseAbility:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"on a Fullcourse Meal {this.GetFullcourseDescription(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"on a Fullcourse Meal.";
 
                     break;
                 case DataTableEnum.LevelUp:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"on Sora's Level Up {this.GetLevelUpAlternatives(randomizedOptions, subCategory, name, value)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"on Sora's Level Ups.";
 
                     break;
                 case DataTableEnum.LuckyMark:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"on Lucky Emblem Milestone {subCategory}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"on Lucky Emblem Milestones.";
                     
                     break;
@@ -162,17 +287,18 @@ namespace KH3Randomizer.Data
 
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in {vbonusLocation.Item1} {vbonusLocation.Item2}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in {vbonusLocation.Item1}.";
 
                     break;
                 case DataTableEnum.Event:
                     var eventLocation = this.GetLocation(category, subCategory);
+                    string preposition = subCategory.Contains("KEYITEM_003") ? "on" : "in";
 
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in {eventLocation.Item1} {eventLocation.Item2}.";
-                    else if (hintType.Equals("Vague"))
-                        hintLocation = $"in {eventLocation.Item1}.";
+                        hintLocation = $"{preposition} {eventLocation.Item1} {eventLocation.Item2}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
+                        hintLocation = $"{preposition} {eventLocation.Item1}.";
 
                     break;
                 case DataTableEnum.EquipItem:
@@ -180,9 +306,26 @@ namespace KH3Randomizer.Data
                     var equipmentLocation = this.GetLocationByLookUp(randomizedOptions, equipmentValue);
 
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in {equipmentLocation} found on {this.GetEquipment(subCategory)}.";
+                    {
+                        if (equipmentLocation != null && (equipmentLocation.Item2.Contains("Small Chest") || equipmentLocation.Item2.Contains("Large Chest")))
+                        {
+                            hintLocation = $"in {equipmentLocation.Item1} found on {this.GetEquipment(subCategory)} in {equipmentLocation.Item2.GetChestLocation(equipmentLocation.Item1.KeyToDataTableEnum())}.";
+                        }
+                        else
+                        {
+                            hintLocation = $"in {equipmentLocation} found on {this.GetEquipment(subCategory)}.";
+                        }
+                    }
                     else if (hintType.Equals("Vague"))
-                        hintLocation = $"in {equipmentLocation}.";
+                        if (equipmentLocation != null)
+                            hintLocation = $"in {equipmentLocation.Item1} on an Equipment.";
+                        else
+                            hintLocation = $"on {this.GetEquipment(subCategory)}.";
+                    else if (hintType.Equals("Category"))
+                        if (equipmentLocation != null)
+                            hintLocation = equipmentLocation.Item1.Equals("Sora's Initial Setup") || equipmentLocation.Item1.Equals("Lucky Emblem Milestones") ? $"on {equipmentLocation.Item1}." : $"in {equipmentLocation.Item1}.";
+                        else
+                            hintLocation = $"on {this.GetEquipment(subCategory)}.";
 
                     break;
                 case DataTableEnum.WeaponEnhance:
@@ -191,13 +334,15 @@ namespace KH3Randomizer.Data
                     var weaponLocation = this.GetLocationByLookUp(randomizedOptions, keybladeId);
 
                     if (weaponLocation == null)
-                        weaponLocation = new Tuple<string, string>("on Sora's Initial Setup", "");
+                        weaponLocation = new Tuple<string, string>("Sora's Initial Setup", "");
 
-                    var weaponDescription = weaponLocation.Item2.Length > 0 ? $" {weaponLocation.Item2}" : "";
+                    var weaponDescription = weaponLocation.Item2.Length > 0 ? $" in {weaponLocation.Item2.GetChestLocation(weaponLocation.Item1.KeyToDataTableEnum())}" : "";
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in {weaponLocation.Item1}{weaponDescription} on {keyblade.Item1} on {keyblade.Item2}.";
                     else if (hintType.Equals("Vague"))
                         hintLocation = $"in {weaponLocation.Item1} on {keyblade.Item1}.";
+                    else if (hintType.Equals("Category"))
+                        hintLocation = weaponLocation.Item1.Equals("Sora's Initial Setup") || weaponLocation.Item1.Equals("Lucky Emblem Milestones") ? $"on {weaponLocation.Item1}." : $"in {weaponLocation.Item1}.";
 
                     break;
                 case DataTableEnum.SynthesisItem:
@@ -207,78 +352,78 @@ namespace KH3Randomizer.Data
 
                 case DataTableEnum.TreasureBT:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in Scala Ad Caelum in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in Scala Ad Caelum in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureBT)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in Scala Ad Caelum.";
 
                     break;
                 case DataTableEnum.TreasureBX:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in San Fransokyo in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in San Fransokyo in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureBX)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in San Fransokyo.";
 
                     break;
                 case DataTableEnum.TreasureCA:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in The Caribbean in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in The Caribbean in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureCA)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in The Caribbean.";
 
                     break;
                 case DataTableEnum.TreasureEW:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in The Final World in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in The Final World in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureEW)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in The Final World.";
 
                     break;
                 case DataTableEnum.TreasureFZ:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in Arendelle in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in Arendelle in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureFZ)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in Arendelle.";
 
                     break;
                 case DataTableEnum.TreasureHE:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in Olympus in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in Olympus in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureHE)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in Olympus.";
 
                     break;
                 case DataTableEnum.TreasureKG:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in The Keyblade Graveyard in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in The Keyblade Graveyard in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureKG)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in The Keyblade Graveyard.";
 
                     break;
                 case DataTableEnum.TreasureMI:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in Monstropolis in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in Monstropolis in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureMI)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in Monstropolis.";
 
                     break;
                 case DataTableEnum.TreasureRA:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in Kingdom of Corona in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in Kingdom of Corona in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureRA)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in Kingdom of Corona.";
 
                     break;
                 case DataTableEnum.TreasureTS:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in Toy Box in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in Toy Box in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureTS)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in Toy Box.";
 
                     break;
                 case DataTableEnum.TreasureTT:
                     if (hintType.Equals("Verbose"))
-                        hintLocation = $"in Twilight Town in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                        hintLocation = $"in Twilight Town in {subCategory.KeyIdToDisplay().GetChestLocation(DataTableEnum.TreasureTT)}.";
+                    else if (hintType.Equals("Vague") || hintType.Equals("Category"))
                         hintLocation = $"in Twilight Town.";
 
                     break;
@@ -292,129 +437,27 @@ namespace KH3Randomizer.Data
 
         #region Helpers
 
-        public string GetDisplayToId(string display)
+        /// <summary>
+        /// Method for getting a hint name without a prefix at the start
+        /// </summary>
+        /// <returns>Returns the given check without its prefix</returns>
+        public string CleanHintName(string hintName)
         {
-            switch (display)
+            string newHintName = hintName;
+            if (hintName.Contains("Magic: "))
             {
-                case "Proof of Promises":
-                    return "KEY_ITEM15\u0000";
-                case "Proof of Times Past":
-                    return "KEY_ITEM16\u0000";
-                case "Proof of Fantasy":
-                    return "KEY_ITEM14\u0000";
-
-                case "Pole Spin":
-                    return "ETresAbilityKind::POLE_SPIN\u0000";
-                case "Block":
-                    return "ETresAbilityKind::REFLECT_GUARD\u0000";
-                case "Dodge Roll":
-                    return "ETresAbilityKind::DODGE\u0000";
-                case "Air-Slide":
-                    return "ETresAbilityKind::AIRSLIDE\u0000";
-                case "Double Flight":
-                    return "ETresAbilityKind::DOUBLEFLIGHT\u0000";
-                case "Second Chance":
-                    return "ETresAbilityKind::LAST_LEAVE\u0000";
-                case "Withstand Combo":
-                    return "ETresAbilityKind::COMBO_LEAVE\u0000";
-
-                case "Dream Heartbinder":
-                    return "KEY_ITEM06\u0000";
-                case "Pixel Heartbinder":
-                    return "KEY_ITEM07\u0000";
-                case "Pride Heartbinder":
-                    return "KEY_ITEM09\u0000";
-                case "Ocean Heartbinder":
-                    return "KEY_ITEM10\u0000";
-                case "\'Ohana Heartbinder":
-                    return "KEY_ITEM08\u0000";
-
-                case "Fire":
-                case "Fira":
-                case "Firaga":
-                    return "ETresVictoryBonusKind::MELEM_FIRE\u0000";
-                case "Water":
-                case "Watera":
-                case "Waterga":
-                    return "ETresVictoryBonusKind::MELEM_WATER\u0000";
-                case "Cure":
-                case "Cura":
-                case "Curaga":
-                    return "ETresVictoryBonusKind::MELEM_CURE\u0000";
-                case "Blizzard":
-                case "Blizzara":
-                case "Blizzaga":
-                    return "ETresVictoryBonusKind::MELEM_BLIZZARD\u0000";
-                case "Thunder":
-                case "Thundara":
-                case "Thundaga":
-                    return "ETresVictoryBonusKind::MELEM_THUNDER\u0000";
-                case "Aero":
-                case "Aerora":
-                case "Aeroga":
-                    return "ETresVictoryBonusKind::MELEM_AERO\u0000";
-
-                case "Hero\'s Origin":
-                    return "WEP_KEYBLADE_SO_01\u0000";
-                case "Grand Chef":
-                    return "WEP_KEYBLADE_SO_011\u0000";
-                case "Ultima Weapon":
-                    return "WEP_KEYBLADE_SO_015\u0000";
-                case "Oblivion":
-                    return "WEP_KEYBLADE_SO_014\u0000";
-                case "Oathkeeper":
-                    return "WEP_KEYBLADE_SO_013\u0000";
-
-                case "Secret Report 1":
-                    return "REPORT_ITEM02\u0000";
-                case "Secret Report 2":
-                    return "REPORT_ITEM03\u0000";
-                case "Secret Report 3":
-                    return "REPORT_ITEM04\u0000";
-                case "Secret Report 4":
-                    return "REPORT_ITEM05\u0000";
-                case "Secret Report 5":
-                    return "REPORT_ITEM06\u0000";
-                case "Secret Report 6":
-                    return "REPORT_ITEM07\u0000";
-                case "Secret Report 7":
-                    return "REPORT_ITEM08\u0000";
-                case "Secret Report 8":
-                    return "REPORT_ITEM09\u0000";
-                case "Secret Report 9":
-                    return "REPORT_ITEM10\u0000";
-                case "Secret Report 10":
-                    return "REPORT_ITEM11\u0000";
-                case "Secret Report 11":
-                    return "REPORT_ITEM12\u0000";
-                case "Secret Report 12":
-                    return "REPORT_ITEM13\u0000";
-                case "Secret Report 13":
-                    return "REPORT_ITEM14\u0000";
-
-                default:
-                    return "UNKNOWN";
+                newHintName = hintName.Split("Magic: ")[1] + " Spell";
             }
-        }
-
-        public string GetDisplayToDefKeyblade(string display)
-        {
-            switch (display)
+            else if (hintName.Contains("Ability: "))
             {
-                case "Hero\'s Origin":
-                    return "ETresItemDefWeapon::WEP_KEYBLADE02\u0000";
-                case "Grand Chef":
-                    return "ETresItemDefWeapon::WEP_KEYBLADE11\u0000";
-                case "Ultima Weapon":
-                    return "ETresItemDefWeapon::WEP_KEYBLADE14\u0000";
-                case "Oblivion":
-                    return "ETresItemDefWeapon::WEP_KEYBLADE13\u0000";
-                case "Oathkeeper":
-                    return "ETresItemDefWeapon::WEP_KEYBLADE12\u0000";
-
-                default:
-                    return "UNKNOWN";
+                newHintName = hintName.Split("Ability: ")[1];
             }
+            else if (hintName.Contains("Bonus: "))
+            {
+                newHintName = hintName.Split("Bonus: ")[1];
+            }
+
+            return newHintName;
         }
 
         public Tuple<string, string> GetLocation(DataTableEnum category, string subCategory)
@@ -434,23 +477,23 @@ namespace KH3Randomizer.Data
                         #region Olympus
                         case "Vbonus_001":
                             world = "Olympus";
-                            description = "(Clearing Heartless)";
+                            description = "(Cliff Ascent Heartless)";
                             break;
                         case "Vbonus_002":
                             world = "Olympus";
-                            description = "(Thebes Courtyard Flame Cores)";
+                            description = "(Thebes Agora Flame Cores)";
                             break;
                         case "Vbonus_005":
                             world = "Olympus";
-                            description = "(Near Plateau Flame Cores)";
+                            description = "(Thebes Overlook Flame Cores)";
                             break;
                         case "Vbonus_006":
                             world = "Olympus";
-                            description = "(Garden Flame Cores)";
+                            description = "(Thebes Garden Flame Cores)";
                             break;
                         case "Vbonus_007":
                             world = "Olympus";
-                            description = "(Timed Heartless)";
+                            description = "(Thebes Alleyway Heartless)";
                             break;
                         case "Vbonus_008":
                             world = "Olympus";
@@ -466,7 +509,7 @@ namespace KH3Randomizer.Data
                             break;
                         case "Vbonus_013":
                             world = "Olympus";
-                            description = "(Wind Titan Boss)";
+                            description = "(Tornado Titan Boss)";
                             break;
                         #endregion Olympus
 
@@ -477,11 +520,11 @@ namespace KH3Randomizer.Data
                             break;
                         case "Vbonus_015":
                             world = "Twilight Town";
-                            description = "(Power Wild Heartless)";
+                            description = "(The Woods Powerwild Heartless)";
                             break;
                         case "Vbonus_016":
                             world = "Twilight Town";
-                            description = "(Nobody & Heartless Mansion)";
+                            description = "(The Old Mansion Nobodies & Heartless)";
                             break;
                         #endregion Twilight Town
 
@@ -492,11 +535,11 @@ namespace KH3Randomizer.Data
                             break;
                         case "Vbonus_018":
                             world = "Toy Box";
-                            description = "(Gigas Heartless Lobby)";
+                            description = "(Galaxy Toys Main Floor: 1F Gigas)";
                             break;
                         case "Vbonus_019":
                             world = "Toy Box";
-                            description = "(Gigas Dragon Heartless)";
+                            description = "(Galaxy Toys Action Figures Supreme Smashers)";
                             break;
                         case "Vbonus_020":
                             world = "Toy Box";
@@ -519,15 +562,15 @@ namespace KH3Randomizer.Data
                         #region Kingdom of Corona
                         case "Vbonus_024":
                             world = "Kingdom of Corona";
-                            description = "(Puffball Heartless)";
+                            description = "(Hills Heartless 1)";
                             break;
                         case "Vbonus_025":
                             world = "Kingdom of Corona";
-                            description = "(Rapunzel's First Battle)";
+                            description = "(Hills Heartless 2)";
                             break;
                         case "Vbonus_026":
                             world = "Kingdom of Corona";
-                            description = "(Reaper Nobody Clearing)";
+                            description = "(Hills Reapers)";
                             break;
                         case "Vbonus_027":
                             world = "Kingdom of Corona";
@@ -535,11 +578,11 @@ namespace KH3Randomizer.Data
                             break;
                         case "Vbonus_028":
                             world = "Kingdom of Corona";
-                            description = "(Reaper Nobody Castle Town)";
+                            description = "(The Kingdom Nobodies)";
                             break;
                         case "Vbonus_029":
                             world = "Kingdom of Corona";
-                            description = "(Puffball Heartless on the Way to Tower)";
+                            description = "(Tower Heartless)";
                             break;
                         case "Vbonus_030":
                             world = "Kingdom of Corona";
@@ -550,35 +593,35 @@ namespace KH3Randomizer.Data
                         #region Monstropolis
                         case "Vbonus_032":
                             world = "Monstropolis";
-                            description = "(Unversed Lobby)";
+                            description = "(Lobby & Offices Unversed)";
                             break;
                         case "Vbonus_033":
                             world = "Monstropolis";
-                            description = "(Unversed Scare Floor)";
+                            description = "(Laugh Floor Unversed)";
                             break;
                         case "Vbonus_034":
                             world = "Monstropolis";
-                            description = "(Boo Laugh Door Warehouse)";
+                            description = "(Upper Level Heartless)";
                             break;
                         case "Vbonus_035":
                             world = "Monstropolis";
-                            description = "(Unversed & Heartless Electrified Room)";
+                            description = "(Second Floor Unversed & Heartless)";
                             break;
                         case "Vbonus_036":
                             world = "Monstropolis";
-                            description = "(Boo Laugh Main Control Room)";
+                            description = "(Second Floor Unversed)";
                             break;
                         case "Vbonus_037":
                             world = "Monstropolis";
-                            description = "(1st Flame Battle)";
+                            description = "(Accessway Unversed & Heartless)";
                             break;
                         case "Vbonus_038":
                             world = "Monstropolis";
-                            description = "(2nd Flame Battle)";
+                            description = "(Tank Yard Heartless)";
                             break;
                         case "Vbonus_039":
                             world = "Monstropolis";
-                            description = "(Unversed Empty Tank)";
+                            description = "(Tank Yard Unversed)";
                             break;
                         case "Vbonus_040":
                             world = "Monstropolis";
@@ -589,23 +632,23 @@ namespace KH3Randomizer.Data
                         #region Arendelle
                         case "Vbonus_041":
                             world = "Arendelle";
-                            description = "(Rock Troll Mini-Boss)";
+                            description = "(Rock Troll & Winterhorns Mini-Boss)";
                             break;
                         case "Vbonus_042":
                             world = "Arendelle";
-                            description = "(1st Ninja Nobody)";
+                            description = "(1st Ninja Nobodies)";
                             break;
                         case "Vbonus_043":
                             world = "Arendelle";
-                            description = "(2nd Ninja Nobody)";
+                            description = "(2nd Ninja Nobodies)";
                             break;
                         case "Vbonus_044":
                             world = "Arendelle";
-                            description = "(3rd Ninja Nobody)";
+                            description = "(3rd Ninja Nobodies)";
                             break;
                         case "Vbonus_045":
                             world = "Arendelle";
-                            description = "(4th Ninja Nobody)";
+                            description = "(4th Ninja Nobodies)";
                             break;
                         case "Vbonus_047":
                             world = "Arendelle";
@@ -613,11 +656,11 @@ namespace KH3Randomizer.Data
                             break;
                         case "Vbonus_048":
                             world = "Arendelle";
-                            description = "(Ice Dragon Heartless)";
+                            description = "(Frost Serpent Heartless)";
                             break;
                         case "Vbonus_049":
                             world = "Arendelle";
-                            description = "(Heartless Forest)";
+                            description = "(Valley of Ice Heartless)";
                             break;
                         case "Vbonus_050":
                             world = "Arendelle";
@@ -628,7 +671,7 @@ namespace KH3Randomizer.Data
                         #region San Fransokyo
                         case "Vbonus_051":
                             world = "San Fransokyo";
-                            description = "(Rock Troll Mini-Boss)";
+                            description = "(Metal Troll Mini-Boss)";
                             break;
                         case "Vbonus_052":
                             world = "San Fransokyo";
@@ -700,12 +743,11 @@ namespace KH3Randomizer.Data
                             description = "(Anti-Aqua Boss)";
                             break;
 
+                        #region The Keyblade Graveyard
                         case "Vbonus_068":
-                            world = "San Fransokyo (Fallen to Darkness)";
+                            world = "The Keyblade Graveyard";
                             description = "(Lich Boss)";
                             break;
-
-                        #region The Keyblade Graveyard
                         case "Vbonus_069":
                             world = "The Keyblade Graveyard";
                             description = "(10,000 Enemy Fight)";
@@ -742,16 +784,16 @@ namespace KH3Randomizer.Data
 
                         #region The Final World
                         case "Vbonus_082":
-                            world = "The Final World (Olympus Intro)";
-                            description = "(Darkside Boss)";
+                            world = "The Final World";
+                            description = "(Darkside Tutorial Boss)";
                             break;
                         case "Vbonus_083":
                             world = "The Final World";
-                            description = "(Collect 200 Soras)";
+                            description = "(Collect 222 Soras)";
                             break;
                         case "Vbonus_084":
                             world = "The Final World";
-                            description = "(Collect 300 Soras)";
+                            description = "(Collect 333 Soras)";
                             break;
                         #endregion The Final World
 
@@ -766,19 +808,19 @@ namespace KH3Randomizer.Data
                             break;
                         case "VBonus_Minigame003":
                             world = "Arendelle";
-                            description = "(A-rank Snow Slide)";
+                            description = "(A-rank Frozen Slider)";
                             break;
                         case "VBonus_Minigame004":
                             world = "Arendelle";
-                            description = "(All Treasures Snow Slide)";
+                            description = "(All Treasures Frozen Slider)";
                             break;
                         case "VBonus_Minigame005":
                             world = "San Fransokyo";
-                            description = "(A-rank Flash Tracer 1)";
+                            description = "(A-rank Flash Tracer 1 (Fred))";
                             break;
                         case "VBonus_Minigame006":
                             world = "San Fransokyo";
-                            description = "(A-rank Flash Tracer 2)";
+                            description = "(A-rank Flash Tracer 2 (Go Go))";
                             break;
                         #endregion Mini-Games
 
@@ -838,19 +880,23 @@ namespace KH3Randomizer.Data
                             world = "Re:Mind (The Keyblade Graveyard)";
                             description = "(Terra-Xehanort & Vanitas Boss)";
                             break;
+                        case "VBonus_DLC_007":
+                            world = "Re:Mind (The Keyblade Graveyard)";
+                            description = "(Saix Boss)";
+                            break;
                         case "VBonus_DLC_008":
                             world = "Re:Mind (The Keyblade Graveyard)";
                             description = "(Young Xehanort, Ansem & Xemnas Boss)";
                             break;
 
                         case "VBonus_DLC_010":
-                            world = "Re:Mind (Scala Ad Caelum)";
+                            world = "Scala Ad Caelum";
                             description = "(Darkside Boss)";
                             break;
 
                         case "VBonus_DLC_015":
-                            world = "Re:Mind (End)";
-                            description = "(Replica-Xehanort Boss)";
+                            world = "Scala Ad Caelum";
+                            description = "(Armored Xehanort Boss)";
                             break;
                         #endregion Re:Mind
 
@@ -959,7 +1005,7 @@ namespace KH3Randomizer.Data
                             break;
                         case "EVENT_HEARTBINDER_003":
                             world = "Monstropolis";
-                            description = "(After Putting Out the Fires)";
+                            description = "(After Tank Yard Heartless)";
                             break;
                         case "EVENT_HEARTBINDER_004":
                             world = "San Fransokyo";
@@ -1036,6 +1082,10 @@ namespace KH3Randomizer.Data
                             world = "San Fransokyo";
                             description = "(Hiro's Garage First Visit)";
                             break;
+                        case "EVENT_KEYITEM_003":
+                            world = "Lucky Emblem Milestones";
+                            description = "(Find All Lucky Emblems)";
+                            break;
                         case "EVENT_KEYITEM_005":
                         case "EVENT_YOZORA_001":
                             world = "Unreality";
@@ -1050,7 +1100,7 @@ namespace KH3Randomizer.Data
                             break;
                         case "EVENT_DATAB_002":
                             world = "Radiant Garden";
-                            description = "(Defeat Data Ansem: Seeker of Darkness)";
+                            description = "(Defeat Data Ansem)";
                             break;
                         case "EVENT_DATAB_003":
                             world = "Radiant Garden";
@@ -1130,7 +1180,7 @@ namespace KH3Randomizer.Data
                     description = this.GetTreasure(subCategory);
                     break;
                 case DataTableEnum.TreasureKG:
-                    world = "The  Keyblade Graveyard";
+                    world = "The Keyblade Graveyard";
                     description = this.GetTreasure(subCategory);
                     break;
                 case DataTableEnum.TreasureMI:
@@ -1151,6 +1201,9 @@ namespace KH3Randomizer.Data
                     break;
                 case DataTableEnum.SynthesisItem:
                     world = "the Moogle Synthesis Shop";
+                    break;
+                case DataTableEnum.LuckyMark:
+                    world = "Lucky Emblem Milestones";
                     break;
             }
 
@@ -1647,13 +1700,13 @@ namespace KH3Randomizer.Data
             foreach (var levelUp in levelUps)
             {
                 if (levelUp.Value["TypeA"].Equals(value))
-                    levelUpTexts.Add($"{levelUp.Key} (TypeA)");
+                    levelUpTexts.Add($"{levelUp.Key} (Warrior)");
 
-                if (levelUp.Value.ContainsKey("TypeB") && levelUp.Value["TypeB"].Equals(value))
-                    levelUpTexts.Add($"{levelUp.Key} (TypeB)");
-
-                if (levelUp.Value.ContainsKey("TypeC") && levelUp.Value["TypeC"].Equals(value))
-                    levelUpTexts.Add($"{levelUp.Key} (TypeC)");
+                if (levelUp.Value["TypeB"].Equals(value))
+                    levelUpTexts.Add($"{levelUp.Key} (Mystic)");
+                
+                if (levelUp.Value["TypeC"].Equals(value))
+                    levelUpTexts.Add($"{levelUp.Key} (Guardian)");
 
                 if (levelUpTexts.Count == 3)
                     break;

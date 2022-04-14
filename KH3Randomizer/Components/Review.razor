@@ -169,7 +169,7 @@
             </div>
         }
 
-        @if (this.AvailableHints.Count > 0)
+        @if (this.ImportantChecks.Count > 0 && !this.HintSelectionType.Equals("None"))
         {
             <div class="review-sub-subsection">
                 <div class="review-header">
@@ -178,16 +178,13 @@
                 <div class="review-content" style="max-height: 600px; overflow-y: auto;">
                     <h4 style="font-size: 1.0rem; margin-left: 10px;"><u><b>Hint Selection Type: @this.HintSelectionType</b></u></h4>
 
-                    @foreach (var hint in this.AvailableHints)
-                    {
-                        @if (hint.Value.Where(x => x.Value).Count() > 0)
-                        {
-                            <div style="display: inline-flex;">
-                                <div id="@(hint.Key)_value" style="display: inline;">
-                                    <span class="sub-option-bubble" style="background: #ffac2f;">@hint.Key</span>
-                                </div>
+                    @foreach (var ic in this.ImportantChecks)
+                    { 
+                        <div style="display: inline-flex;">
+                            <div id="@(ic)_value" style="display: inline;">
+                                <span class="sub-option-bubble" style="background: #ffac2f;">@ic</span>
                             </div>
-                        }
+                        </div>
                     }
                 </div>
             </div>
@@ -211,8 +208,8 @@
     [Parameter] public Dictionary<string, bool> Exceptions { get; set; }
     // [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
     [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
-    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableHints { get; set; }
     [Parameter] public string HintSelectionType { get; set; }
+    [Parameter] public List<string> ImportantChecks { get; set; }
     [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableQualityOfLifeSettings { get; set; }
     [Parameter] public bool CanBeNone { get; set; }
 
@@ -309,18 +306,7 @@
         });
 
         // Generate Hints
-        byte[] hintResults;
-        var availableHints = new Dictionary<string, bool>();
-
-        foreach(var hint in this.AvailableHints)
-        {
-            foreach (var subHint in hint.Value)
-            {
-                availableHints.Add(subHint.Key, subHint.Value);
-            }
-        }
-
-        hintResults = this.HintService.GenerateHints(this.CurrentSeed, this.RandomizedOptions, this.HintSelectionType, availableHints, ref this.hintValues);
+        byte[] hintResults = this.HintService.GenerateHints(this.CurrentSeed, this.RandomizedOptions, this.AvailablePools, this.HintSelectionType, this.ImportantChecks, ref this.hintValues);
 
         // Generate QoL Settings
         this.qolValues = new();

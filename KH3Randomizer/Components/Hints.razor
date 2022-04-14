@@ -1,76 +1,45 @@
-﻿<div class="hints-section">
+﻿@inject KH3Randomizer.Data.RandomizerService RandomizerService
 
-    <div class="hints-subsection">
-        <h3>Hints</h3>
+<div class="hints-section">
 
-        <div class="hint-selection">
-            <div class="row" style="width: 100%;">
-                <div class="col-md-2">
-                    <label style="margin-top: 8px; font-size: larger; font-weight: 500;"><b>Hint Selection Type: </b></label>
-                </div>
-                <div class="col-md-2">
-                    <a class="rounded-selector a-tag-selector @(selectedHintType == "None" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("None"); })" @onclick:preventDefault>None</a>
-                </div>
-                <div class="col-md-2">
-                    <a class="rounded-selector a-tag-selector @(selectedHintType == "Vague" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Vague"); })" @onclick:preventDefault>Vague</a>
-                </div>
-                <div class="col-md-2">
-                    <a class="rounded-selector a-tag-selector @(selectedHintType == "Verbose" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Verbose"); })" @onclick:preventDefault>Verbose</a>
-                </div>
+    <div class="hint-selection">
+        <div class="row" style="width: 100%;">
+            <div class="col-md-2">
+                <label style="margin-top: 8px; font-size: larger; font-weight: 500;"><b>Hint Selection Type: </b></label>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedHintType == "None" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("None"); })" @onclick:preventDefault>None</a>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedHintType == "Vague" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Vague"); })" @onclick:preventDefault>Vague</a>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedHintType == "Verbose" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Verbose"); })" @onclick:preventDefault>Verbose</a>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedHintType == "Category" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Category"); })" @onclick:preventDefault>Category</a>
             </div>
         </div>
+    </div>
 
-        <div class="row" style="margin-top: 25px;">
-            @foreach (var hint in this.hints)
+    <br />
+
+    <div class="hints-subsection @(this.HintSelectionType.Equals("None") ? "spoiler-overlay" : "")">
+        <CascadingValue Value="this">
+            <SearchComponent SelectedChecks="@this.importantChecks" SearchLimit="25" SelectedTitle="Important Checks" SearchTitle="Available Checks" ActionType="Options" StateUpdate="@this.RefreshState" UseDisplayValues="true"></SearchComponent>
+        </CascadingValue>
+
+        <br />
+        <h4><b>Quick Toggle</b></h4>
+        <div class="row" style="width: 100%;">
+            @foreach (var group in this.checkGroups)
             {
-                <div class="col-md-4" style="margin: 15px 0px;">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label class="switch">
-                                <input type="checkbox" @onchange="@((value) => { UpdateHints(hint.Key, (bool)value.Value); })" checked="@this.CheckHints(hint.Key)" disabled="@(this.selectedHintType == "None")">
-                                <span class="slider round @(this.selectedHintType == "None" ? "slider-disabled" : "")"></span>
-                            </label>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label><b>@hint.Key</b></label>
-                        </div>
-
-                        <div class="col-md-1">
-                            <Tooltip Text="@hintDescriptions[hint.Key]">
-                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
-                            </Tooltip>
-                        </div>
-                    </div>
+                <div class="col-md-2">
+                    <a class="rounded-selector a-tag-selector @(this.CheckGroupEnabled(group.Key) ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { ToggleCheckGroup(group.Key); })" @onclick:preventDefault>@group.Key</a>
                 </div>
             }
         </div>
     </div>
-
-
-    @*<div class="row hints-sub-subsection">
-            @foreach (var subHint in hint.Value)
-            {
-                <div class="col-md-4" style="margin: 15px 0px;">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <label class="switch">
-                                <input type="checkbox" @onchange="@((value) => { this.hints[hint.Key][subHint.Key] = (bool)value.Value; CheckHints(hint.Key); })" checked="@subHint.Value">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label><b>@subHint.Key</b></label>
-                        </div>
-                    </div>
-                </div>
-            }
-
-            <hr />
-        </div>*@
-
-
 
     <br />
 
@@ -81,55 +50,42 @@
 @code {
     [Parameter] public EventCallback<string> BackTo { get; set; }
     [Parameter] public EventCallback<string> ContinueTo { get; set; }
-    [Parameter] public EventCallback<Dictionary<string, Dictionary<string, bool>>> UpdateAvailableHints { get; set; }
     [Parameter] public EventCallback<string> UpdateHintSelection { get; set; }
+    [Parameter] public EventCallback<List<string>> UpdateImportantChecks { get; set; }
+    [Parameter] public string HintSelectionType { get; set; }
+    [Parameter] public List<string> ImportantChecks { get; set; }
 
-    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableHints { get; set; }
+    private List<string> importantChecks = new List<string>();
 
-    private Dictionary<string, Dictionary<string, bool>> hints = new Dictionary<string, Dictionary<string, bool>>();
-
-    private Dictionary<string, string> hintDescriptions = new Dictionary<string, string> {
-        { "Proofs", "All Proofs will be considered checks: Proof of Promises, Proof of Times Past, Proof of Fantasy." },
-        { "Abilities", "Certain Abilities that may be useful and will be considered checks: Pole Spin, Block, Dodge Roll, Air-Slide, Double Flight, Second Chance, Withstand Combo." },
-        { "Heartbinders", "All Links will be considered checks: Dream Heartbinder, Pixel Heartbinder, Pride Heartbinder, Ocean Heartbinder, \'Ohana Heartbinder." },
-        { "Magic", "All Magic and their upgrades will be considered checks: Fire, Water, Cure, Blizzard, Thunder & Aero." },
-        { "Formchanges", "The following keyblade formchanges will be considered checks: Hero's Origin, Grand Chef, Ultima Weapon, Oblivion & Oathkeeper." },
-        { "Secret Reports", "All Secret Reports will be conidered checks: Secret Reports 1 - 13." },
+    private Dictionary<string, List<string>> checkGroups = new Dictionary<string, List<string>> {
+        { "Proofs", new List<string> {
+            "Proof of Promises", "Proof of Times Past", "Proof of Fantasy"}
+        },
+        { "Secret Reports", new List<string> {
+            "Secret Report 1", "Secret Report 2", "Secret Report 3", "Secret Report 4",
+            "Secret Report 5", "Secret Report 6", "Secret Report 7", "Secret Report 8",
+            "Secret Report 9", "Secret Report 10", "Secret Report 11", "Secret Report 12", "Secret Report 13" }
+        },
+        { "Magic", new List<string> {
+            "Magic: Aero", "Magic: Blizzard", "Magic: Cure",
+            "Magic: Fire", "Magic: Thunder", "Magic: Water" }
+        },
+        { "Heartbinders", new List<string> {
+            "\'Ohana Heartbinder", "Dream Heartbinder", "Ocean Heartbinder",
+            "Pixel Heartbinder", "Pride Heartbinder" }
+        },
+        { "Key Abilities", new List<string> {
+            "Ability: Pole Spin", "Ability: Block", "Ability: Dodge Roll", "Ability: Air Slide",
+            "Ability: Doubleflight", "Ability: Second Chance", "Ability: Withstand Combo" }
+        }
     };
 
-    private Collapsable hintCollapsable;
-    private string currentHint = string.Empty;
     private string selectedHintType = "Verbose";
 
     protected override void OnInitialized()
     {
-        this.hints = this.AvailableHints;
-    }
-
-    private bool CheckHints(string key)
-    {
-        var allOn = false;
-
-        foreach (var subHint in this.hints[key])
-        {
-            if (subHint.Value)
-            {
-                allOn = true;
-                break;
-            }
-        }
-
-        return allOn;
-    }
-
-    private void UpdateHints(string key, bool value)
-    {
-        foreach (var subHint in this.hints[key])
-        {
-            this.hints[key][subHint.Key] = value;
-        }
-
-        this.UpdateAvailableHints.InvokeAsync(this.hints);
+        this.importantChecks = this.ImportantChecks;
+        this.selectedHintType = this.HintSelectionType;
     }
 
     private void UpdateCurrentHintSelection(string selection)
@@ -144,13 +100,54 @@
         });
     }
 
-    private void ToggleCollapsables(string currentHint)
+    private bool CheckGroupEnabled(string group)
     {
-        this.currentHint = currentHint;
-
-        InvokeAsync(() =>
+        if (this.checkGroups.ContainsKey(group))
         {
-            StateHasChanged();
-        });
+            bool hasAllChecks = true;
+            foreach (var check in this.checkGroups[group])
+            {
+                if (!this.importantChecks.Contains(check))
+                {
+                    hasAllChecks = false;
+                    break;
+                }
+            }
+            return hasAllChecks;
+
+        }
+        return false;
+    }
+
+    private void ToggleCheckGroup(string group)
+    {
+        if (this.checkGroups.ContainsKey(group))
+        {
+            if (CheckGroupEnabled(group))
+            {
+                foreach (var check in this.checkGroups[group])
+                {
+                    if (importantChecks.Contains(check))
+                    {
+                        importantChecks.Remove(check);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var check in this.checkGroups[group])
+                {
+                    if (!importantChecks.Contains(check))
+                    {
+                        importantChecks.Add(check);
+                    }
+                }
+            }
+        }
+    }
+
+    public void RefreshState()
+    {
+        this.StateHasChanged();
     }
 }
