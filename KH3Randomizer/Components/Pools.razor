@@ -22,7 +22,10 @@
                     </Tooltip>
                 </div>
 
-                <div class="col-md-4" style="margin-top: 8px; text-align: end;">
+                <div class="col-md-4">
+                    <label style="font-size: 1.3rem; padding: 5px 0px 0px 0px;">Remaining Vanilla or Replace Pools: <b>@this.remainingReplaceVanillaCount</b></label>
+                </div>
+                @*<div class="col-md-4" style="margin-top: 8px; text-align: end;">
                     <b>All Pools: </b>
 
                     <div id="poolOptionEnums" style="display: inline-flex;">
@@ -36,7 +39,7 @@
                             Replace
                         </button>
                     </div>
-                </div>
+                </div>*@
             </div>
         </div>
     </div>
@@ -56,13 +59,13 @@
                             <label style="margin-top: 5px;"><b>@pool.Key:</b></label>
 
                             <div id="poolOptionEnums" style="display: inline-flex; float: right;">
-                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateWorldPool(pool.Key, RandomizeOptionEnum.Vanilla); })">
+                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateWorldPool(pool.Key, RandomizeOptionEnum.Vanilla); })" disabled="@this.maxReplaceVanillaMet">
                                     Vanilla
                                 </button>
                                 <button class="kh-center-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateWorldPool(pool.Key, RandomizeOptionEnum.Randomize); })">
                                     Randomize
                                 </button>
-                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Replace ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateWorldPool(pool.Key, RandomizeOptionEnum.Replace); })">
+                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Replace ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateWorldPool(pool.Key, RandomizeOptionEnum.Replace); })" disabled="@this.maxReplaceVanillaMet">
                                     Replace
                                 </button>
                             </div>
@@ -91,13 +94,13 @@
                         </div>
                         <div class="col-md-8">
                             <div id="poolOptionEnums" style="display: inline-flex; float: right;">
-                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Vanilla); })" disabled="@(pool.Key == "Battle Portals")">
+                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Vanilla); })" disabled="@(pool.Key == "Battle Portals" || this.maxReplaceVanillaMet)">
                                     Vanilla
                                 </button>
                                 <button class="kh-center-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Randomize); })" disabled="@(pool.Key == "Battle Portals")">
                                     Randomize
                                 </button>
-                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Replace ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Replace); })" disabled="@(pool.Key == "Battle Portals")">
+                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Replace ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Replace); })" disabled="@(pool.Key == "Battle Portals" || this.maxReplaceVanillaMet)">
                                     Replace
                                 </button>
                             </div>
@@ -200,6 +203,10 @@
     private Dictionary<string, RandomizeOptionEnum> miscellaneousPools = new Dictionary<string, RandomizeOptionEnum>();
     private Dictionary<string, bool> exceptions { get; set; }
 
+    private int maxReplaceVanillaCount = 13;
+    private bool maxReplaceVanillaMet = false;
+    private int remainingReplaceVanillaCount = 0;
+
     private Dictionary<string, string> exceptionDescriptions = new Dictionary<string, string>
     {
         { "Default Abilities", "Keeps Sora's base abilities from being randomized, like Pole Spin, Dodge, Block, etc." },
@@ -225,6 +232,8 @@
         this.miscellaneousPools = this.RandomizerService.GetPools(this.AvailablePools, "Miscellaneous");
         this.exceptions = this.Exceptions;
 
+        this.CheckMaxReplacePools();
+
         this.currentSeed = this.CurrentSeed ?? "";
     }
 
@@ -233,6 +242,8 @@
         this.worldPools = this.RandomizerService.GetPools(this.AvailablePools, "World");
         this.miscellaneousPools = this.RandomizerService.GetPools(this.AvailablePools, "Miscellaneous");
         this.exceptions = this.Exceptions;
+
+        this.CheckMaxReplacePools();
 
         this.currentSeed = this.CurrentSeed ?? "";
 
@@ -243,6 +254,7 @@
     {
         this.worldPools[key] = randomizeOptionEnum;
 
+        this.CheckMaxReplacePools();
 
         this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed });
     }
@@ -251,8 +263,18 @@
     {
         this.miscellaneousPools[key] = randomizeOptionEnum;
 
+        this.CheckMaxReplacePools();
 
         this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed });
+    }
+
+    private void CheckMaxReplacePools()
+    {
+        var worldCount = this.worldPools.Where(x => x.Value != RandomizeOptionEnum.Randomize).Count();
+        var miscCount = this.miscellaneousPools.Where(x => x.Value != RandomizeOptionEnum.Randomize).Count();
+
+        this.remainingReplaceVanillaCount = this.maxReplaceVanillaCount - (worldCount + miscCount);
+        this.maxReplaceVanillaMet = (worldCount + miscCount) >= this.maxReplaceVanillaCount;
     }
 
     private void UpdatePools(RandomizeOptionEnum randomizeOptionEnum)

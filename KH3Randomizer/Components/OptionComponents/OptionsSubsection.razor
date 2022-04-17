@@ -34,23 +34,26 @@
                         {
                             @foreach (var extraSubOption in extraSubOptions[subOption.Key])
                             { 
-                                <div class="row">
-                                    <div class="col-md-1"></div>
+                                @if (option.Value.Any(x => x.Key == subOption.Key + ": " + extraSubOption.Key))
+                                { 
+                                    <div class="row">
+                                        <div class="col-md-1"></div>
 
-                                    <div class="col-md-10">
-                                        <div class="@(currentSubSelection == extraSubOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSubSelection(extraSubOption.Key)">
-                                            <label class="switch" id="switch@(subOption.Key + ": " + extraSubOption.Key)" name="switch@(subOption.Key + ": " + extraSubOption.Key)">
-                                                <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key + ": " + extraSubOption.Key, (bool)value.Value))" checked="@extraSubOption.Value" disabled="@IsDisabled">
-                                                <span class="slider round"></span>
-                                            </label>
+                                        <div class="col-md-10">
+                                            <div class="@(currentSubSelection == extraSubOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSubSelection(extraSubOption.Key)">
+                                                <label class="switch" id="switch@(subOption.Key + ": " + extraSubOption.Key)" name="switch@(subOption.Key + ": " + extraSubOption.Key)">
+                                                    <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key + ": " + extraSubOption.Key, (bool)value.Value))" checked="@extraSubOption.Value" disabled="@IsDisabled">
+                                                    <span class="slider round"></span>
+                                                </label>
 
 
-                                            <label for="switch@(subOption.Key + ": " + extraSubOption.Key)" style="padding-left: 20px;"><b>@extraSubOption.Key</b></label>
+                                                <label for="switch@(subOption.Key + ": " + extraSubOption.Key)" style="padding-left: 20px;"><b>@extraSubOption.Key</b></label>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-md-1"></div>
-                                </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                }
                             }
                         }
                     }
@@ -289,6 +292,15 @@
         } }
     };
 
+    private List<string> Worlds = new List<string> { "Olympus", "Twilight Town", "Toy Box", "Kingdom of Corona", "Monstropolis",
+                                                     "Arendelle", "San Fransokyo", "The Caribbean", "Keyblade Graveyard",
+                                                     "100 Acre Wood", "Re:Mind", "Dark World", "Unreality" };
+
+    private List<string> WeaponUpgrades = new List<string> { "Kingdom Key", "Hero's Origin", "Shooting Star",  "Favorite Deputy",
+                                                             "Ever After", "Happy Gear", "Crystal Snow", "Hunny Spout",
+                                                             "Wheel of Fate", "Nano Gear", "Starlight", "Grand Chef", "Classic Tone",
+                                                             "Ultima Weapon", "Elemental Encoder", "Oblivion", "Oathkeeper" };
+
     protected override void OnParametersSet()
     {
         this.availableOptions = this.AvailableOptions;
@@ -322,9 +334,25 @@
         base.OnParametersSet();
     }
 
+    private void ToggleCollapsables(string currentOption)
+    {
+        this.UpdateCurrentSelection(this.ConvertDisplayStringToDefaultCurrentSelection(currentOption));
+        this.currentOption = currentOption;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
     private void UpdateCurrentSelection(string selection)
     {
         this.currentSelection = selection;
+
+        if (this.Worlds.Contains(selection))
+            this.UpdateCurrentSubSelection(displayAvailableOptions["Worlds"].FirstOrDefault(x => x.Key.Contains($"{selection}:")).Key.Split(": ")[1]);
+        else if (selection == "Weapon Upgrades")
+            this.UpdateCurrentSubSelection(displayAvailableOptions["Moogle Workshop"].FirstOrDefault(x => x.Key.Contains($"{selection}:")).Key.Split(": ")[1]);
     }
 
     private void UpdateCurrentSubSelection(string selection)
@@ -342,17 +370,6 @@
 
         this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
         this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
-
-        InvokeAsync(() =>
-        {
-            StateHasChanged();
-        });
-    }
-
-    private void ToggleCollapsables(string currentOption)
-    {
-        this.currentSelection = this.ConvertDisplayStringToDefaultCurrentSelection(currentOption);
-        this.currentOption = currentOption;
 
         InvokeAsync(() =>
         {
@@ -379,17 +396,15 @@
         {
             foreach (var category in this.randomizedOptions)
             {
-                //var categoryConverted = category.Key.DataTableEnumToKey();
                 foreach (var subCategory in category.Value)
                 {
-                    //var subCategoryConverted = subCategory.Key.CategoryToKey(category.Key);
-                    //var isFound = false;
+                    var isFound = false;
 
                     foreach (var option in subCategory.Value)
                     {
                         if (option.Key.KeyIdToDisplay().ToLower().Contains(this.searchValue.ToLower()) || option.Value.ValueIdToDisplay().ToLower().Contains(this.searchValue.ToLower()))
                         {
-                            //isFound = true;
+                            isFound = true;
 
                             if (!this.searchRandomizedOptions.ContainsKey(category.Key))
                                 this.searchRandomizedOptions.Add(category.Key, new Dictionary<string, Dictionary<string, string>>());
@@ -398,27 +413,50 @@
                                 this.searchRandomizedOptions[category.Key].Add(subCategory.Key, new Dictionary<string, string>());
 
                             this.searchRandomizedOptions[category.Key][subCategory.Key].Add(option.Key, option.Value);
-
-
-                            //var pool = this.RandomizerService.GetPoolFromOption(category.Key, subCategory.Key);
-                            //var temp = this.RandomizerService.GetOptionsForPool(pool, this.searchRandomizedOptions);
                         }
                     }
 
 
-                    //if (isFound)
-                    //{
-                    //if (!this.searchAvailableOptions.ContainsKey(categoryConverted))
-                    //    this.searchAvailableOptions.Add(categoryConverted, new Dictionary<string, bool>());
+                    if (isFound)
+                    {
+                        var pool = this.RandomizerService.GetPoolFromOption(category.Key, subCategory.Key);
+                        var subPool = this.RandomizerService.GetSubPoolFromOption(category.Key, subCategory.Key);
 
-                    //if (!this.searchAvailableOptions[categoryConverted].ContainsKey(subCategoryConverted))
-                    //    this.searchAvailableOptions[categoryConverted].Add(subCategoryConverted, true);
-                    //}
+                        if (this.Worlds.Contains(pool))
+                        {
+                            if (!this.searchAvailableOptions.ContainsKey("Worlds"))
+                                this.searchAvailableOptions.Add("Worlds", new Dictionary<string, bool>());
+
+                            if (!this.searchAvailableOptions["Worlds"].ContainsKey(pool))
+                                this.searchAvailableOptions["Worlds"].Add(pool, true);
+
+                            if (!this.searchAvailableOptions["Worlds"].ContainsKey($"{pool}: {subPool}"))
+                                this.searchAvailableOptions["Worlds"].Add($"{pool}: {subPool}", true);
+                        }
+                        else if (this.WeaponUpgrades.Contains(subPool))
+                        {
+                            if (!this.searchAvailableOptions.ContainsKey("Moogle Workshop"))
+                                this.searchAvailableOptions.Add("Moogle Workshop", new Dictionary<string, bool>());
+
+                            if (!this.searchAvailableOptions["Moogle Workshop"].ContainsKey("Weapon Upgrades"))
+                                this.searchAvailableOptions["Moogle Workshop"].Add("Weapon Upgrades", true);
+
+                            if (!this.searchAvailableOptions["Moogle Workshop"].ContainsKey($"Weapon Upgrades: {subPool}"))
+                                this.searchAvailableOptions["Moogle Workshop"].Add($"Weapon Upgrades: {subPool}", true);
+                        }
+                        else
+                        {
+                            if (!this.searchAvailableOptions.ContainsKey(pool))
+                                this.searchAvailableOptions.Add(pool, new Dictionary<string, bool>());
+
+                            if (!this.searchAvailableOptions[pool].ContainsKey(subPool))
+                                this.searchAvailableOptions[pool].Add(subPool, true);
+                        }
+                    }
                 }
             }
 
-            //this.displayAvailableOptions = this.RandomizerService.GetOptionsForPool();
-            this.displayAvailableOptions = this.availableOptions;
+            this.displayAvailableOptions = this.searchAvailableOptions;
             this.displayRandomizedOptions = this.searchRandomizedOptions;
         }
         else

@@ -8,6 +8,10 @@ namespace KH3Randomizer.Data
 {
     public class HintService
     {
+        private List<string> Worlds = new List<string> { "Olympus", "Twilight Town", "Toy Box", "Kingdom of Corona", "Monstropolis",
+                                                         "Arendelle", "San Fransokyo", "The Caribbean", "Keyblade Graveyard",
+                                                         "100 Acre Wood", "Re:Mind", "Dark World", "Unreality" };
+
         public byte[] GenerateHints(string seed, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, string hintType, Dictionary<string, bool> availableHints, ref Dictionary<string, List<string>> hintValues)
         {
             var hints = new byte[0];
@@ -97,7 +101,7 @@ namespace KH3Randomizer.Data
 
                 if (hintType.Equals("Verbose"))
                     hintText = $"{hintName.ValueIdToDisplay()} is {hintLocation}";
-                else if (hintType.Equals("Vague"))
+                else if (hintType.Contains("Vague"))
                     hintText = $"There is 1 check {hintLocation}";
 
                 hintList.Add(hintText);
@@ -106,18 +110,46 @@ namespace KH3Randomizer.Data
             var hash = seed.StringToSeed();
             var rng = new Random((int)hash);
 
-            hintList.Shuffle(rng);
-
             var hintNames = new List<string> { "SecretReport02", "SecretReport03", "SecretReport04", "SecretReport05", "SecretReport06", "SecretReport07", "SecretReport08",
-                                               "SecretReport09", "SecretReport10", "SecretReport11", "SecretReport12", "SecretReport13", "SecretReport14", };
-            for (int i = 0; i < hintList.Count; ++i)
+                                               "SecretReport09", "SecretReport10", "SecretReport11", "SecretReport12", "SecretReport13", "SecretReport14" };
+
+            if (hintType.Contains("By World"))
             {
-                int index = (i / 4);
+                var tempHintList = new List<string>();
 
-                if (!hintValues.ContainsKey(hintNames[index]))
-                    hintValues.Add(hintNames[index], new List<string>());
+                foreach (var world in this.Worlds)
+                {
+                    var checkCount = 0;
+                    foreach (var hint in hintList)
+                    {
+                        if (world == "Keyblade Graveyard" && hint.Contains("Final World"))
+                            ++checkCount;
 
-                hintValues[hintNames[index]].Add(hintList[i]);
+                        if (hint.Contains(world))
+                            ++checkCount;
+                    }
+
+                    if (checkCount == 0 || checkCount > 1)
+                        tempHintList.Add($"There are {checkCount} checks in {world}");
+                    else
+                        tempHintList.Add($"There is 1 check in {world}");
+                }
+
+                hintList = tempHintList;
+            }
+            else
+            {
+                hintList.Shuffle(rng);
+
+                for (int i = 0; i < hintList.Count; ++i)
+                {
+                    int index = (i / 4);
+
+                    if (!hintValues.ContainsKey(hintNames[index]))
+                        hintValues.Add(hintNames[index], new List<string>());
+
+                    hintValues[hintNames[index]].Add(hintList[i]);
+                }
             }
 
             var mobile = new Mobile();
@@ -139,21 +171,21 @@ namespace KH3Randomizer.Data
                 case DataTableEnum.FullcourseAbility:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"on a Fullcourse Meal {this.GetFullcourseDescription(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"on a Fullcourse Meal.";
 
                     break;
                 case DataTableEnum.LevelUp:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"on Sora's Level Up {this.GetLevelUpAlternatives(randomizedOptions, subCategory, name, value)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"on Sora's Level Ups.";
 
                     break;
                 case DataTableEnum.LuckyMark:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"on Lucky Emblem Milestone {subCategory}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"on Lucky Emblem Milestones.";
                     
                     break;
@@ -162,7 +194,7 @@ namespace KH3Randomizer.Data
 
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in {vbonusLocation.Item1} {vbonusLocation.Item2}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in {vbonusLocation.Item1}.";
 
                     break;
@@ -171,7 +203,7 @@ namespace KH3Randomizer.Data
 
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in {eventLocation.Item1} {eventLocation.Item2}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in {eventLocation.Item1}.";
 
                     break;
@@ -181,7 +213,7 @@ namespace KH3Randomizer.Data
 
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in {equipmentLocation} found on {this.GetEquipment(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in {equipmentLocation}.";
 
                     break;
@@ -196,7 +228,7 @@ namespace KH3Randomizer.Data
                     var weaponDescription = weaponLocation.Item2.Length > 0 ? $" {weaponLocation.Item2}" : "";
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in {weaponLocation.Item1}{weaponDescription} on {keyblade.Item1} on {keyblade.Item2}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in {weaponLocation.Item1} on {keyblade.Item1}.";
 
                     break;
@@ -208,77 +240,77 @@ namespace KH3Randomizer.Data
                 case DataTableEnum.TreasureBT:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in Scala Ad Caelum in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in Scala Ad Caelum.";
 
                     break;
                 case DataTableEnum.TreasureBX:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in San Fransokyo in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in San Fransokyo.";
 
                     break;
                 case DataTableEnum.TreasureCA:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in The Caribbean in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in The Caribbean.";
 
                     break;
                 case DataTableEnum.TreasureEW:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in The Final World in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in The Final World.";
 
                     break;
                 case DataTableEnum.TreasureFZ:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in Arendelle in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in Arendelle.";
 
                     break;
                 case DataTableEnum.TreasureHE:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in Olympus in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in Olympus.";
 
                     break;
                 case DataTableEnum.TreasureKG:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in The Keyblade Graveyard in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in The Keyblade Graveyard.";
 
                     break;
                 case DataTableEnum.TreasureMI:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in Monstropolis in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in Monstropolis.";
 
                     break;
                 case DataTableEnum.TreasureRA:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in Kingdom of Corona in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in Kingdom of Corona.";
 
                     break;
                 case DataTableEnum.TreasureTS:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in Toy Box in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in Toy Box.";
 
                     break;
                 case DataTableEnum.TreasureTT:
                     if (hintType.Equals("Verbose"))
                         hintLocation = $"in Twilight Town in {this.GetTreasure(subCategory)}.";
-                    else if (hintType.Equals("Vague"))
+                    else if (hintType.Contains("Vague"))
                         hintLocation = $"in Twilight Town.";
 
                     break;
@@ -742,7 +774,7 @@ namespace KH3Randomizer.Data
 
                         #region The Final World
                         case "Vbonus_082":
-                            world = "The Final World (Olympus Intro)";
+                            world = "The Final (Tutorial) World";
                             description = "(Darkside Boss)";
                             break;
                         case "Vbonus_083":

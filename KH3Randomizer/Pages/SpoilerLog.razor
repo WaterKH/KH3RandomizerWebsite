@@ -63,31 +63,6 @@
             }
         </div>
 
-        @*<div class="row">
-            <div class="kh-input col-md-10">
-                <div class="row">
-                    <div class="col-md-2">
-                        <label for="seed" style="font-size: 1.3rem; padding: 5px 0px 0px 0px;">Seed Name: </label>
-                    </div>
-                    <div class="col-md-6">
-                        <input id="seed" name="seed" class="kh-inputfield" @onchange="RandomizeOptions" placeholder="Enter a seed name..." value="@(string.IsNullOrEmpty(this.currentSeed) ? "" : this.currentSeed)" />
-                    </div>
-                    <div class="col-md-1" style="margin-top: 8px; float: right;">
-                        <Tooltip Text="This is what is used to randomize the items. You can generate a duplicate seed if the same name is used.">
-                            <i class="bi bi-question-circle" style="font-size: 1.2rem;"></i>
-                        </Tooltip>
-                    </div>
-                    <div class="col-md-1"></div>
-                </div>
-            </div>
-            <div class="col-md-2 kh-modification-button">
-                @if (this.modifications.Count > 0)
-                {
-                    <button class="btn btn-danger" @onclick="ResetModifications">Reset Modifications</button>
-                }
-            </div>
-        </div>*@
-
         <div style="margin-top: 25px;"></div>
 
         <OptionsSubsection UpdateAvailableOptions="@this.UpdateAvailableOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
@@ -122,7 +97,9 @@
 
     private Dictionary<string, bool> exceptions = new Dictionary<string, bool>
     {
-        { "Default Abilities", false }
+        { "Default Abilities", false },
+        { "Default Critical Abilities", true },
+        { "Early Critical Abilities", false }
     };
 
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();

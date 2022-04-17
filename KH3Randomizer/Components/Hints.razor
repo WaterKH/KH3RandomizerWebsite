@@ -12,7 +12,10 @@
                     <a class="rounded-selector a-tag-selector @(selectedHintType == "None" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("None"); })" @onclick:preventDefault>None</a>
                 </div>
                 <div class="col-md-2">
-                    <a class="rounded-selector a-tag-selector @(selectedHintType == "Vague" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Vague"); })" @onclick:preventDefault>Vague</a>
+                    <a class="rounded-selector a-tag-selector @(selectedHintType == "Vague: By Check" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Vague: By Check"); })" @onclick:preventDefault>Vague: By Check</a>
+                </div>
+                <div class="col-md-2">
+                    <a class="rounded-selector a-tag-selector @(selectedHintType == "Vague: By World" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Vague: By World"); })" @onclick:preventDefault>Vague: By World</a>
                 </div>
                 <div class="col-md-2">
                     <a class="rounded-selector a-tag-selector @(selectedHintType == "Verbose" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateCurrentHintSelection("Verbose"); })" @onclick:preventDefault>Verbose</a>
