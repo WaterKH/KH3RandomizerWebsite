@@ -9,7 +9,13 @@
         <th>Action</th>
     </TableHeader>
     <RowTemplate>
-        <td>@Treasure.Id.KeyIdToDisplay()</td>
+        <td>
+            @Treasure.Id.KeyIdToDisplay()
+            <Tooltip Text="@Treasure.Id.KeyIdToDisplay().GetChestLocation(GetDataTableEnumFromSelection(this.WorldName))">
+                <i class="bi bi-question-circle" style="font-size: 1rem; color: #0366de;"></i>
+            </Tooltip>
+        </td>
+
         <td>@Treasure.Reward.ValueIdToDisplay()</td>
         @if (this.actionType == "Options")
         {
