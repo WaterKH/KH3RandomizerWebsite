@@ -25,7 +25,15 @@ namespace KH3Randomizer.Data
             List<SecretReport> reports = new List<SecretReport>();
 
             if (hintType.Equals("None"))
-                return hints;
+            {
+                List<string> hintList = new List<string>();
+                for (int i = 1; i < 14; i++)
+                {
+                    hintValues.Add($"SecretReport{(i + 1).ToString("00")}", new List<string>());
+                    hintList.Add(null);
+                }
+                return mobile.Process(hintList, 1).ToArray();
+            }
 
             var levelUpTracker = new List<string>();
 

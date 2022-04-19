@@ -213,7 +213,7 @@
     <PackageReference Include="Blazored.Modal" Version="6.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageReference Include="UE4DataTableInterpreter" Version="1.1.13" />
+    <PackageReference Include="UE4DataTableInterpreter" Version="1.2.3" />
   </ItemGroup>
 
   <ItemGroup>
