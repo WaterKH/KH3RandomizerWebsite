@@ -329,7 +329,6 @@ namespace KH3Randomizer.Data
             var rng = new Random((int)hash);
 
             // Use randomizedItems
-            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot/DefaultKH3.json"));
             // Category > Id > Item > Value
             var defaultOptions = GetDefaultOptions();
 
@@ -808,7 +807,6 @@ namespace KH3Randomizer.Data
             var randomizedOptions = new Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>();
 
             // Read in Default KH3 Options
-            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot/DefaultKH3.json"));
             var defaultOptions = GetDefaultOptions();
 
             if (string.IsNullOrEmpty(seed))
