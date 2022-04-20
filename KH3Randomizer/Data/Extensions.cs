@@ -193,7 +193,7 @@ namespace KH3Randomizer.Data
                 case "I05013":
                     return "Buster Ring";
                 case "I05014":
-                    return "Brave Ring";
+                    return "Valor Ring";
                 case "I05015":
                     return "Phantom Ring";
                 case "I05016":
@@ -232,7 +232,7 @@ namespace KH3Randomizer.Data
                     return "Master Medal";
 
                 case "I05031":
-                    return "Mickey's Brooch";
+                    return "Mickey Clasp";
 
                 case "I05032":
                     return "Soldier's Earring";
@@ -851,7 +851,7 @@ namespace KH3Randomizer.Data
                     return "Complete Battle Portal 12 in San Fransokyo";
                 case "EVENT_REPORT_013a":
                 case "EVENT_REPORT_013b":
-                    return "Complete Battle Portal 12 in The Keyblade Graveyard";
+                    return "Complete Battle Portal 13 in The Keyblade Graveyard";
                 case "EVENT_REPORT_014":
                     return "Defeat Dark Inferno";
 
@@ -912,43 +912,43 @@ namespace KH3Randomizer.Data
                 #region VBonus
 
                 case "Vbonus_001":
-                    return "After the first battle in the clearing in Olympus";
+                    return "After the first battle in Olympus - Cliff Ascent";
                 case "Vbonus_002":
-                    return "After the Flame Core battle in the Thebes courtyard in Olympus";
+                    return "After the 1st Flame Core battle in Olympus - Thebes: Agora";
                 case "Vbonus_005":
-                    return "After the second Flame Core battle near the plateau in Olympus";
+                    return "After the 2nd Flame Core battle in Olympus - Thebes: Overlook";
                 case "Vbonus_006":
-                    return "After the Flame Core battle in the garden in Olympus";
+                    return "After the 3rd Flame Core battle in Olympus - Thebes: Gardens";
                 case "Vbonus_007":
-                    return "After the timed Heartless battle in Olympus";
+                    return "After the timed Heartless battle in Olympus - Thebes: Alleyway";
                 case "Vbonus_008":
-                    return "After the Rock Troll battle in the Thebes courtyard in Olympus";
+                    return "After the Rock Troll battle in Olympus - Thebes: Agora";
                 case "Vbonus_009":
                     return "After the Water Core(?) battle on the way up mountain in Olympus";
                 case "Vbonus_010":
                     return "After the Rock Titan boss battle in Olympus";
                 case "Vbonus_011":
-                    return "After the Satyr Mob battle in Olympus";
+                    return "After the Satyr Mob battle in Olympus - Realm of the Gods: Courtyard";
                 case "Vbonus_013":
-                    return "After the Wind Titan boss battle in Olympus";
+                    return "After the Tornado Titan boss battle in Olympus";
 
                 case "Vbonus_014":
-                    return "After the Demon Tide battle in the town square in Twilight Town";
+                    return "After the Demon Tide battle in Twilight Town - Tram Common";
                 case "Vbonus_015":
-                    return "After the Power Wild Mob battle in the forest in Twilight Town";
+                    return "After the Powerwild Mob battle in Twilight Town - The Woods";
                 case "Vbonus_016":
-                    return "After the Heartless & Nobody Mob battle outside the mansion in Twilight Town";
+                    return "After the Heartless & Nobody Mob battle in Twilight Town - The Old Mansion";
 
                 case "Vbonus_017":
-                    return "After the Heartless Mob battle in Andy's room in Toy Box";
+                    return "After the Heartless Mob battle in Toy Box - Andy's House";
                 case "Vbonus_018":
-                    return "After the Gigas Heartless Mob battle in Galaxy Toys lobby in Toy Box";
+                    return "After the Gigas Mob battle in Toy Box - Galaxy Toys Main Floor: 1F";
                 case "Vbonus_019":
-                    return "After the Gigas Dragon Heartless Mob battle in Toy Box";
+                    return "After the Supreme Smashes battle in Toy Box - Action Figures";
                 case "Vbonus_020":
-                    return "After the Angelic Amber boss battle in Babies and Toddlers in Toy Box";
+                    return "After the Angelic Amber boss battle in Toy Box - Babies & Toddlers: Dolls";
                 case "Vbonus_021":
-                    return "After the UFO battle outside Play Place in Toy Box";
+                    return "After the UFO battle in Toy Box - Babies & Toddlers: Outdoors";
                 case "Vbonus_022":
                     return "After the Verum Rex: Beat of Lead minigame in Toy Box";
                 case "Vbonus_023":
@@ -956,72 +956,72 @@ namespace KH3Randomizer.Data
 
 
                 case "Vbonus_024":
-                    return "After the Puffball Mob battle in Kingdom of Corona";
+                    return "After the 1st Heartless Mob battle in Kingdom of Corona - Hills";
                 case "Vbonus_025":
-                    return "After the first battle with Rapunzel in Kingdom of Corona";
+                    return "After the 2nd Heartless Mob battle in Kingdom of Corona - Hills";
                 case "Vbonus_026":
-                    return "After the first Reaper Nobody battle in Kingdom of Corona";
+                    return "After the Reapers Nobody battle in Kingdom of Corona - Hills";
                 case "Vbonus_027":
                     return "After the Chaos Carriage Heartless battle in Kingdom of Corona";
                 case "Vbonus_028":
-                    return "After the Reaper Nobody battle in the Castle Town in Kingdom of Corona";
+                    return "After the Reapers Nobody battle in the Castle Town in Kingdom of Corona";
                 case "Vbonus_029":
-                    return "After the Puffball Mob battle on the way to the tower in Kingdom of Corona";
+                    return "After the Heartless Mob battle in Kingdom of Corona - Tower";
                 case "Vbonus_030":
-                    return "After the Grim Guardianess boss battle in Kingdom of Corona";
-                
+                    return "After the Grim Guardianess boss battle in Kingdom of Corona - Tower";
+
                 case "Vbonus_032":
-                    return "After the Unversed battle in the lobby in Monstropolis";
+                    return "After the Unversed battle in Monstropolis - Lobby & Offices";
                 case "Vbonus_033":
-                    return "After the Unversed battle on the scare floor in Monstropolis";
+                    return "After the Unversed battle in Monstropolis - Laugh Floor";
                 case "Vbonus_034":
-                    return "After the battle to make Boo laugh in the door storage in Monstropolis";
+                    return "After the battle to make Boo laugh in in Monstropolis - The Door Vault: Upper Level";
                 case "Vbonus_035":
-                    return "After the Heartless & Unversed battle in the electric fence room in Monstropolis";
+                    return "After the Heartless & Unversed battle in Monstropolis - The Factory: Second Floor";
                 case "Vbonus_036":
-                    return "After the battle to make Boo laugh in the main control room in Monstropolis";
+                    return "After the battle to make Boo laugh in Monstropolis - The Factory: Second Floor";
                 case "Vbonus_037":
-                    return "After the first battle in the flames outside the factory in Monstropolis";
+                    return "After the Heartless & Unversed battle in Monstropolis - The Power Plant: Accessway";
                 case "Vbonus_038":
-                    return "After the second battle in the flames outside the factory in Monstropolis";
+                    return "After the Heartless Mob battle in Monstropolis  - The Power Plant: Tank Yard";
                 case "Vbonus_039":
-                    return "After the Unversed battle in empty tank in Monstropolis";
+                    return "After the Unversed battle in Monstropolis - The Power Plant: Tank Yard";
                 case "Vbonus_040":
-                    return "After the Lump of Horror boss battle in Monstropolis";
+                    return "After the Lump of Horror boss battle in Monstropolis - The Door Vault: Service Area";
 
                 case "Vbonus_041":
                     return "After the Rock Troll battle in Arendelle";
                 case "Vbonus_042":
-                    return "After the first Ninja Nobody battle in the ice labyrinth in Arendelle";
+                    return "After the first Ninja Nobody battle in Arendelle - The Labyrinth of Ice";
                 case "Vbonus_043":
-                    return "After the second Ninja Nobody battle in the ice labyrinth in Arendelle";
+                    return "After the second Ninja Nobody battle in Arendelle - The Labyrinth of Ice";
                 case "Vbonus_044":
-                    return "After the third Ninja Nobody battle in the ice labyrinth in Arendelle";
+                    return "After the third Ninja Nobody battle in Arendelle - The Labyrinth of Ice";
                 case "Vbonus_045":
-                    return "After the fourth Ninja Nobody battle in the ice labyrinth in Arendelle";
+                    return "After the fourth Ninja Nobody battle in Arendelle - The Labyrinth of Ice";
                 case "Vbonus_047":
                     return "After the Marshmallow boss battle in Arendelle";
                 case "Vbonus_048":
-                    return "After the 3 Ice Dragon Heartless battle in Arendelle";
+                    return "After the 3 Frost Serpent Heartless battle in Arendelle";
                 case "Vbonus_049":
-                    return "After the Heartless Mob battle in the forest in Arendelle";
+                    return "After the Heartless Mob battle in Valley of Ice in Arendelle";
                 case "Vbonus_050":
                     return "After the Skoll boss battle in Arendelle";
 
                 case "Vbonus_051":
-                    return "After the Rock Troll battle on the bridge in San Fransokyo";
+                    return "After the Metal Troll battle on the bridge in San Fransokyo";
                 case "Vbonus_052":
                     return "After the meeting Hiro in the garage in San Fransokyo";
                 case "Vbonus_053":
-                    return "After the Heartless Mob battle on the roof in San Fransokyo";
+                    return "After the Heartless Mob battle on the roof in San Fransokyo - The City (Day)";
                 case "Vbonus_054":
-                    return "After the Catastrochorus boss battle in the city in San Fransokyo";
+                    return "After the Catastrochorus boss battle in San Fransokyo - The City (Day)";
                 case "Vbonus_055":
-                    return "After the rescue mission for the Big Hero 6 team in the city in San Fransokyo";
+                    return "After the rescue mission for the Big Hero 6 team in San Fransokyo - The City (Night)";
                 case "Vbonus_056":
-                    return "After the Darkube boss battle in San Fransokyo";
+                    return "After the Darkube boss battle in San Fransokyo - The City (Night)";
                 case "Vbonus_057":
-                    return "After the Dark Baymax boss battle in San Fransokyo";
+                    return "After the Dark Baymax boss battle in San Fransokyo - The City (Day)";
 
                 case "Vbonus_058":
                     return "After catching the Black Pearl in Davy Jones Locker in The Caribbean";
@@ -1067,23 +1067,23 @@ namespace KH3Randomizer.Data
                 case "Vbonus_082":
                     return "After the Darkside boss battle in The Final World";
                 case "Vbonus_083":
-                    return "After collecting 200 Soras in The Final World";
+                    return "After collecting 222 Soras in The Final World";
                 case "Vbonus_084":
-                    return "After collecting 300 Soras in The Final World";
+                    return "After collecting 333 Soras in The Final World";
 
                 case "VBonus_Minigame001":
                     return "After obtaining the first A-rank in Verum Rex: Beat of Lead minigame in Toy Box";
                 case "VBonus_Minigame002":
-                    return "After obtaining the first A-rank in the Festival Dancing minigame in Kingdom of Corona";
+                    return "After obtaining the first A-rank in the Festival Dance minigame in Kingdom of Corona";
                 case "VBonus_Minigame003":
-                    return "After obtaining the first A-rank in the Snow Slide minigame in Arendelle";
+                    return "After obtaining the first A-rank in the Frozen Slider minigame in Arendelle";
                 case "VBonus_Minigame004":
-                    return "After obtaining all the treasures in the Snow Slide minigame in Arendelle";
+                    return "After obtaining all the treasures in the Frozen Slider minigame in Arendelle";
                 case "VBonus_Minigame005":
-                    return "After obtaining the first A-Rank in the Flash Tracer 1 minigame in San Fransokyo";
+                    return "After obtaining the first A-Rank in the Flash Tracer 1 (Fred) minigame in San Fransokyo";
                 case "VBonus_Minigame006":
-                    return "After obtaining the first A-Rank in the Flash Tracer 2 minigame in San Fransokyo";
-                
+                    return "After obtaining the first A-Rank in the Flash Tracer 2 (Go Go) minigame in San Fransokyo";
+
                 case "VBonus_Minigame007":
                     return "After obtaining the first A-Rank in the Cherry Flan minigame in Olympus";
                 case "VBonus_Minigame008":
@@ -1124,13 +1124,14 @@ namespace KH3Randomizer.Data
                 case "VBonus_DLC_011":
                     return "After collecting all of Kairi's heart fragments in Re:Mind";
                 case "VBonus_DLC_012":
-                    return "After the 13 Replicas boss battle as the Guardians of Light in Re:Mind";
+                    return "After the Replica Xehanorts boss battle as the Guardians of Light in Re:Mind";
                 case "VBonus_DLC_013":
-                    return "After the Replicanorts boss battle as King Mickey in Re:Mind";
+                    return "After the Replica Xehanorts boss battle as King Mickey in Re:Mind";
                 case "VBonus_DLC_014":
                     return "After connecting all the keyholes in Re:Mind";
                 case "VBonus_DLC_015":
-                    return "After the Replica-Xehanort boss battle in Re:Mind";
+                    return "After the Armored Xehanort boss battle in Re:Mind";
+
                 #endregion VBonus
 
                 #region Synthesis Items
@@ -1485,7 +1486,7 @@ namespace KH3Randomizer.Data
                 case "PRT_ITEM12":
                     return "Firaga Bangle";
                 case "PRT_ITEM13":
-                    return "Firagun Bangle";
+                    return "Firaza Bangle";
 
                 case "PRT_ITEM14":
                     return "Fire Chain";
@@ -1607,7 +1608,7 @@ namespace KH3Randomizer.Data
                 case "ACC_ITEM13":
                     return "Buster Ring";
                 case "ACC_ITEM14":
-                    return "Brave Ring";
+                    return "Valor Ring";
                 case "ACC_ITEM15":
                     return "Phantom Ring";
                 case "ACC_ITEM16":
@@ -1646,7 +1647,7 @@ namespace KH3Randomizer.Data
                     return "Master Medal";
 
                 case "ACC_ITEM31":
-                    return "Mickey's Brooch";
+                    return "Mickey Clasp";
 
                 case "ACC_ITEM32":
                     return "Soldier's Earring";
@@ -2047,11 +2048,11 @@ namespace KH3Randomizer.Data
                 case "ETresAbilityKind::HIGHJUMP":
                     return "Ability: High Jump";
                 case "ETresAbilityKind::DOUBLEFLIGHT":
-                    return "Ability: Double Flight";
+                    return "Ability: Doubleflight";
                 case "ETresAbilityKind::SUPERJUMP":
-                    return "Ability: Super Jump";
+                    return "Ability: Superjump";
                 case "ETresAbilityKind::SUPERSLIDE":
-                    return "Ability: Super Slide";
+                    return "Ability: Superslide";
                 case "ETresAbilityKind::GLIDE":
                     return "Ability: Glide";
                 case "ETresAbilityKind::LIBRA":
@@ -2153,7 +2154,7 @@ namespace KH3Randomizer.Data
                 case "ETresAbilityKind::AUTO_FINISH":
                     return "Ability: Auto-Finish";
                 case "ETresAbilityKind::FORM_UP":
-                    return "Ability: Form Boost";
+                    return "Ability: Situation Boost";
                 case "ETresAbilityKind::MAGIC_TIME":
                     return "Ability: Grand Magic Extender";
                 case "ETresAbilityKind::AUTO_LOCK_MAGIC":
@@ -2387,6 +2388,57 @@ namespace KH3Randomizer.Data
             }
         }
 
+        public static DataTableEnum KeyToDataTableEnum(this string key)
+        {
+            switch (key)
+            {
+                case "Starting Stats":
+                    return DataTableEnum.ChrInit;
+                case "Equippables":
+                    return DataTableEnum.EquipItem;
+                case "Events":
+                    return DataTableEnum.Event;
+                case "Fullcourse Abilities":
+                    return DataTableEnum.FullcourseAbility;
+                case "Level Ups":
+                    return DataTableEnum.LevelUp;
+                case "Lucky Emblems":
+                    return DataTableEnum.LuckyMark;
+                case "Bonuses":
+                    return DataTableEnum.VBonus;
+                case "Weapon Upgrades":
+                    return DataTableEnum.WeaponEnhance;
+                case "Synthesis Items":
+                    return DataTableEnum.SynthesisItem;
+
+                case "Olympus":
+                    return DataTableEnum.TreasureHE;
+                case "Twilight Town":
+                    return DataTableEnum.TreasureTT;
+                case "Kingdom of Corona":
+                    return DataTableEnum.TreasureRA;
+                case "Toy Box":
+                    return DataTableEnum.TreasureTS;
+                case "Arendelle":
+                    return DataTableEnum.TreasureFZ;
+                case "Monstropolis":
+                    return DataTableEnum.TreasureMI;
+                case "The Caribbean":
+                    return DataTableEnum.TreasureCA;
+                case "San Fransokyo":
+                    return DataTableEnum.TreasureBX;
+                case "Keyblade Graveyard":
+                    return DataTableEnum.TreasureKG;
+                case "The Final World":
+                    return DataTableEnum.TreasureEW;
+                case "Scala Ad Caelum":
+                    return DataTableEnum.TreasureBT;
+
+                default:
+                    return DataTableEnum.None;
+            }
+        }
+
         public static string CategoryToKey(this string category, DataTableEnum dataTableEnum)
         {
             switch (dataTableEnum)
@@ -2513,6 +2565,608 @@ namespace KH3Randomizer.Data
             }
 
             return "";
+        }
+
+        public static string ToLevelUpRoute(this string type)
+        {
+            switch (type)
+            {
+                case "TypeA":
+                    return "Warrior";
+                case "TypeB":
+                    return "Mystic";
+                case "TypeC":
+                    return "Guardian";
+                default:
+                    return "";
+            }
+        }
+
+        public static string GetChestLocation(this string chest, DataTableEnum dataTableEnum)
+        {
+            switch (dataTableEnum)
+            {
+                case DataTableEnum.TreasureHE:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 24 (Large Chest, Thebes: Overlook)";
+                        case "Large Chest 2":
+                            return "Chest 9 (Large Chest, Mount Olympus: Cliff Ascent)";
+                        case "Large Chest 3":
+                            return "Chest 31 (Large Chest, Realm of the Gods: Apex)";
+                        case "Large Chest 4":
+                            return "Chest 29 (Large Chest, Realm of the Gods: Corridors)";
+                        case "Small Chest 1":
+                            return "Chest 25 (Small Chest, Realm of the Gods: Courtyard)";
+                        case "Small Chest 2":
+                            return "Chest 26 (Small Chest, Realm of the Gods: Courtyard)";
+                        case "Small Chest 3":
+                            return "Chest 27 (Small Chest, Realm of the Gods: Courtyard)";
+                        case "Small Chest 4":
+                            return "Chest 28 (Small Chest, Realm of the Gods: Corridors)";
+                        case "Small Chest 6":
+                            return "Chest 30 (Small Chest, Realm of the Gods: Cloud Ridge)";
+                        case "Small Chest 8":
+                            return "Chest 32 (Small Chest, Realm of the Gods: Apex)";
+                        case "Small Chest 9":
+                            return "Chest 1 (Small Chest, Mount Olympus: Ravine)";
+                        case "Small Chest 10":
+                            return "Chest 2 (Small Chest, Mount Olympus: Ravine)";
+                        case "Small Chest 11":
+                            return "Chest 3 (Small Chest, Mount Olympus: Cliff Ascent)";
+                        case "Small Chest 12":
+                            return "Chest 4 (Small Chest, Mount Olympus: Cliff Ascent)";
+                        case "Small Chest 13":
+                            return "Chest 5 (Small Chest, Mount Olympus: Cliff Ascent)";
+                        case "Small Chest 14":
+                            return "Chest 6 (Small Chest, Mount Olympus: Cliff Ascent)";
+                        case "Small Chest 15":
+                            return "Chest 7 (Small Chest, Mount Olympus: Cliff Ascent)";
+                        case "Small Chest 16":
+                            return "Chest 8 (Small Chest, Mount Olympus: Cliff Ascent)";
+                        case "Small Chest 17":
+                            return "Chest 10 (Small Chest, Mount Olympus: Mountainside)";
+                        case "Small Chest 20":
+                            return "Chest 11 (Small Chest, Mount Olympus: Summit)";
+                        case "Small Chest 21":
+                            return "Chest 12 (Small Chest, Mount Olympus: Mountainside)";
+                        case "Small Chest 22":
+                            return "Chest 13 (Small Chest, Thebes: Alleyway)";
+                        case "Small Chest 23":
+                            return "Chest 14 (Small Chest, Thebes: Alleyway)";
+                        case "Small Chest 24":
+                            return "Chest 15 (Small Chest, Thebes: Agora)";
+                        case "Small Chest 25":
+                            return "Chest 16 (Small Chest, Thebes: The Big Olive)";
+                        case "Small Chest 26":
+                            return "Chest 17 (Small Chest, Thebes: The Big Olive)";
+                        case "Small Chest 27":
+                            return "Chest 18 (Small Chest, Thebes: Gardens)";
+                        case "Small Chest 28":
+                            return "Chest 19 (Small Chest, Thebes: Overlook)";
+                        case "Small Chest 29":
+                            return "Chest 20 (Small Chest, Thebes: Overlook)";
+                        case "Small Chest 30":
+                            return "Chest 21 (Small Chest, Thebes: Gardens)";
+                        case "Small Chest 31":
+                            return "Chest 22 (Small Chest, Thebes: Overlook)";
+                        case "Small Chest 33":
+                            return "Chest 23 (Small Chest, Thebes: Overlook)";
+                        default: 
+                            return "";
+                    }
+                case DataTableEnum.TreasureTT:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 1 (Large Chest, The Neighborhood: Tram Common)";
+                        case "Small Chest 1":
+                            return "Chest 2 (Small Chest, The Neighborhood: Tram Common)";
+                        case "Small Chest 2":
+                            return "Chest 3 (Small Chest, The Neighborhood: Tram Common)";
+                        case "Small Chest 3":
+                            return "Chest 4 (Small Chest, The Neighborhood: Tram Common)";
+                        case "Small Chest 4":
+                            return "Chest 5 (Small Chest, The Neighborhood: Tram Common)";
+                        case "Small Chest 5":
+                            return "Chest 6 (Small Chest, Underground Conduit)";
+                        case "Small Chest 6":
+                            return "Chest 7 (Small Chest, The Woods)";
+                        case "Small Chest 7":
+                            return "Chest 8 (Small Chest, The Woods)";
+                        case "Small Chest 8":
+                            return "Chest 9 (Small Chest, The Woods)";
+                        case "Small Chest 9":
+                            return "Chest 10 (Small Chest, The Old Mansion)";
+                        default:
+                            return "";
+                    }
+                case DataTableEnum.TreasureTS:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 1 (Large Chest, Andy's House)";
+                        case "Large Chest 2":
+                            return "Chest 2 (Large Chest, Andy's House)";
+                        case "Large Chest 3":
+                            return "Chest 5 (Large Chest, Galaxy Toys: Main Floor 1F)";
+                        case "Large Chest 4":
+                            return "Chest 13 (Large Chest, Galaxy Toys: Lower Vents)";
+                        case "Large Chest 5":
+                            return "Chest 24 (Large Chest, Galaxy Toys: Kid Korral)";
+                        case "Large Chest 6":
+                            return "Chest 29 (Large Chest, Galaxy Toys: Rail 3)";
+                        case "Small Chest 1":
+                            return "Chest 3 (Small Chest, Andy's House)";
+                        case "Small Chest 2":
+                            return "Chest 4 (Small Chest, Andy's House)";
+                        case "Small Chest 3":
+                            return "Chest 6 (Small Chest, Galaxy Toys: Exit)";
+                        case "Small Chest 4":
+                            return "Chest 7 (Small Chest, Galaxy Toys: Rail 3)";
+                        case "Small Chest 5":
+                            return "Chest 8 (Small Chest, Galaxy Toys: Action Figures)";
+                        case "Small Chest 6":
+                            return "Chest 9 (Small Chest, Galaxy Toys: Action Figures)";
+                        case "Small Chest 7":
+                            return "Chest 10 (Small Chest, Galaxy Toys: Action Figures)";
+                        case "Small Chest 8":
+                            return "Chest 11 (Small Chest, Galaxy Toys: Lower Vents)";
+                        case "Small Chest 9":
+                            return "Chest 12 (Small Chest, Galaxy Toys: Lower Vents)";
+                        case "Small Chest 11":
+                            return "Chest 14 (Small Chest, Babies and Toddlers: Dolls)";
+                        case "Small Chest 12":
+                            return "Chest 15 (Small Chest, Babies and Toddlers: Dolls)";
+                        case "Small Chest 13":
+                            return "Chest 16 (Small Chest, Babies and Toddlers: Dolls)";
+                        case "Small Chest 14":
+                            return "Chest 17 (Small Chest, Babies and Toddlers: Dolls)";
+                        case "Small Chest 15":
+                            return "Chest 18 (Small Chest, Babies and Toddlers: Outdoors)";
+                        case "Small Chest 16":
+                            return "Chest 19 (Small Chest, Babies and Toddlers: Outdoors)";
+                        case "Small Chest 17":
+                            return "Chest 20 (Small Chest, Galaxy Toys: Video Games)";
+                        case "Small Chest 18":
+                            return "Chest 21 (Small Chest, Galaxy Toys: Kid Korral)";
+                        case "Small Chest 19":
+                            return "Chest 22 (Small Chest, Galaxy Toys: Kid Korral)";
+                        case "Small Chest 20":
+                            return "Chest 23 (Small Chest, Galaxy Toys: Kid Korral)";
+                        case "Small Chest 22":
+                            return "Chest 25 (Small Chest, Galaxy Toys: Kid Korral)";
+                        case "Small Chest 23":
+                            return "Chest 26 (Small Chest, Galaxy Toys: Main Floor 2F)";
+                        case "Small Chest 24":
+                            return "Chest 27 (Small Chest, Galaxy Toys: Main Floor 1F)";
+                        case "Small Chest 25":
+                            return "Chest 28 (Small Chest, Babies and Toddlers: Outdoors)";
+                        default:
+                            return "";
+                    }
+                case DataTableEnum.TreasureRA:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 7 (Large Chest, The Forest: Hills)";
+                        case "Large Chest 2":
+                            return "Chest 10 (Large Chest, The Forest: Marsh)";
+                        case "Large Chest 3":
+                            return "Chest 9 (Large Chest, The Forest: Hills)";
+                        case "Large Chest 4":
+                            return "Chest 22 (Large Chest, The Forest: Wildflower Clearing)";
+                        case "Large Chest 5":
+                            return "Chest 24 (Large Chest, The Kingdom: Thoroughfare)";
+                        case "Large Chest 6":
+                            return "Chest 14 (Large Chest, The Forest: Wetlands)";
+                        case "Small Chest 1":
+                            return "Chest 1 (Small Chest, The Forest: Tower)";
+                        case "Small Chest 2":
+                            return "Chest 2 (Small Chest, The Forest: Hills)";
+                        case "Small Chest 3":
+                            return "Chest 3 (Small Chest, The Forest: Hills)";
+                        case "Small Chest 4":
+                            return "Chest 4 (Small Chest, The Forest: Hills)";
+                        case "Small Chest 5":
+                            return "Chest 5 (Small Chest, The Forest: Hills)";
+                        case "Small Chest 6":
+                            return "Chest 6 (Small Chest, The Forest: Hills)";
+                        case "Small Chest 7":
+                            return "Chest 8 (Small Chest, The Forest: Hills)";
+                        case "Small Chest 8":
+                            return "Chest 11 (Small Chest, The Forest: Marsh)";
+                        case "Small Chest 9":
+                            return "Chest 12 (Small Chest, The Forest: Marsh)";
+                        case "Small Chest 10":
+                            return "Chest 13 (Small Chest, The Forest: Wetlands)";
+                        case "Small Chest 11":
+                            return "Chest 15 (Small Chest, The Forest: Wetlands)";
+                        case "Small Chest 12":
+                            return "Chest 16 (Small Chest, The Forest: Wetlands)";
+                        case "Small Chest 13":
+                            return "Chest 17 (Small Chest, The Forest: Wetlands)";
+                        case "Small Chest 14":
+                            return "Chest 18 (Small Chest, The Forest: Wetlands/Campsite)";
+                        case "Small Chest 15":
+                            return "Chest 19 (Small Chest, The Forest: Campsite)";
+                        case "Small Chest 16":
+                            return "Chest 20 (Small Chest, The Forest: Shore)";
+                        case "Small Chest 17":
+                            return "Chest 21 (Small Chest, The Forest: Wildflower Clearing)";
+                        case "Small Chest 18":
+                            return "Chest 23 (Small Chest, The Kingdom: Thoroughfare)";
+                        case "Small Chest 19":
+                            return "Chest 25 (Small Chest, The Kingdom: Thoroughfare)";
+                        case "Small Chest 20":
+                            return "Chest 26 (Small Chest, The Kingdom: Wharf)";
+                        case "Small Chest 21":
+                            return "Chest 27 (Small Chest, The Kingdom: Wharf)";
+                        case "Small Chest 22":
+                            return "Chest 28 (Small Chest, The Kingdom: Wharf)";
+                        default:
+                            return "";
+                    }
+                case DataTableEnum.TreasureMI:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 1 (Large Chest, Monsters, Inc.)";
+                        case "Large Chest 2":
+                            return "Chest 9 (Large Chest, The Factory)";
+                        case "Large Chest 3":
+                            return "Chest 19 (Large Chest, The Power Plant: Tank Yard)";
+                        case "Large Chest 4":
+                            return "Chest 10 (Large Chest, The Factory)";
+                        case "Small Chest 1":
+                            return "Chest 2 (Small Chest, Monsters, Inc.)";
+                        case "Small Chest 2":
+                            return "Chest 3 (Small Chest, Monsters, Inc.)";
+                        case "Small Chest 3":
+                            return "Chest 4 (Small Chest, Monsters, Inc.)";
+                        case "Small Chest 5":
+                            return "Chest 11 (Small Chest, The Factory)";
+                        case "Small Chest 6":
+                            return "Chest 12 (Small Chest, The Factory)";
+                        case "Small Chest 7":
+                            return "Chest 13 (Small Chest, Vault Door: Service Area)";
+                        case "Small Chest 8":
+                            return "Chest 14 (Small Chest, The Factory: Second Floor)";
+                        case "Small Chest 9":
+                            return "Chest 15 (Small Chest, The Power Plant: Accessway)";
+                        case "Small Chest 10":
+                            return "Chest 16 (Small Chest, The Power Plant: Accessway)";
+                        case "Small Chest 11":
+                            return "Chest 17 (Small Chest, The Power Plant: Accessway)";
+                        case "Small Chest 12":
+                            return "Chest 18 (Small Chest, The Power Plant: Tank Yard)";
+                        case "Small Chest 13":
+                            return "Chest 20 (Small Chest, The Power Plant: Vault Passage)";
+                        case "Small Chest 14":
+                            return "Chest 21 (Small Chest, The Power Plant: Vault Passage)";
+                        case "Small Chest 15":
+                            return "Chest 22 (Small Chest, The Power Plant: Accessway)";
+                        case "Small Chest 16":
+                            return "Chest 5 (Small Chest, Monsters, Inc.: Upper Level)";
+                        case "Small Chest 17":
+                            return "Chest 6 (Small Chest, Monsters, Inc.: Lower Levels)";
+                        case "Small Chest 18":
+                            return "Chest 7 (Small Chest, The Door Vault: Service Area)";
+                        case "Small Chest 19":
+                            return "Chest 8 (Small Chest, The Door Vault: Upper Level)";
+                        default:
+                            return "";
+                    }
+                case DataTableEnum.TreasureFZ:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 1 (Large Chest, The North Mountain: Treescape)";
+                        case "Large Chest 2":
+                            return "Chest 10 (Large Chest, The Labyrinth of Ice: Middle Tier)";
+                        case "Large Chest 3":
+                            return "Chest 8 (Large Chest, The North Mountain: Treescape)";
+                        case "Large Chest 4":
+                            return "Chest 7 (Large Chest, The North Mountain: Snowfield)";
+                        case "Large Chest 5":
+                            return "Chest 14 (Large Chest, The Labyrinth of Ice: Lower Tier)";
+                        case "Large Chest 6":
+                            return "Chest 9 (Large Chest, The North Mountain: Snowfield)";
+                        case "Small Chest 1":
+                            return "Chest 2 (Small Chest, The North Mountain: Treescape)";
+                        case "Small Chest 2":
+                            return "Chest 3 (Small Chest, The North Mountain: Treescape)";
+                        case "Small Chest 4":
+                            return "Chest 4 (Small Chest, The North Mountain: Gorge)";
+                        case "Small Chest 5":
+                            return "Chest 5 (Small Chest, The North Mountain: Gorge)";
+                        case "Small Chest 7":
+                            return "Chest 6 (Small Chest, The North Mountain: Snowfield)";
+                        case "Small Chest 11":
+                            return "Chest 11 (Small Chest, The Labyrinth of Ice: Lower Tier)";
+                        case "Small Chest 12":
+                            return "Chest 12 (Small Chest, The Labyrinth of Ice: Middle Tier)";
+                        case "Small Chest 13":
+                            return "Chest 13 (Small Chest, The Labyrinth of Ice: Lower Tier)";
+                        case "Small Chest 15":
+                            return "Chest 15 (Small Chest, The Labyrinth of Ice: Middle Tier)";
+                        case "Small Chest 16":
+                            return "Chest 16 (Small Chest, The North Mountain: Valley of Ice)";
+                        case "Small Chest 17":
+                            return "Chest 17 (Small Chest, The North Mountain: Valley of Ice)";
+                        case "Small Chest 19":
+                            return "Chest 18 (Small Chest, The North Mountain: Valley of Ice)";
+                        case "Small Chest 20":
+                            return "Chest 19 (Small Chest, The North Mountain: Valley of Ice)";
+                        case "Small Chest 22":
+                            return "Chest 20 (Small Chest, The North Mountain: Valley of Ice)";
+                        case "Small Chest 23":
+                            return "Chest 21 (Small Chest, The North Mountain: The Frozen Wall)";
+                        case "Small Chest 24":
+                            return "Chest 22 (Small Chest, The North Mountain: The Frozen Wall)";
+                        case "Small Chest 25":
+                            return "Chest 23 (Small Chest, The North Mountain: The Frozen Wall)";
+                        case "Small Chest 27":
+                            return "Chest 24 (Small Chest, The North Mountain: Foothills)";
+                        case "Small Chest 29":
+                            return "Chest 25 (Small Chest, The North Mountain: Foothills)";
+                        default:
+                            return "";
+                    }
+                case DataTableEnum.TreasureCA:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 20 (Large Chest, The Huddled Isles)";
+                        case "Large Chest 2":
+                            return "Chest 19 (Large Chest, Sandbar Isle)";
+                        case "Large Chest 3":
+                            return "Chest 17 (Large Chest, Isla de los Mástiles)";
+                        case "Large Chest 4":
+                            return "Chest 18 (Large Chest, Ship's End)";
+                        case "Large Chest 5":
+                            return "Chest 51 (Large Chest, Port Royal: Docks)";
+                        case "Large Chest 6":
+                            return "Chest 47 (Large Chest, Port Royal: Fort)";
+                        case "Large Chest 7":
+                            return "Chest 4 (Large Chest, The Huddled Isles)";
+                        case "Large Chest 8":
+                            return "Chest 10 (Large Chest, Isla Verdemontaña)";
+                        case "Large Chest 9":
+                            return "Chest 13 (Large Chest, Confinement Island)";
+                        case "Large Chest 10":
+                            return "Chest 15 (Large Chest, The Huddled Isles)";
+                        case "Large Chest 11":
+                            return "Chest 6 (Large Chest, Isla de los Mástiles)";
+                        case "Small Chest 1":
+                            return "Chest 46 (Small Chest, Port Royal: Fort)";
+                        case "Small Chest 2":
+                            return "Chest 48 (Small Chest, Port Royal: Seaport)";
+                        case "Small Chest 3":
+                            return "Chest 49 (Small Chest, Port Royal: Seaport)";
+                        case "Small Chest 4":
+                            return "Chest 50 (Small Chest, Port Royal: Seaport)";
+                        case "Small Chest 5":
+                            return "Chest 52 (Small Chest, Port Royal: Settlement)";
+                        case "Small Chest 6":
+                            return "Chest 53 (Small Chest, Port Royal: Docks)";
+                        case "Small Chest 7":
+                            return "Chest 54 (Small Chest, Port Royal: Underwater)";
+                        case "Small Chest 8":
+                            return "Chest 55 (Small Chest, Port Royal: Settlement)";
+                        case "Small Chest 9":
+                            return "Chest 56 (Small Chest, Port Royal: Seaport)";
+                        case "Small Chest 10":
+                            return "Chest 1 (Small Chest, The Huddled Isles)";
+                        case "Small Chest 11":
+                            return "Chest 2 (Small Chest, The Huddled Isles)";
+                        case "Small Chest 12":
+                            return "Chest 3 (Small Chest, The Huddled Isles)";
+                        case "Small Chest 13":
+                            return "Chest 5 (Small Chest, Isla de los Mástiles)";
+                        case "Small Chest 14":
+                            return "Chest 7 (Small Chest, Ship's End)";
+                        case "Small Chest 15":
+                            return "Chest 8 (Small Chest, Ship's End)";
+                        case "Small Chest 16":
+                            return "Chest 9 (Small Chest, Isla Verdemontaña)";
+                        case "Small Chest 17":
+                            return "Chest 11 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 18":
+                            return "Chest 12 (Small Chest, Exile Island)";
+                        case "Small Chest 19":
+                            return "Chest 14 (Small Chest, The Gateway of Regret)";
+                        case "Small Chest 20":
+                            return "Chest 16 (Small Chest, Horseshoe Island)";
+                        case "Small Chest 21":
+                            return "Chest 21 (Small Chest, The Huddled Isles)";
+                        case "Small Chest 22":
+                            return "Chest 22 (Small Chest, The Huddled Isles)";
+                        case "Small Chest 23":
+                            return "Chest 23 (Small Chest, Isla de los Mástiles)";
+                        case "Small Chest 24":
+                            return "Chest 24 (Small Chest, Isla de los Mástiles)";
+                        case "Small Chest 25":
+                            return "Chest 45 (Small Chest, Leviathan)";
+                        case "Small Chest 26":
+                            return "Chest 25 (Small Chest, Isla Verdemontaña)";
+                        case "Small Chest 27":
+                            return "Chest 26 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 28":
+                            return "Chest 27 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 29":
+                            return "Chest 28 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 30":
+                            return "Chest 29 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 31":
+                            return "Chest 30 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 32":
+                            return "Chest 31 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 33":
+                            return "Chest 32 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 34":
+                            return "Chest 33 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 35":
+                            return "Chest 34 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 36":
+                            return "Chest 35 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 37":
+                            return "Chest 36 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 38":
+                            return "Chest 37 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 39":
+                            return "Chest 38 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 40":
+                            return "Chest 39 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 41":
+                            return "Chest 40 (Small Chest, Sandbar Isle)";
+                        case "Small Chest 42":
+                            return "Chest 41 (Small Chest, Horseshoe Island)";
+                        case "Small Chest 43":
+                            return "Chest 42 (Small Chest, Horseshoe Island)";
+                        case "Small Chest 44":
+                            return "Chest 43 (Small Chest, Horseshoe Island)";
+                        case "Small Chest 45":
+                            return "Chest 44 (Small Chest, Horseshoe Island)";
+                        default:
+                            return "";
+                    }
+                case DataTableEnum.TreasureBX:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 3 (Large Chest, The City: South District)";
+                        case "Large Chest 5":
+                            return "Chest 34 (Large Chest, The City: Central District)";
+                        case "Large Chest 6":
+                            return "Chest 35 (Large Chest, The City: South District)";
+                        case "Large Chest 7":
+                            return "Chest 36 (Large Chest, The City: Central District)";
+
+                        case "Small Chest 1":
+                            return "Chest 1 (Small Chest, The City: Central District)";
+                        case "Small Chest 2":
+                            return "Chest 2 (Small Chest, The City: South District)";
+                        case "Small Chest 3":
+                            return "Chest 4 (Small Chest, The City: South District)";
+                        case "Small Chest 4":
+                            return "Chest 5 (Small Chest, The City: North District)";
+                        case "Small Chest 5":
+                            return "Chest 6 (Small Chest, The City: North District)";
+                        case "Small Chest 6":
+                            return "Chest 7 (Small Chest, The City: South District)";
+                        case "Small Chest 7":
+                            return "Chest 8 (Small Chest, The City: Central District)";
+                        case "Small Chest 8":
+                            return "Chest 9 (Small Chest, The City: Central District)";
+                        case "Small Chest 9":
+                            return "Chest 10 (Small Chest, The City: North District)";
+                        case "Small Chest 10":
+                            return "Chest 11 (Small Chest, The City: South District)";
+                        case "Small Chest 11":
+                            return "Chest 12 (Small Chest, The City: South District)";
+                        case "Small Chest 12":
+                            return "Chest 13 (Small Chest, The City: North District)";
+                        case "Small Chest 13":
+                            return "Chest 14 (Small Chest, The City: North District)";
+                        case "Small Chest 14":
+                            return "Chest 15 (Small Chest, The City: North District)";
+                        case "Small Chest 15":
+                            return "Chest 16 (Small Chest, The City: Central District)";
+                        case "Small Chest 16":
+                            return "Chest 17 (Small Chest, The City: Central District)";
+                        case "Small Chest 17":
+                            return "Chest 18 (Small Chest, The City: South District)";
+                        case "Small Chest 18":
+                            return "Chest 19 (Small Chest, The City: North District)";
+                        case "Small Chest 19":
+                            return "Chest 20 (Small Chest, The City: South District)";
+                        case "Small Chest 20":
+                            return "Chest 21 (Small Chest, The City: South District)";
+                        case "Small Chest 21":
+                            return "Chest 22 (Small Chest, The City: North District)";
+                        case "Small Chest 22":
+                            return "Chest 23 (Small Chest, The City: Central District)";
+                        case "Small Chest 23":
+                            return "Chest 24 (Small Chest, The City: Central District)";
+                        case "Small Chest 24":
+                            return "Chest 25 (Small Chest, The City: Central District)";
+                        case "Small Chest 25":
+                            return "Chest 26 (Small Chest, The City: Central District)";
+                        case "Small Chest 26":
+                            return "Chest 27 (Small Chest, The City: South District)";
+                        case "Small Chest 27":
+                            return "Chest 28 (Small Chest, The City: North District)";
+                        case "Small Chest 28":
+                            return "Chest 29 (Small Chest, The City: North District)";
+                        case "Small Chest 29":
+                            return "Chest 30 (Small Chest, The City: Central District)";
+                        case "Small Chest 30":
+                            return "Chest 31 (Small Chest, The City: South District)";
+                        case "Small Chest 31":
+                            return "Chest 32 (Small Chest, The City: North District)";
+                        case "Small Chest 32":
+                            return "Chest 33 (Small Chest, The City: North District)";
+                        default:
+                            return "";
+                    }
+
+                case DataTableEnum.TreasureKG:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 1 (Large Chest, The Badlands)";
+                        case "Large Chest 2":
+                            return "Chest 3 (Large Chest, The Skein of Severance: Trail of Valediction)";
+                        case "Small Chest 1":
+                            return "Chest 4 (Small Chest, The Skein of Severance: Trail of Valediction)";
+                        case "Small Chest 2":
+                            return "Chest 5 (Small Chest, The Skein of Severance: Trail of Valediction/Twist of Isolation)";
+                        case "Small Chest 3":
+                            return "Chest 6 (Small Chest, The Skein of Severance: Twist of Isolation)";
+                        case "Small Chest 4":
+                            return "Chest 2 (Small Chest, The Badlands)";
+                        default:
+                            return "";
+                    }
+
+                case DataTableEnum.TreasureEW:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 1 (Large Chest, The Final World)";
+                        default:
+                            return "";
+                    }
+
+                case DataTableEnum.TreasureBT:
+                    switch (chest)
+                    {
+                        case "Large Chest 1":
+                            return "Chest 1 (Large Chest, The Stairway to the Sky)";
+                        case "Large Chest 2":
+                            return "Chest 2 (Large Chest, Breezy Quarter)";
+                        case "Small Chest 1":
+                            return "Chest 3 (Small Chest, Breezy Quarter)";
+                        case "Small Chest 2":
+                            return "Chest 4 (Small Chest, Breezy Quarter)";
+                        case "Small Chest 3":
+                            return "Chest 5 (Small Chest, Breezy Quarter)";
+                        case "Small Chest 4":
+                            return "Chest 6 (Small Chest, Breezy Quarter)";
+                        case "Small Chest 5":
+                            return "Chest 7 (Small Chest, Breezy Quarter)";
+                        case "Small Chest 6":
+                            return "Chest 8 (Small Chest, Breezy Quarter)";
+                        case "Small Chest 7":
+                            return "Chest 9 (Small Chest, Breezy Quarter)";
+                        default:
+                            return "";
+                    }
+                default:
+                    return "";
+            }
         }
     }
 }

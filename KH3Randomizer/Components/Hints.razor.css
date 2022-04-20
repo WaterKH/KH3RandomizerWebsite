@@ -129,3 +129,8 @@ input:checked + .slider:before {
 .slider-disabled {
     background-color: #93bfe3 !important;
 }
+
+.spoiler-overlay {
+    filter: blur(6px);
+    pointer-events: none;
+}
