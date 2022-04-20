@@ -232,7 +232,7 @@ namespace KH3Randomizer.Data
                     return "Master Medal";
 
                 case "I05031":
-                    return "Mickey's Brooch";
+                    return "Mickey Clasp";
 
                 case "I05032":
                     return "Soldier's Earring";
@@ -1647,7 +1647,7 @@ namespace KH3Randomizer.Data
                     return "Master Medal";
 
                 case "ACC_ITEM31":
-                    return "Mickey's Brooch";
+                    return "Mickey Clasp";
 
                 case "ACC_ITEM32":
                     return "Soldier's Earring";
@@ -2590,15 +2590,13 @@ namespace KH3Randomizer.Data
                     switch (chest)
                     {
                         case "Large Chest 1":
-                            //return "Chest 24 (Large Chest, Thebes: Overlook)"; Large Chest 1 and 4 are swapped right now
-                            return "Chest 29 (Large Chest, Realm of the Gods: Corridors)";
+                            return "Chest 24 (Large Chest, Thebes: Overlook)";
                         case "Large Chest 2":
                             return "Chest 9 (Large Chest, Mount Olympus: Cliff Ascent)";
                         case "Large Chest 3":
                             return "Chest 31 (Large Chest, Realm of the Gods: Apex)";
                         case "Large Chest 4":
-                            //return "Chest 29 (Large Chest, Realm of the Gods: Corridors)"; Large Chest 1 and 4 are swapped right now
-                            return "Chest 24 (Large Chest, Thebes: Overlook)";
+                            return "Chest 29 (Large Chest, Realm of the Gods: Corridors)";
                         case "Small Chest 1":
                             return "Chest 25 (Small Chest, Realm of the Gods: Courtyard)";
                         case "Small Chest 2":
@@ -2919,22 +2917,16 @@ namespace KH3Randomizer.Data
                 case DataTableEnum.TreasureCA:
                     switch (chest)
                     {
-                        // Large Chest 1-5 are being shifted up by one right now
                         case "Large Chest 1":
-                            //return "Chest 20 (Large Chest, The Huddled Isles)";
-                            return "Chest 19 (Large Chest, Sandbar Isle)";
-                        case "Large Chest 2":
-                            //return "Chest 19 (Large Chest, Sandbar Isle)";
-                            return "Chest 17 (Large Chest, Isla de los Mástiles)";
-                        case "Large Chest 3":
-                            //return "Chest 17 (Large Chest, Isla de los Mástiles)";
-                            return "Chest 18 (Large Chest, Ship's End)";
-                        case "Large Chest 4":
-                            //return "Chest 18 (Large Chest, Ship's End)";
-                            return "Chest 51 (Large Chest, Port Royal: Docks)";
-                        case "Large Chest 5":
-                            //return "Chest 51 (Large Chest, Port Royal: Docks)";
                             return "Chest 20 (Large Chest, The Huddled Isles)";
+                        case "Large Chest 2":
+                            return "Chest 19 (Large Chest, Sandbar Isle)";
+                        case "Large Chest 3":
+                            return "Chest 17 (Large Chest, Isla de los Mástiles)";
+                        case "Large Chest 4":
+                            return "Chest 18 (Large Chest, Ship's End)";
+                        case "Large Chest 5":
+                            return "Chest 51 (Large Chest, Port Royal: Docks)";
                         case "Large Chest 6":
                             return "Chest 47 (Large Chest, Port Royal: Fort)";
                         case "Large Chest 7":

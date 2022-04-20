@@ -12,9 +12,9 @@ namespace KH3Randomizer.Data
     {
         // Don't provide empty hints for these pools
         List<string> blockedEmptyPools = new List<string>()
-            {
-                "Equipment Abilities", "Fullcourse Abilities", "Flantastic Flans", "Minigames", "Battle Portals", "Always On"
-            };
+        {
+            "Equipment Abilities", "Fullcourse Abilities", "Flantastic Flans", "Minigames", "Battle Portals", "Always On"
+        };
 
         public byte[] GenerateHints(string seed, Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions, Dictionary<string, RandomizeOptionEnum> availablePools, string hintType, List<string> importantChecks, ref Dictionary<string, List<string>> hintValues)
         {
@@ -254,6 +254,10 @@ namespace KH3Randomizer.Data
                     return "in the Moogle Synthesis Shop.";
                 case "Lucky Emblems":
                     return "on Lucky Emblem Milestones.";
+                case "Dark World":
+                    return "in The Dark World.";
+                case "Keyblade Graveyard":
+                    return "in The Keyblade Graveyard.";
                 default: 
                     return $"in {pool}.";
             }
@@ -1364,7 +1368,7 @@ namespace KH3Randomizer.Data
                     return "Master Medal";
 
                 case "I05031":
-                    return "Mickey's Brooch";
+                    return "Mickey Clasp";
 
                 case "I05032":
                     return "Soldier's Earring";
