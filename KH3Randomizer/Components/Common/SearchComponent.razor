@@ -6,10 +6,8 @@
             <span class="limit">@(this.SelectedChecks.Count + "/" + this.ListLimit)</span>
         }
 
-        <div class=@(ActionType.Equals("Options") ? "kh-input options-input" : ActionType.Equals("Modal") ? "kh-input modal-input" : "kh-input")>
-            <input value="@searchValue" id="randomizer_search" name="randomizer_search" class="kh-inputfield" @oninput="@((e) => this.SearchChecks(e.Value.ToString()))" placeholder="Search for a check to add to your @this.SelectedTitle..." />
-        </div>
-
+        <input value="@searchValue" id="randomizer_search" name="randomizer_search" class="kh-inputfield" @oninput="@((e) => this.SearchChecks(e.Value.ToString()))" placeholder="Search for a check to add to your @this.SelectedTitle..." />
+        
         <div class="selected-check-list">
             @foreach (var check in this.SelectedChecks)
             {

@@ -134,3 +134,10 @@ input:checked + .slider:before {
     filter: blur(6px);
     pointer-events: none;
 }
+
+.sub-section-text {
+    margin: -55px 25px 5px 0;
+    font-style: italic;
+    color: #bdbdbd;
+    text-align: right;
+}

@@ -21,14 +21,19 @@
 .kh-inputfield {
     padding: 5px 15px;
     border-radius: 5px;
-    border: unset;
     text-align: left;
-    width: 100%;
+    width: 50%;
     height: auto;
+    margin-left: 10px;
+    border: 1px solid black;
+}
+
+.selected-check-list {
+    margin-top: 10px;
 }
 
 .check {
-    background: linear-gradient(to right, #397e9b, #00b0f8);
+    background-color: #49b3ff;
     color: white;
     padding: 5px 10px;
     border-radius: 30px;
@@ -39,11 +44,11 @@
 }
 
 .options-check {
-    background: linear-gradient(to right, #397e9b, #00b0f8);
+    background-color: #49b3ff;
 }
 
 .modal-check {
-    background: linear-gradient(to right, #75559b, #a877df);
+    background-color: #49b3ff;
 }
 
 .check-icon {

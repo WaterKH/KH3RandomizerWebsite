@@ -246,7 +246,7 @@ namespace KH3Randomizer.Data
 
         public static Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> GetDefaultOptions()
         {
-            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot\DefaultKH3.json"));
+            using var streamReader = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"wwwroot/DefaultKH3.json"));
             return JsonSerializer.Deserialize<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(streamReader.ReadToEnd());
         }
 
