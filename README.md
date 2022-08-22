@@ -32,20 +32,20 @@ dallin1016: They 3D modeled the Randomizer Keyblade (Pandora's Power) and create
 ## Distinguished Beta Testers & Supporters
 I (waterkh) wanted to recognize these testers as they went above and beyond, testing and running back saves to diagnose, or help make it easier to diagnose, what the problem was. Theses people also showed little anger or annoyance with the development team as they were aware that bugs were likely and they always were mostly positive throughout the entire development cycle:
 
-PreferredWhale6: None of this would exist without her constant support. She kept me going during the most difficult time when creating this free mod for every type of KH fan to enjoy.
-Bio-Roxas: Bio was also a huge reason this reached the finish line, propping me up, promoting me early on in the development cycle and just the constant behind the scenes support when I needed to chat through problems or bugs.
-SuperSpikeGhettiBros: Mike and Jason, by far, were the best beta testers I've ever worked with. They always had positive attitudes working on and off stream helping me identify issues and find bugs. They both brought exceptional speedrunning and challenge run experience with them when testing the KH3 Randomizer, as well as just chill casual runs.
-Tatsoomaki: A veteran of running competive KH2FM randomizers, Tatsoo exceeded expectations as a beta tester, bringing with him knowledge of different strats that are utilized throughout KH3 speedruns.
-ShibuyaGato: Another veteran of running competive KH2FM randomizers, Shibuya also brought strats specifically around running randomizers, allowing her to give us valuable feedback we could improve the KH3 Rando experience with.
-RegularPat: Pat's most notable contribution was to test old patches when new ones released. On a more serious note, Pat's experience is what I expect most people's to be: a new way to experience KH3. And he helped move our development towards a variety of different opinions and views, not just for competitions or speedrunners.
-damo279: A different experience-based, analytical approach, Damo was able to identify bugs that not many people would think to try or do, leading to the discovery of a major bug. He also gave us, much like Pat, a different experience when approaching the KH3 Randomizer.
-Violin: Violin was the one that approached us to create a Discord to house the community for the KH3 Randomizer. With this server, there was feedback that helped handle several bugs.
+- PreferredWhale6: None of this would exist without her constant support. She kept me going during the most difficult time when creating this free mod for every type of KH fan to enjoy.
+- Bio-Roxas: Bio was also a huge reason this reached the finish line, propping me up, promoting me early on in the development cycle and just the constant behind the scenes support when I needed to chat through problems or bugs.
+- SuperSpikeGhettiBros: Mike and Jason, by far, were the best beta testers I've ever worked with. They always had positive attitudes working on and off stream helping me identify issues and find bugs. They both brought exceptional speedrunning and challenge run experience with them when testing the KH3 Randomizer, as well as just chill casual runs.
+- Tatsoomaki: A veteran of running competive KH2FM randomizers, Tatsoo exceeded expectations as a beta tester, bringing with him knowledge of different strats that are utilized throughout KH3 speedruns.
+- ShibuyaGato: Another veteran of running competive KH2FM randomizers, Shibuya also brought strats specifically around running randomizers, allowing her to give us valuable feedback we could improve the KH3 Rando experience with.
+- RegularPat: Pat's most notable contribution was to test old patches when new ones released. On a more serious note, Pat's experience is what I expect most people's to be: a new way to experience KH3. And he helped move our development towards a variety of different opinions and views, not just for competitions or speedrunners.
+- damo279: A different experience-based, analytical approach, Damo was able to identify bugs that not many people would think to try or do, leading to the discovery of a major bug. He also gave us, much like Pat, a different experience when approaching the KH3 Randomizer.
+- Violin: Violin was the one that approached us to create a Discord to house the community for the KH3 Randomizer. With this server, there was feedback that helped handle several bugs.
 
 ## Discord Bug Testers & Contributors:
 There were several people that helped by submitting bugs, participating in community polls and other things. We can't name them all here, but you can find them in the Discord server under #bug-reports and #development-discussion. I did want to list a couple of people that did stand out though.
 
-Rudabegga: They pointed us towards hosting with DigitalOcean, which has made the online seed generator the most stable it's ever been.
-Clara The Classy: They did an amazing job cross-referencing treasure chest data to verify that chests were being properly shown on the website with the correct text.
-SwiftShadow: They helped by contributing code to the hint system, allowing easier to follow hints, modular amount of hints per report and added a new category to map to.
+- Rudabegga: They pointed us towards hosting with DigitalOcean, which has made the online seed generator the most stable it's ever been.
+- Clara The Classy: They did an amazing job cross-referencing treasure chest data to verify that chests were being properly shown on the website with the correct text.
+- SwiftShadow: They helped by contributing code to the hint system, allowing easier to follow hints, modular amount of hints per report and added a new category to map to.
 
-You can also join the [Kingdom Hearts 3 Randomizer Discord](https://discord.gg/qf42CZfVBr) to help, find people to play the KH3 Rando with or discuss this project in general.
+You can also join the [Kingdom Hearts 3 Randomizer Community Discord](https://discord.gg/qf42CZfVBr) to help, find people to play the KH3 Rando with or discuss this project in general.
