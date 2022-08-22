@@ -23,11 +23,11 @@ This is the UE4 logic that allows the game to process all the randomized items, 
 ## Artists
 There were so many talented people that contributed so much to this project artistically and they put so much hard work and effort into each of their projects. Please commission them if you are looking for work to be done, this project is a testament to the quality they can produce:
 
-Kimpchuu: They created the initial website's design and also created the Proof of Fantasy
-Mr. Matthews: They created the icons falling in the main menu & the logo for the KH3 Randomizer 
-NotSoMewwo: They created the 3D Render and Animation of the treasure chest for the Reveal Trailer
-Tatsoomaki: They conceptualized the Randomizer Keyblade (Pandora's Power) and created the Reveal Trailer
-dallin1016: They 3D modeled the Randomizer Keyblade (Pandora's Power) and created it in-game
+- Kimpchuu: They created the initial website's design and also created the Proof of Fantasy
+- Mr. Matthews: They created the icons falling in the main menu & the logo for the KH3 Randomizer 
+- NotSoMewwo: They created the 3D Render and Animation of the treasure chest for the Reveal Trailer
+- Tatsoomaki: They conceptualized the Randomizer Keyblade (Pandora's Power) and created the Reveal Trailer
+- dallin1016: They 3D modeled the Randomizer Keyblade (Pandora's Power) and created it in-game
 
 ## Distinguished Beta Testers & Supporters
 I (waterkh) wanted to recognize these testers as they went above and beyond, testing and running back saves to diagnose, or help make it easier to diagnose, what the problem was. Theses people also showed little anger or annoyance with the development team as they were aware that bugs were likely and they always were mostly positive throughout the entire development cycle:
