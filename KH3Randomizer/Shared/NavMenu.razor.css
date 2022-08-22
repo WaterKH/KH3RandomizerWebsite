@@ -21,6 +21,11 @@
     top: 20%;
 }
 
+.bottom-middle-row {
+    position: absolute;
+    bottom: 10%;
+}
+
 .bottom-row {
     padding: 5px 25px;
     position: absolute;
@@ -80,9 +85,6 @@
     }
 }
 
-
-
-
 .selector {
     width: 10px;
     height: 35px;
@@ -91,3 +93,18 @@
     margin-right: -49px;
     border-radius: 50px;
 }
+
+
+.kh-create-button {
+    background: #0081ff;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-create-button:hover {
+        opacity: .75;
+    }

@@ -1,4 +1,5 @@
 ﻿@using UE4DataTableInterpreter.Enums
+@using UE4DataTableInterpreter.Models
 
 @inject KH3Randomizer.Data.RandomizerService RandomizerService
 
@@ -7,195 +8,366 @@
     <input value="@searchValue" id="randomizer_search" name="randomizer_search" class="kh-inputfield" @onchange="@((e) => this.SearchOptions(e))" placeholder="Search for an item, ability, bonus, etc. to filter below..." disabled="@this.SpoilerChecked" />
 </div>
 
-@foreach (var option in this.displayAvailableOptions)
+<div class="option-selection">
+    <div class="row" style="width: 100%;">
+        <div class="col-md-2">
+            <label style="margin-top: 8px; font-size: larger; font-weight: 500;"><b>Selection Type: </b></label>
+        </div>
+        <div class="col-md-2">
+            <a class="rounded-selector a-tag-selector @(selectedType == "Options" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateSelectedType("Options"); })" @onclick:preventDefault>Options</a>
+        </div>
+        <div class="col-md-2">
+            <a class="rounded-selector a-tag-selector @(selectedType == "Stats" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateSelectedType("Stats"); })" @onclick:preventDefault>Stats</a>
+        </div>
+        <div class="col-md-2">
+            <a class="rounded-selector a-tag-selector @(selectedType == "Entities" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateSelectedType("Entities"); })" @onclick:preventDefault>Entities</a>
+        </div>
+    </div>
+</div>
+
+<br />
+
+@if (selectedType == "Options")
 {
-    <Collapsable @ref="this.collapsableDictionary[option.Key]" CurrentOption="@this.currentOption" ToggleCollapsables="this.ToggleCollapsables" Title="@option.Key" ActionType="@this.ActionType">
-        <div class="row">
-            @if (option.Value.Count > 0)
-            {
-                <div class="col-md-3 suboption-section">
-                    @foreach (var subOption in option.Value.Where(x => !x.Key.Contains(":")))
-                    {
-                        <div class="row">
-                            <div class="@(currentSelection == subOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")"  @onclick="() => UpdateCurrentSelection(subOption.Key)">
-                                <div class="col-md-12">
-                                    <label class="switch" id="switch@(subOption.Key)" name="switch@(subOption.Key)">
-                                        <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key, (bool)value.Value))" checked="@subOption.Value" disabled="@IsDisabled">
-                                        <span class="slider round"></span>
-                                    </label>
+    @foreach (var option in this.displayAvailableOptions.Where(x => !x.Key.Contains("Stats") && x.Key != "EXP Multiplier"))
+    {
+        <Collapsable @ref="this.collapsableDictionary[option.Key]" CurrentOption="@this.currentOption" ToggleCollapsables="this.ToggleCollapsables" Title="@option.Key" ActionType="@this.ActionType">
+            <div class="row">
+                @if (option.Value.Count > 0)
+                {
+                    <div class="col-md-3 suboption-section">
+                        @foreach (var subOption in option.Value.Where(x => !x.Key.Contains(":")))
+                        {
+                            <div class="row">
+                                <div class="@(currentSelection == subOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSelection(subOption.Key)">
+                                    <div class="col-md-12">
+                                        <label class="switch" id="switch@(subOption.Key)" name="switch@(subOption.Key)">
+                                            <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key, (bool)value.Value))" checked="@subOption.Value" disabled="@IsDisabled">
+                                            <span class="slider round"></span>
+                                        </label>
 
 
-                                    <label for="switch@(subOption.Key)" style="padding-left: 20px;"><b>@subOption.Key</b></label>
+                                        <label for="switch@(subOption.Key)" style="padding-left: 20px;"><b>@subOption.Key</b></label>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                                
-                        @if (extraSubOptions.ContainsKey(subOption.Key) && this.currentSelection == subOption.Key)
-                        {
-                            @foreach (var extraSubOption in extraSubOptions[subOption.Key])
-                            { 
-                                @if (option.Value.Any(x => x.Key == subOption.Key + ": " + extraSubOption.Key))
-                                { 
-                                    <div class="row">
-                                        <div class="col-md-1"></div>
 
-                                        <div class="col-md-10">
-                                            <div class="@(currentSubSelection == extraSubOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSubSelection(extraSubOption.Key)">
-                                                <label class="switch" id="switch@(subOption.Key + ": " + extraSubOption.Key)" name="switch@(subOption.Key + ": " + extraSubOption.Key)">
-                                                    <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key + ": " + extraSubOption.Key, (bool)value.Value))" checked="@extraSubOption.Value" disabled="@IsDisabled">
-                                                    <span class="slider round"></span>
-                                                </label>
+                            @if (extraSubOptions.ContainsKey(subOption.Key) && this.currentSelection == subOption.Key)
+                            {
+                                @foreach (var extraSubOption in extraSubOptions[subOption.Key])
+                                {
+                                    @if (option.Value.Any(x => x.Key == subOption.Key + ": " + extraSubOption.Key))
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+
+                                            <div class="col-md-10">
+                                                <div class="@(currentSubSelection == extraSubOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSubSelection(extraSubOption.Key)">
+                                                    <label class="switch" id="switch@(subOption.Key + ": " + extraSubOption.Key)" name="switch@(subOption.Key + ": " + extraSubOption.Key)">
+                                                        <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key + ": " + extraSubOption.Key, (bool)value.Value))" checked="@extraSubOption.Value" disabled="@IsDisabled">
+                                                        <span class="slider round"></span>
+                                                    </label>
 
 
-                                                <label for="switch@(subOption.Key + ": " + extraSubOption.Key)" style="padding-left: 20px;"><b>@extraSubOption.Key</b></label>
+                                                    <label for="switch@(subOption.Key + ": " + extraSubOption.Key)" style="padding-left: 20px;"><b>@extraSubOption.Key</b></label>
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col-md-1"></div>
-                                    </div>
+                                            <div class="col-md-1"></div>
+                                        </div>
+                                    }
                                 }
                             }
                         }
-                    }
+                    </div>
+
+                    <div class="col-md-9" style="overflow-y: auto; max-height: 700px;">
+                        <div style="border-radius: 10px; padding: 20px; @(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" class="@(this.SpoilerChecked ? "spoiler-overlay" : "")">
+                            @if (option.Key == "Worlds")
+                            {
+                                <WorldSubComponent WorldName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+
+                            }
+                            else if (option.Key == "Sora")
+                            {
+                                <SoraSubComponent SoraName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                  AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+                            }
+                            else if (option.Key == "Equipment Abilities")
+                            {
+                                <EquippableSubComponent EquippableName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+                            }
+                            else if (option.Key == "Data Battle Rewards")
+                            {
+                                <DataBattleRewardSubComponent DataBattleRewardName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                              AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+                            }
+                            else if (option.Key == "Moogle Workshop")
+                            {
+                                <MoogleWorkshopSubComponent MoogleWorkshopName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+                            }
+                            else if (option.Key == "Fullcourse Abilities")
+                            {
+                                <FullcourseSubComponent FullcourseName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+                            }
+                            else if (option.Key == "Lucky Emblems")
+                            {
+                                <LuckyEmblemSubComponent LuckyEmblemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+                            }
+                            else if (option.Key == "Flantastic Flans")
+                            {
+                                <FlantasticFlanSubComponent FlantasticFlanName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+                            }
+                            else if (option.Key == "Minigames")
+                            {
+                                <MinigameSubComponent MinigameName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                      AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+                            }
+                            else if (option.Key == "Battle Portals")
+                            {
+                                <BattlePortalSubComponent BattlePortalName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                                                          AvailableOptions="@this.displayAvailableOptions" ActionType="@((this.SwapOptions != null) ? "Modal" : this.ActionType)" CurrentSeed="@this.CurrentSeed" SwapOptions="@(this.SwapOptions != null ? this.SwapOptions : new Action<DataTableEnum, string, string, string>(EmptyAction))" />
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </Collapsable>
+    }
+}
+else if (selectedType == "Stats")
+{
+    @foreach (var option in this.displayAvailableOptions.Where(x => x.Key.Contains("Stats") || x.Key == "EXP Multiplier"))
+    {
+        <Collapsable @ref="this.collapsableDictionary[option.Key]" CurrentOption="@this.currentOption" ToggleCollapsables="this.ToggleCollapsables" Title="@option.Key" ActionType="@this.ActionType">
+            <div class="row">
+                @if (option.Value.Count > 0)
+                {
+                    <div class="col-md-3 suboption-section">
+                        @foreach (var subOption in option.Value.Where(x => !x.Key.Contains(":")))
+                        {
+                            <div class="row">
+                                <div class="@(currentSelection == subOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSelection(subOption.Key)">
+                                    <div class="col-md-12">
+                                        <label class="switch" id="switch@(subOption.Key)" name="switch@(subOption.Key)">
+                                            <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key, (bool)value.Value))" checked="@subOption.Value" disabled="@IsDisabled">
+                                            <span class="slider round"></span>
+                                        </label>
+
+
+                                        <label for="switch@(subOption.Key)" style="padding-left: 20px;"><b>@subOption.Key</b></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (extraSubOptions.ContainsKey(subOption.Key) && this.currentSelection == subOption.Key)
+                            {
+                                @foreach (var extraSubOption in extraSubOptions[subOption.Key])
+                                {
+                                    @if (option.Value.Any(x => x.Key == subOption.Key + ": " + extraSubOption.Key))
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+
+                                            <div class="col-md-10">
+                                                <div class="@(currentSubSelection == extraSubOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSubSelection(extraSubOption.Key)">
+                                                    <label class="switch" id="switch@(subOption.Key + ": " + extraSubOption.Key)" name="switch@(subOption.Key + ": " + extraSubOption.Key)">
+                                                        <input type="checkbox" @onchange="@((value) => UpdateSwitch(option.Key, subOption.Key + ": " + extraSubOption.Key, (bool)value.Value))" checked="@extraSubOption.Value" disabled="@IsDisabled">
+                                                        <span class="slider round"></span>
+                                                    </label>
+
+
+                                                    <label for="switch@(subOption.Key + ": " + extraSubOption.Key)" style="padding-left: 20px;"><b>@extraSubOption.Key</b></label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-1"></div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+
+                    <div class="col-md-9" style="overflow-y: auto; max-height: 700px;">
+                        <div style="border-radius: 10px; padding: 20px; @(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" class="@(this.SpoilerChecked ? "spoiler-overlay" : "")">
+                            @if (option.Key == "Base Sora Stats")
+                            {
+                                <BaseCharStatSubComponent BaseCharStatName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions"
+                                                          UpdateStat="@(new Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>>(
+                                                                                    (dataTableEnum, subCategory, originalStats, updatedStats) => this.UpdateStat(dataTableEnum, subCategory, originalStats, updatedStats)))" />
+                            }
+                            else if (option.Key == "Level Up Stats")
+                            {
+                                <LevelUpStatSubComponent LevelUpStatName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions"
+                                                         UpdateStat="@(new Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>>(
+                                                                                    (dataTableEnum, subCategory, originalStats, updatedStats) => this.UpdateStat(dataTableEnum, subCategory, originalStats, updatedStats)))" />
+                            }
+                            else if (option.Key == "Keyblade Enhance Stats")
+                            {
+                                <WeaponUpgradeStatSubComponent WeaponUpgradeStatName="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions"
+                                                               UpdateStat="@(new Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>>(
+                                                                                    (dataTableEnum, subCategory, originalStats, updatedStats) => this.UpdateStat(dataTableEnum, subCategory, originalStats, updatedStats)))" />
+                            }
+                            else if (option.Key == "Equipment Stats")
+                            {
+                                <EquipmentStatSubComponent EquipmentStatName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions"
+                                                           UpdateStat="@(new Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>>(
+                                                                                    (dataTableEnum, subCategory, originalStats, updatedStats) => this.UpdateStat(dataTableEnum, subCategory, originalStats, updatedStats)))" />
+                            }
+                            else if (option.Key == "Food Effect Stats")
+                            {
+                                <FoodStatSubComponent FoodStatName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions"
+                                                      UpdateStat="@(new Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>>(
+                                                                                    (dataTableEnum, subCategory, originalStats, updatedStats) => this.UpdateStat(dataTableEnum, subCategory, originalStats, updatedStats)))" />
+                            }
+                            else if (option.Key == "EXP Multiplier")
+                            {
+                                <EXPStatSubComponent EXPStatName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions"
+                                                     UpdateStat="@(new Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>>(
+                                                                                    (dataTableEnum, subCategory, originalStats, updatedStats) => this.UpdateStat(dataTableEnum, subCategory, originalStats, updatedStats)))" />
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </Collapsable>
+    }
+}
+else if (this.selectedType == "Entities")
+{
+    @foreach (var enemy in this.filteredRandomizedEnemies)
+    {
+        <Collapsable @ref="this.collapsableDictionary[enemy.Key]" CurrentOption="@this.currentOption" ToggleCollapsables="this.ToggleCollapsables" Title="@enemy.Key.WorldPrefixToWorldName()" ActionType="@this.ActionType">
+            <div class="row">
+                @if (enemy.Value.Count > 0)
+                {
+                    <div class="col-md-3 suboption-section">
+                        @foreach (var subOption in enemy.Value.Where(x => !x.Key.Contains(": ")))
+                        {
+                            <div class="row">
+                                <div class="@(currentSelection == subOption.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSelection(subOption.Key)">
+                                    <div class="col-md-12">
+                                        <label class="switch" id="switch@(subOption.Key)" name="switch@(subOption.Key)">
+                                            <input type="checkbox" @onchange="@((value) => UpdateSwitch(enemy.Key, subOption.Key, (bool)value.Value))" checked="@subOption.Value" disabled="@IsDisabled">
+                                            <span class="slider round"></span>
+                                        </label>
+
+
+                                        <label for="switch@(subOption.Key)" style="padding-left: 20px;"><b>@subOption.Key.WorldPrefixToWorldName()</b></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (extraSubEnemies.ContainsKey(subOption.Key) && this.currentSelection == subOption.Key)
+                            {
+                                @foreach (var extraSubEnemy in extraSubEnemies[subOption.Key])
+                                {
+                                    @if (enemy.Value.Any(x => x.Key.Contains(subOption.Key + ": " + extraSubEnemy.Key)))
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-1"></div>
+
+                                            <div class="col-md-10">
+                                                <div class="@(currentSubSelection == extraSubEnemy.Key ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="() => UpdateCurrentSubSelection(extraSubEnemy.Key)">
+                                                    <label class="switch" id="switch@(subOption.Key + ": " + extraSubEnemy.Key)" name="switch@(subOption.Key + ": " + extraSubEnemy.Key)">
+                                                        <input type="checkbox" @onchange="@((value) => UpdateSwitch(enemy.Key, subOption.Key + ": " + extraSubEnemy.Key, (bool)value.Value))" checked="@extraSubEnemy.Value" disabled="@IsDisabled">
+                                                        <span class="slider round"></span>
+                                                    </label>
+
+
+                                                    <label for="switch@(subOption.Key + ": " + extraSubEnemy.Key)" style="padding-left: 20px;"><b>@extraSubEnemy.Key</b></label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-1"></div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+
+                    <div class="col-md-9" style="overflow-y: auto; max-height: 700px;">
+                        <div style="border-radius: 10px; padding: 20px; @(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" class="@(this.SpoilerChecked ? "spoiler-overlay" : "")">
+                            <EnemySubComponent EnemyName="@this.currentSelection" SubSelection="@this.currentSubSelection" FilteredRandomizedEnemies="@this.randomizedEnemies"
+                                               UpdateEnemy="@(new Action<string, Enemy>((key, enemy) => this.UpdateEnemy(key, enemy)))" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </Collapsable>
+    }
+
+    if (this.randomizedBosses.Count > 0)
+    {
+        <hr />
+
+        <Collapsable @ref="@(this.collapsableDictionary["Bosses"])" CurrentOption="@this.currentOption" ToggleCollapsables="this.ToggleCollapsables" Title="Bosses" ActionType="@this.ActionType">
+            <div class="row">
+                <div class="col-md-3 suboption-section">
+                    <div class="row">
+                        <div class="@(currentSelection == "Bosses" ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="@(() => UpdateCurrentSelection("Bosses"))">
+                            <div class="col-md-12">
+                                <label class="switch" id="switchBosses" name="switchBosses">
+                                    <input type="checkbox" @onchange="@((value) => UpdateSwitch("Bosses", "Bosses", (bool)value.Value))" checked="@true" disabled="@IsDisabled">
+                                    <span class="slider round"></span>
+                                </label>
+
+
+                                <label for="switchBosses" style="padding-left: 20px;"><b>Bosses</b></label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-9" style="overflow-y: auto; max-height: 700px;">
                     <div style="border-radius: 10px; padding: 20px; @(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" class="@(this.SpoilerChecked ? "spoiler-overlay" : "")">
-                        @if (option.Key == "Worlds")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <WorldSubComponent WorldName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></WorldSubComponent>
-                            }
-                            else
-                            {
-                                <WorldSubComponent WorldName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                   AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></WorldSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Sora")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <SoraSubComponent SoraName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                  AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></SoraSubComponent>
-                            }
-                            else
-                            {
-                                <SoraSubComponent SoraName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                  AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></SoraSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Equipment Abilities")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <EquippableSubComponent EquippableName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></EquippableSubComponent>
-                            }
-                            else
-                            {
-                                <EquippableSubComponent EquippableName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></EquippableSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Data Battle Rewards")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <DataBattleRewardSubComponent DataBattleRewardName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                              AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></DataBattleRewardSubComponent>
-                            }
-                            else
-                            {
-                                <DataBattleRewardSubComponent DataBattleRewardName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                              AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></DataBattleRewardSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Moogle Workshop")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <MoogleWorkshopSubComponent MoogleWorkshopName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></MoogleWorkshopSubComponent>
-                            }
-                            else
-                            {
-                                <MoogleWorkshopSubComponent MoogleWorkshopName="@this.currentSelection" SubSelection="@this.currentSubSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></MoogleWorkshopSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Fullcourse Abilities")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <FullcourseSubComponent FullcourseName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></FullcourseSubComponent>
-                            }
-                            else
-                            {
-                                <FullcourseSubComponent FullcourseName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                        AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></FullcourseSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Lucky Emblems")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <LuckyEmblemSubComponent LuckyEmblemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></LuckyEmblemSubComponent>
-                            }
-                            else
-                            {
-                                <LuckyEmblemSubComponent LuckyEmblemName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                         AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></LuckyEmblemSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Flantastic Flans")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <FlantasticFlanSubComponent FlantasticFlanName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></FlantasticFlanSubComponent>
-                            }
-                            else
-                            {
-                                <FlantasticFlanSubComponent FlantasticFlanName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                            AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></FlantasticFlanSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Minigames")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <MinigameSubComponent MinigameName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                      AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></MinigameSubComponent>
-                            }
-                            else
-                            {
-                                <MinigameSubComponent MinigameName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                      AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></MinigameSubComponent>
-                            }
-                        }
-                        else if (option.Key == "Battle Portals")
-                        {
-                            if (this.SwapOptions != null)
-                            {
-                                <BattlePortalSubComponent BattlePortalName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                          AvailableOptions="@this.displayAvailableOptions" ActionType="@("Modal")" CurrentSeed="@this.CurrentSeed" SwapOptions="@this.SwapOptions"></BattlePortalSubComponent>
-                            }
-                            else
-                            {
-                                <BattlePortalSubComponent BattlePortalName="@this.currentSelection" RandomizedOptions="@this.displayRandomizedOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                                                          AvailableOptions="@this.displayAvailableOptions" ActionType="@this.ActionType" CurrentSeed="@this.CurrentSeed"></BattlePortalSubComponent>
-                            }
-                        }
+                        <BossSubComponent BossName="@this.currentSelection" RandomizedBosses="@this.randomizedBosses"
+                                          UpdateBoss="@(new Action<string, string>((id, randomized) => this.UpdateBoss(id, randomized)))" />
                     </div>
                 </div>
-            }
-        </div>
-    </Collapsable>
+            </div>
+        </Collapsable>
+    }
+
+    if (this.randomizedPartyMembers.Count > 0)
+    {
+        <hr />
+
+        <Collapsable @ref="@(this.collapsableDictionary["Party Members"])" CurrentOption="@this.currentOption" ToggleCollapsables="this.ToggleCollapsables" Title="Party Members" ActionType="@this.ActionType">
+            <div class="row">
+                <div class="col-md-3 suboption-section">
+                    <div class="row">
+                        <div class="@(currentSelection == "Party Members" ? "suboption-radio-active" : "suboption-radio")" style="@(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" @onclick="@(() => UpdateCurrentSelection("Party Members"))">
+                            <div class="col-md-12">
+                                <label class="switch" id="switchPartyMembers" name="switchPartyMembers">
+                                    <input type="checkbox" @onchange="@((value) => UpdateSwitch("Party Members", "Party Members", (bool)value.Value))" checked="@true" disabled="@IsDisabled">
+                                    <span class="slider round"></span>
+                                </label>
+
+
+                                <label for="switchPartyMembers" style="padding-left: 20px;"><b>Party Members</b></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-9" style="overflow-y: auto; max-height: 700px;">
+                    <div style="border-radius: 10px; padding: 20px; @(ActionType == "Options" ? "background-color: #ffffff;" : ActionType == "Modal" ? "background-color: #F2F2F2;" : "")" class="@(this.SpoilerChecked ? "spoiler-overlay" : "")">
+                        <PartyMemberSubComponent PartyMemberName="@this.currentSelection" RandomizedPartyMembers="@this.randomizedPartyMembers"
+                                                 UpdatePartyMember="@(new Action<string, string>((id, randomized) => this.UpdatePartyMember(id, randomized)))" />
+                    </div>
+                </div>
+            </div>
+        </Collapsable>
+    }
 }
 
 
@@ -205,26 +377,38 @@
     [Parameter] public EventCallback<Dictionary<string, Dictionary<string, bool>>> UpdateAvailableOptions { get; set; }
     [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
     [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, Enemy>> UpdateRandomizedEnemies { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, string>> UpdateRandomizedBosses { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, string>> UpdateRandomizedPartyMembers { get; set; }
 
     [Parameter] public string CurrentSeed { get; set; }
     [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
     [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> FilteredRandomizedEnemies { get; set; }
+    [Parameter] public Dictionary<string, Enemy> RandomizedEnemies { get; set; }
+    [Parameter] public Dictionary<string, string> RandomizedBosses { get; set; }
+    [Parameter] public Dictionary<string, string> RandomizedPartyMembers { get; set; }
     [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
 
     [Parameter] public bool IsDisabled { get; set; } = false;
     [Parameter] public bool SpoilerChecked { get; set; } = false;
     [Parameter] public string ActionType { get; set; } = "Options"; // Options, Modal, Spoiler
 
-    [Parameter] public Action<DataTableEnum, string, string, string> SwapOptions { get; set; }
+    [Parameter] public Action<DataTableEnum, string, string, string> SwapOptions { get; set; } = null;
 
 
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
     private List<Tuple<Option, Option>> modifications = new();
+    private Dictionary<string, Dictionary<string, bool>> filteredRandomizedEnemies = new();
+    private Dictionary<string, Enemy> randomizedEnemies = new();
+    private Dictionary<string, string> randomizedBosses = new();
+    private Dictionary<string, string> randomizedPartyMembers = new();
 
     private string currentSelection = "";
     private string currentSubSelection = "";
     private string currentOption = "";
+    private string selectedType = "Options";
 
     private Dictionary<string, Collapsable> collapsableDictionary = new Dictionary<string, Collapsable>();
 
@@ -239,7 +423,7 @@
 
 
     private Dictionary<string, Dictionary<string, bool>> extraSubOptions = new Dictionary<string, Dictionary<string, bool>>
-    {
+{
         // Worlds
         { "Olympus", new Dictionary<string, bool> {
             { "Treasures", true }, { "Events", true }, { "Bonuses", true }
@@ -272,7 +456,7 @@
         { "100 Acre Wood", new Dictionary<string, bool> {
             { "Events", true }
         } },
-        { "Re:Mind", new Dictionary<string, bool> {
+        { "Re+Mind", new Dictionary<string, bool> {
             { "Treasures", true }, { "Bonuses", true }
         } },
         { "Dark World", new Dictionary<string, bool> {
@@ -287,25 +471,88 @@
             { "Kingdom Key", true }, { "Hero's Origin", true }, { "Shooting Star", true }, { "Favorite Deputy", true },
             { "Ever After", true }, { "Happy Gear", true }, { "Crystal Snow", true }, { "Hunny Spout", true },
             { "Wheel of Fate", true }, { "Nano Gear", true }, { "Starlight", true }, { "Grand Chef", true },
-            { "Classic Tone", true }, { "Ultima Weapon", true }, { "Elemental Encoder", true }, { "Oblivion", true },
+            { "Classic Tone", true }, { "Ultima Weapon", true }, { "Pandora's Power", true }, { "Oblivion", true },
             { "Oathkeeper", true }
+        } },
+
+
+        // Weapon Upgrade Stats
+        { "Keyblade Enhance Stats", new Dictionary<string, bool> {
+            { "Kingdom Key", true }, { "Hero's Origin", true }, { "Shooting Star", true }, { "Favorite Deputy", true },
+            { "Ever After", true }, { "Happy Gear", true }, { "Crystal Snow", true }, { "Hunny Spout", true },
+            { "Wheel of Fate", true }, { "Nano Gear", true }, { "Starlight", true }, { "Grand Chef", true },
+            { "Classic Tone", true }, { "Ultima Weapon", true }, { "Pandora's Power", true }, { "Oblivion", true },
+            { "Oathkeeper", true }
+        } }
+    };
+
+    private Dictionary<string, Dictionary<string, bool>> extraSubEnemies = new Dictionary<string, Dictionary<string, bool>>
+    {
+        { "HE", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "TT", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "TS", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "RA", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "MI", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "FZ", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "CA", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "BX", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "DW", new Dictionary<string, bool> {
+            { "Bosses", true }
+        } },
+        { "KG", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "EW", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Bosses", true }
+        } },
+        { "BT", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "EX", new Dictionary<string, bool> {
+            { "Mobs", true }, { "Mini-Bosses", true }, { "Bosses", true }
+        } },
+        { "RG", new Dictionary<string, bool> {
+            { "Bosses", true }
+        } },
+        { "SS", new Dictionary<string, bool> {
+            { "Bosses", true }
         } }
     };
 
     private List<string> Worlds = new List<string> { "Olympus", "Twilight Town", "Toy Box", "Kingdom of Corona", "Monstropolis",
                                                      "Arendelle", "San Fransokyo", "The Caribbean", "Keyblade Graveyard",
-                                                     "100 Acre Wood", "Re:Mind", "Dark World", "Unreality" };
+                                                     "100 Acre Wood", "Re+Mind", "Dark World", "Unreality" };
 
     private List<string> WeaponUpgrades = new List<string> { "Kingdom Key", "Hero's Origin", "Shooting Star",  "Favorite Deputy",
                                                              "Ever After", "Happy Gear", "Crystal Snow", "Hunny Spout",
                                                              "Wheel of Fate", "Nano Gear", "Starlight", "Grand Chef", "Classic Tone",
-                                                             "Ultima Weapon", "Elemental Encoder", "Oblivion", "Oathkeeper" };
+                                                             "Ultima Weapon", "Pandora's Power", "Oblivion", "Oathkeeper" };
 
     protected override void OnParametersSet()
     {
         this.availableOptions = this.AvailableOptions;
         this.randomizedOptions = this.RandomizedOptions;
         this.modifications = this.Modifications;
+        this.filteredRandomizedEnemies = this.FilteredRandomizedEnemies;
+        this.randomizedEnemies = this.RandomizedEnemies;
+        this.randomizedBosses = this.RandomizedBosses;
+        this.randomizedPartyMembers = this.RandomizedPartyMembers;
 
         if (this.searchAvailableOptions.Count > 0 && this.searchRandomizedOptions.Count > 0)
         {
@@ -320,7 +567,7 @@
 
         this.searchValue = "";
 
-        foreach (var option in this.availableOptions.Where(x => x.Key == "Worlds" || x.Key == "Moogle Workshop"))
+        foreach (var option in this.availableOptions.Where(x => x.Key == "Worlds" || x.Key == "Moogle Workshop" || x.Key == "Keyblade Enhance Stats"))
         {
             foreach (var subOption in option.Value.Where(x => x.Key.Contains(":")))
             {
@@ -330,6 +577,11 @@
                     this.extraSubOptions[splitSubOption[0]][splitSubOption[1]] = subOption.Value;
             }
         }
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
 
         base.OnParametersSet();
     }
@@ -353,6 +605,10 @@
             this.UpdateCurrentSubSelection(displayAvailableOptions["Worlds"].FirstOrDefault(x => x.Key.Contains($"{selection}:")).Key.Split(": ")[1]);
         else if (selection == "Weapon Upgrades")
             this.UpdateCurrentSubSelection(displayAvailableOptions["Moogle Workshop"].FirstOrDefault(x => x.Key.Contains($"{selection}:")).Key.Split(": ")[1]);
+        else if (selection == "Keyblade Enhance Stats")
+            this.UpdateCurrentSubSelection(displayAvailableOptions["Keyblade Enhance Stats"].FirstOrDefault(x => x.Key.Contains($"{selection}:")).Key.Split(": ")[1]);
+        else if (extraSubEnemies.Keys.Contains(selection))
+            this.UpdateCurrentSubSelection(filteredRandomizedEnemies[selection].FirstOrDefault(x => x.Key.Contains($"{selection}:")).Key.Split(": ")[1]);
     }
 
     private void UpdateCurrentSubSelection(string selection)
@@ -381,8 +637,10 @@
     {
         if (this.displayAvailableOptions.ContainsKey(displayString))
             return this.displayAvailableOptions[displayString].Keys.FirstOrDefault();
+        else if (this.filteredRandomizedEnemies.ContainsKey(displayString.WorldNameToWorldPrefix()))
+            return this.filteredRandomizedEnemies[displayString.WorldNameToWorldPrefix()].Keys.FirstOrDefault();
 
-        return "";
+        return displayString;
     }
 
     private void SearchOptions(ChangeEventArgs e)
@@ -399,6 +657,9 @@
                 foreach (var subCategory in category.Value)
                 {
                     var isFound = false;
+
+                    if (subCategory.Key.Contains("GIVESORA"))
+                        continue;
 
                     foreach (var option in subCategory.Value)
                     {
@@ -466,6 +727,60 @@
         }
 
         InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public static void EmptyAction(DataTableEnum dataTableEnum, string subCategory, string name, string value)
+    {
+
+    }
+
+    public async void UpdateStat(DataTableEnum dataTableEnum, string subCategory, Dictionary<string, string> originalStats, Dictionary<string, string> updatedStats)
+    {
+        foreach (var stat in updatedStats)
+        {
+            if (stat.Value != originalStats[stat.Key])
+            {
+                this.randomizedOptions[dataTableEnum][subCategory][stat.Key] = stat.Value;
+
+                await this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+
+                var originalOption = new Option { Category = dataTableEnum, SubCategory = subCategory, Name = stat.Key, Value = originalStats[stat.Key] };
+                var newOption = new Option { Category = dataTableEnum, SubCategory = subCategory, Name = stat.Key, Value = stat.Value };
+
+                this.UpdateModifications.Invoke(originalOption, newOption);
+            }
+        }
+    }
+
+    public async void UpdateEnemy(string key, Enemy enemy)
+    {
+        this.randomizedEnemies[key] = enemy;
+
+        await this.UpdateRandomizedEnemies.InvokeAsync(this.randomizedEnemies);
+    }
+
+    public async void UpdateBoss(string id, string randomized)
+    {
+        this.randomizedBosses[id] = randomized;
+
+        await this.UpdateRandomizedBosses.InvokeAsync(this.randomizedBosses);
+    }
+
+    public async void UpdatePartyMember(string id, string randomized)
+    {
+        this.randomizedPartyMembers[id] = randomized;
+
+        await this.UpdateRandomizedPartyMembers.InvokeAsync(this.randomizedPartyMembers);
+    }
+
+    public async void UpdateSelectedType(string type)
+    {
+        this.selectedType = type;
+
+        await InvokeAsync(() =>
         {
             StateHasChanged();
         });

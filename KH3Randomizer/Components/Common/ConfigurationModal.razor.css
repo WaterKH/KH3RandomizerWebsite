@@ -1,0 +1,150 @@
+.collapsable-half {
+    background-color: #F2F2F2;
+    border-radius: 10px 10px 0px 0px;
+    padding: 10px 25px 0px 25px;
+}
+
+.collapsable-full {
+    background-color: #F2F2F2;
+    border-radius: 10px;
+    padding: 10px 25px;
+}
+
+.collapsable-panel {
+    padding: 40px 30px;
+    max-height: 750px;
+    background-color: #F2F2F2;
+    border-radius: 0px 0px 10px 10px;
+}
+
+.collapsable .title {
+    cursor: pointer;
+}
+
+.collapsable {
+    margin-top: 15px;
+}
+
+.table-content {
+    max-height: 70%;
+    overflow-y: auto;
+}
+
+.configuration-modal {
+    max-height: 80vh;
+    max-width: 80vw;
+    min-width: 80vw;
+    background-color: #F2F2F2;
+}
+
+.kh-button {
+    background: #0081ff;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button:hover {
+        opacity: .75;
+    }
+
+.kh-button-cancel {
+    background-color: transparent;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: black;
+    border: grey solid 1px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button-cancel:hover {
+        opacity: .75;
+    }
+
+.kh-button-remove {
+    background-color: #e53d3d;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button-cancel:hover {
+        opacity: .75;
+    }
+
+.configuration-bubble {
+    text-align: center;
+    border: 1px #e7e7e7 solid;
+    border-radius: 15px;
+    margin: 5px 10px;
+}
+
+.configuration-bubble-active {
+    text-align: center;
+    border: 1px #89c3ff solid;
+    border-radius: 15px;
+    box-shadow: 0px 0px 6px 0px #89c3ff;
+    margin: 5px 10px;
+}
+
+.config-icon {
+    font-size: x-large;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+}
+
+    .config-icon:hover {
+        opacity: .5;
+    }
+
+
+.upload-section {
+    background-color: #F2F2F2;
+    border-radius: 15px;
+    padding: 5px 30px;
+}
+
+.upload-sub-section {
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 10px;
+    margin-bottom: 0px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.upload-border {
+    border: dashed 2px grey;
+    border-radius: 15px;
+    padding: 7px 40px;
+    width: 100%;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.selector {
+    width: 53px;
+    height: 10px;
+    display: inline-flex;
+    position: absolute;
+    margin-left: 12px;
+    margin-top: -33px;
+    border-radius: 50px;
+}

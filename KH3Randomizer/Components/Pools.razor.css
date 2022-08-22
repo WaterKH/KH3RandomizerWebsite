@@ -11,7 +11,7 @@
 }
 
 .kh-button {
-    background: linear-gradient(to right, #015eea, #00c0fa);
+    background: #0081ff;
     padding: 5px 25px;
     border-radius: 10px;
     color: white;
@@ -24,8 +24,23 @@
     opacity: .75;
 }
 
+.kh-button-light {
+    background: #00c0fa;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    margin-top: 5px;
+}
+
+.kh-button-light:hover {
+    opacity: .75;
+}
+
 .kh-input {
-    background: linear-gradient(to right, #015eea, #00c0fa);
+    background: #015eea;
     padding: 5px 25px;
     border-radius: 10px;
     color: white;
@@ -145,4 +160,20 @@ input:checked + .slider:before {
     background-color: #0081ff;
     color: white;
     outline: none !important;
+}
+
+input:checked + .kh-stat-color {
+    background-color: #ba85ff;
+}
+
+input:checked + .kh-enemy-color {
+    background-color: #ff4949;
+}
+
+.selected-kh-stat-color {
+    background-color: #ba85ff;
+}
+
+.selected-kh-enemy-color {
+    background-color: #ff4949;
 }

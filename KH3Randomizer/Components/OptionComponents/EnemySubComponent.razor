@@ -1,0 +1,54 @@
+﻿@using UE4DataTableInterpreter.Models
+
+@inject RandomizerService RandomizerService
+
+<Table Items="this.WorldEnemies" Context="WorldEnemy" CurrentPage="1">
+    <TableHeader>
+        <th>Location</th>
+        <th>Enemy</th>
+        <th>Action</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@WorldEnemy.FilePath.Split('/')[^3].LevelIdToLevelName()</td>
+        <td>@WorldEnemy.EnemyPath.Split('/')[^2].EnemyIdToEnemyName().BossIdToBossName()</td>
+        <td><a href="#" @onclick="() => OpenModal(WorldEnemy)" @onclick:preventDefault>Change</a></td>
+    </RowTemplate>
+</Table>
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public string EnemyName { get; set; }
+    [Parameter] public string SubSelection { get; set; }
+
+    [Parameter] public Action<string, Enemy> UpdateEnemy { get; set; }
+    [Parameter] public Dictionary<string, Enemy> FilteredRandomizedEnemies { get; set; }
+
+    private List<Enemy> WorldEnemies { get; set; }
+    private Dictionary<string, Enemy> filteredRandomizedEnemies = new();
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<string>(nameof(this.EnemyName), out var value) && parameters.TryGetValue<string>(nameof(this.SubSelection), out var subSelection) && parameters.TryGetValue<Dictionary<string, Enemy>>(nameof(FilteredRandomizedEnemies), out var enemies))
+        {
+            this.filteredRandomizedEnemies = enemies;
+            this.WorldEnemies = this.RandomizerService.GetAvailableWorldEnemies(value, subSelection, this.filteredRandomizedEnemies);
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    private void OpenModal(Enemy enemy)
+    {
+        var parameters = new ModalParameters();
+
+        parameters.Add("Name", enemy.Key);
+        parameters.Add("Enemy", enemy);
+
+        parameters.Add("UpdateEnemy", UpdateEnemy);
+
+        var options = new ModalOptions { Class = "modal-custom" };
+
+        Modal.Show<ChangeEnemy>($"Change {EnemyName}", parameters, options);
+    }
+}

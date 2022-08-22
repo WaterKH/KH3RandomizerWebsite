@@ -867,37 +867,37 @@ namespace KH3Randomizer.Data
                             break;
                         #endregion Flans
 
-                        #region Re:Mind
+                        #region Re+Mind
                         case "VBonus_DLC_001":
-                            world = "Re:Mind (The Keyblade Graveyard)";
+                            world = "Re+Mind (The Keyblade Graveyard)";
                             description = "(Dark Inferno Boss)";
                             break;
                         case "VBonus_DLC_002":
-                            world = "Re:Mind (The Keyblade Graveyard)";
+                            world = "Re+Mind (The Keyblade Graveyard)";
                             description = "(Anti-Aqua Boss)";
                             break;
                         case "VBonus_DLC_003":
-                            world = "Re:Mind (The Keyblade Graveyard)";
+                            world = "Re+Mind (The Keyblade Graveyard)";
                             description = "(Terra-Xehanort Boss)";
                             break;
                         case "VBonus_DLC_004":
-                            world = "Re:Mind (The Keyblade Graveyard)";
+                            world = "Re+Mind (The Keyblade Graveyard)";
                             description = "(Xigbar & Dark Riku Boss)";
                             break;
                         case "VBonus_DLC_005":
-                            world = "Re:Mind (The Keyblade Graveyard)";
+                            world = "Re+Mind (The Keyblade Graveyard)";
                             description = "(Luxord, Larxene & Marluxia Boss)";
                             break;
                         case "VBonus_DLC_006":
-                            world = "Re:Mind (The Keyblade Graveyard)";
+                            world = "Re+Mind (The Keyblade Graveyard)";
                             description = "(Terra-Xehanort & Vanitas Boss)";
                             break;
                         case "VBonus_DLC_007":
-                            world = "Re:Mind (The Keyblade Graveyard)";
+                            world = "Re+Mind (The Keyblade Graveyard)";
                             description = "(Saix Boss)";
                             break;
                         case "VBonus_DLC_008":
-                            world = "Re:Mind (The Keyblade Graveyard)";
+                            world = "Re+Mind (The Keyblade Graveyard)";
                             description = "(Young Xehanort, Ansem & Xemnas Boss)";
                             break;
 
@@ -910,7 +910,7 @@ namespace KH3Randomizer.Data
                             world = "Scala Ad Caelum";
                             description = "(Armored Xehanort Boss)";
                             break;
-                        #endregion Re:Mind
+                        #endregion Re+Mind
 
                         default:
                             world = "UNKNOWN";
@@ -1301,7 +1301,7 @@ namespace KH3Randomizer.Data
                 case "I03018":
                     return "Starlight";
                 case "I03019":
-                    return "Elemental Encoder";
+                    return "Pandora's Power";
                 #endregion Keyblades
 
                 #region Armor
@@ -1684,7 +1684,7 @@ namespace KH3Randomizer.Data
                     keyblade = "Ultima Weapon";
                     break;
                 case 15:
-                    keyblade = "Elemental Encoder";
+                    keyblade = "Pandora's Power";
                     break;
                 case 16:
                     keyblade = "Starlight";

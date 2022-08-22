@@ -1,0 +1,69 @@
+﻿@using UE4DataTableInterpreter.Enums
+@using KH3Randomizer.Models.Stats
+
+@inject RandomizerService RandomizerService
+
+<Table Items="this.FoodStats" Context="FoodStat" CurrentPage="1">
+    <TableHeader>
+        <th>Name</th>
+        <th>HP+</th>
+        <th>MP+</th>
+        <th>Attack+</th>
+        <th>Magic+</th>
+        <th>Defense+</th>
+        <th>Action</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@FoodStat.Name.FoodIdToFoodName()</td>
+        <td>@FoodStat.HPPlus</td>
+        <td>@FoodStat.MPPlus</td>
+        <td>@FoodStat.AttackPlus</td>
+        <td>@FoodStat.MagicPlus</td>
+        <td>@FoodStat.DefensePlus</td>
+        <td><a href="#" @onclick="() => OpenModal(FoodStat)" @onclick:preventDefault>Change</a></td>
+    </RowTemplate>
+</Table>
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public string FoodStatName { get; set; }
+
+    [Parameter] public Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>> UpdateStat { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    private List<FoodStat> FoodStats { get; set; }
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<string>(nameof(this.FoodStatName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
+        {
+            this.randomizedOptions = options;
+            this.FoodStats = this.RandomizerService.GetAvailableFoodStats(value, ref this.randomizedOptions);
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    private void OpenModal(FoodStat foodStat)
+    {
+        var parameters = new ModalParameters();
+
+        var foodStats = new Dictionary<string, string> {
+            { "HPPlus", foodStat.HPPlus }, { "MPPlus", foodStat.MPPlus },
+            { "AttackPlus", foodStat.AttackPlus }, { "MagicPlus", foodStat.MagicPlus }, { "DefensePlus", foodStat.DefensePlus }
+        };
+
+        parameters.Add("Category", DataTableEnum.FoodItemEffectStat);
+        parameters.Add("SubCategory", foodStat.Name);
+        parameters.Add("OriginalStats", foodStats);
+        parameters.Add("UpdatedStats", foodStats.ToDictionary(x => x.Key, y => y.Value));
+
+        parameters.Add("UpdateStat", UpdateStat);
+
+        var options = new ModalOptions { Class = "modal-custom" };
+
+        Modal.Show<ChangeStat>($"Change {foodStat.Name.ValueIdToDisplay()} Stats", parameters, options);
+    }
+}

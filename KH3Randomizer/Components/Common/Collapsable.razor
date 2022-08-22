@@ -34,12 +34,32 @@
     [Parameter] public Action<string> ToggleCollapsables { get; set; }
     [Parameter] public string ActionType {get; set; }
 
-    protected override void OnParametersSet()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            this.Collapsed = this.CurrentOption != this.Title;
+
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected override async Task OnParametersSetAsync()
     {
         if (this.CurrentOption != this.Title)
         {
             this.Collapsed = true;
         }
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
 
         base.OnParametersSet();
     }

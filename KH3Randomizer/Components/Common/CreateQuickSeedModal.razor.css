@@ -1,0 +1,103 @@
+.collapsable-half {
+    background-color: #F2F2F2;
+    border-radius: 10px 10px 0px 0px;
+    padding: 10px 25px 0px 25px;
+}
+
+.collapsable-full {
+    background-color: #F2F2F2;
+    border-radius: 10px;
+    padding: 10px 25px;
+}
+
+.collapsable-panel {
+    padding: 40px 30px;
+    max-height: 750px;
+    background-color: #F2F2F2;
+    border-radius: 0px 0px 10px 10px;
+}
+
+.collapsable .title {
+    cursor: pointer;
+}
+
+.collapsable {
+    margin-top: 15px;
+}
+
+.table-content {
+    max-height: 70%;
+    overflow-y: auto;
+}
+
+.create-quick-seed-modal {
+    max-height: 80vh;
+    max-width: 80vw;
+    min-width: 80vw;
+    background-color: #F2F2F2;
+}
+
+.kh-input {
+    background: #015eea;
+    padding: 5px 25px;
+    margin: 0px 20px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.kh-inputfield {
+    padding: 5px 15px;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: unset;
+    width: 100%;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    text-align: left;
+}
+
+.kh-button {
+    background: #0081ff;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button:hover {
+        opacity: .75;
+    }
+
+.kh-button-cancel {
+    background-color: transparent;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: black;
+    border: grey solid 1px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button-cancel:hover {
+        opacity: .75;
+    }
+
+.kh-disabled-button {
+    background: grey;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+}
+
+.kh-select {
+    border: 1px solid grey;
+    border-radius: 10px;
+    padding: 5px;
+    margin-left: 15px;
+}

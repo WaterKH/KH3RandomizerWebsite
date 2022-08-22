@@ -24,28 +24,42 @@
     <br />
 
     <div class="hints-subsection @(this.HintSelectionType.Equals("None") ? "spoiler-overlay" : "")">
-        <CascadingValue Value="this">
-            <SearchComponent SelectedChecks="@this.importantChecks" SearchLimit="25" SelectedTitle="Important Checks" SearchTitle="Available Checks" ActionType="Options" StateUpdate="@this.RefreshState" UseDisplayValues="true"></SearchComponent>
-        </CascadingValue>
-
-        <br />
-        <h4><b>Quick Toggle</b></h4>
-        <div class="row" style="width: 100%;">
-            @foreach (var group in this.checkGroups)
+        <label style="font-size: larger; font-weight: 500;"><b>Hints Included in Secret Reports: </b></label>
+        <div class="selected-check-list">
+            @foreach (var check in this.importantChecks)
             {
-                <div class="col-md-2">
-                    <a class="rounded-selector a-tag-selector @(this.CheckGroupEnabled(group.Key) ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { ToggleCheckGroup(group.Key); })" @onclick:preventDefault>@group.Key</a>
-                </div>
+                <span class="check options-check" @onclick="@(() => this.RemoveSelectedCheck(check))">@check.ValueIdToDisplay() <i class="bi bi-dash-lg check-icon"></i></span>
             }
         </div>
+        
+        <hr />
+
+        @if (this.importantChecks.Count < this.limit)
+        {
+            <div class="row" style="width: 100%; margin-top: 25px;">
+                <div class="col-md-2">
+                    <label style="margin-top: 8px; font-size: larger; font-weight: 500;"><b>Default Hint Toggles: </b></label>
+                </div>
+
+                @foreach (var group in this.checkGroups)
+                {
+                    <div class="col-md-2">
+                        <a class="rounded-selector a-tag-selector @(this.CheckGroupEnabled(group.Key) ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { ToggleCheckGroup(group.Key); })" @onclick:preventDefault>@group.Key</a>
+                    </div>
+                }
+            </div>
+
+            <SearchComponent SelectedChecks="@this.importantChecks" SearchLimit="25" AddSelected="@((check) => this.AddSelectedCheck(check))"></SearchComponent>
+        }
+        else
+        {
+            <label style="font-size: larger; font-weight: 500;">There is a limit of @(this.limit) hints.</label>
+        }
     </div>
 
-    <div class="sub-section-text">In Collaboration With SwiftShadow</div>
-
     <br />
-
     <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Quality of Life...</button>
-    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to Review...</button>
+    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to Clear Conditions...</button>
 </div>
 
 @code {
@@ -55,6 +69,8 @@
     [Parameter] public EventCallback<List<string>> UpdateImportantChecks { get; set; }
     [Parameter] public string HintSelectionType { get; set; }
     [Parameter] public List<string> ImportantChecks { get; set; }
+
+    private int limit = 60;
 
     private List<string> importantChecks = new List<string>();
 
@@ -94,6 +110,27 @@
         this.selectedHintType = selection;
 
         this.UpdateHintSelection.InvokeAsync(this.selectedHintType);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void AddSelectedCheck(string check)
+    {
+        if (!this.importantChecks.Contains(check))
+        {
+            this.importantChecks.Add(check);
+        }
+    }
+
+    private void RemoveSelectedCheck(string check)
+    {
+        if (this.importantChecks.Contains(check))
+        {
+            this.importantChecks.Remove(check);
+        }
 
         InvokeAsync(() =>
         {
@@ -145,10 +182,5 @@
                 }
             }
         }
-    }
-
-    public void RefreshState()
-    {
-        this.StateHasChanged();
     }
 }

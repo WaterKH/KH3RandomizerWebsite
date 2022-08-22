@@ -16,3 +16,70 @@
     margin-left: 25px;
     top: -2px;
 }
+
+.kh-button {
+    background: #00c0fa;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button:hover {
+        opacity: .75;
+    }
+
+.kh-button-cancel {
+    background-color: transparent;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: black;
+    border: grey solid 1px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button-cancel:hover {
+        opacity: .75;
+    }
+
+.kh-button-remove {
+    background-color: #e53d3d;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: grey solid 1px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button-remove:hover {
+        opacity: .75;
+    }
+
+.kh-input {
+    background: #0081ff;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.kh-inputfield {
+    padding: 5px 15px;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: 1px solid #d1d1d1;
+    width: 100%;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    text-align: left;
+}
+
+input:focus {
+    border: unset;
+}

@@ -1,0 +1,149 @@
+﻿@inject KH3Randomizer.Data.RandomizerService RandomizerService
+
+<div class="clear-conditions-section">
+    <div class="clear-conditions-selection">
+        <div class="row" style="width: 100%;">
+            <div class="col-md-3">
+                <label style="margin-top: 8px; font-size: larger; font-weight: 500;"><b>Default Clear Conditions: </b></label>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedDefaultClearCondition == "3 Proofs" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateSelectedClearCondition("3 Proofs"); })" @onclick:preventDefault>The 3 Proofs</a>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedDefaultClearCondition == "7 Heart Pieces" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateSelectedClearCondition("7 Heart Pieces"); })" @onclick:preventDefault>Kairi's 7 Heart Pieces</a>
+            </div>
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(selectedDefaultClearCondition == "Custom" ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { UpdateSelectedClearCondition("Custom"); })" @onclick:preventDefault>Custom</a>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="clear-conditions-subsection">
+        <label style="font-size: larger; font-weight: 500;"><b>Clear Conditions to Unlock Scala Ad Caelum Portal: </b></label>
+        <div class="row selected-check-list">
+            @foreach (var (conditionName, conditionValue) in this.ClearConditionList)
+            {
+                <div class="col-md-3 condition-bubble">
+                    <div class="row" style="align-items: center; padding: 5px;">
+                        <div class="col-md-7">
+                            <label style="margin: 0px;">@conditionName.ValueIdToDisplay(): </label>
+                        </div>
+
+                        <div class="col-md-4">
+                            <input class="kh-inputfield" type="number" value="@conditionValue" @onchange="@((updatedValue) => UpdateCondition(conditionName, updatedValue.Value.ToString()))" />
+                        </div>
+
+                        <span @onclick="@(() => this.RemoveSelectedCondition(conditionName))" style="cursor: pointer;"><i class="bi bi-trash" style="color: #a42828; font-size: x-large;"></i></span>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <hr />
+
+        <SearchComponent SelectedChecks="@this.ClearConditionList.Keys.ToList()" SearchLimit="25" AddSelected="@((condition) => this.AddSelectedCondition(condition))"></SearchComponent>
+    </div>
+
+    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Hints...</button>
+    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to @(this.IsPlando ? "Options" : "Review")...</button>
+</div>
+
+@code {
+    [Parameter] public EventCallback<string> BackTo { get; set; }
+    [Parameter] public EventCallback<string> ContinueTo { get; set; }
+    [Parameter] public EventCallback<string> UpdateSelectedClearConditionType { get; set; }
+    [Parameter] public EventCallback<Dictionary<string,  int>> UpdateClearConditions { get; set; }
+    [Parameter] public string SelectedClearConditionType { get; set; }
+    [Parameter] public Dictionary<string, int> ClearConditionList { get; set; }
+    [Parameter] public bool IsPlando { get; set; }
+
+    private string selectedDefaultClearCondition = "3 Proofs";
+
+    protected override void OnInitialized()
+    {
+        this.selectedDefaultClearCondition = this.SelectedClearConditionType;
+    }
+
+    private void UpdateSelectedClearCondition(string selection)
+    {
+        this.selectedDefaultClearCondition = selection;
+
+        if (this.selectedDefaultClearCondition == "3 Proofs")
+        {
+            this.ClearConditionList = new Dictionary<string, int> {
+                { "KEY_ITEM15\u0000", 1 }, { "KEY_ITEM16\u0000", 1 }, { "KEY_ITEM14\u0000", 1 }
+            };
+        }
+        else if (this.selectedDefaultClearCondition == "7 Heart Pieces")
+        {
+            this.ClearConditionList = new Dictionary<string, int> {
+                { "KEY_ITEM17\u0000", 7 }
+            };
+        }
+        else
+        {
+            this.ClearConditionList = new Dictionary<string, int>();
+        }
+
+        this.UpdateSelectedClearConditionType.InvokeAsync(this.selectedDefaultClearCondition);
+        this.UpdateClearConditions.InvokeAsync(this.ClearConditionList);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void AddSelectedCondition(string condition)
+    {
+        if (!this.ClearConditionList.ContainsKey(condition))
+        {
+            this.ClearConditionList.Add(condition, 1);
+        }
+
+        this.selectedDefaultClearCondition = "Custom";
+
+        this.UpdateSelectedClearConditionType.InvokeAsync(this.selectedDefaultClearCondition);
+        this.UpdateClearConditions.InvokeAsync(this.ClearConditionList);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void RemoveSelectedCondition(string condition)
+    {
+        if (this.ClearConditionList.ContainsKey(condition))
+        {
+            this.ClearConditionList.Remove(condition);
+        }
+
+        this.selectedDefaultClearCondition = "Custom";
+
+        this.UpdateSelectedClearConditionType.InvokeAsync(this.selectedDefaultClearCondition);
+        this.UpdateClearConditions.InvokeAsync(this.ClearConditionList);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void UpdateCondition(string condition, string updatedValue)
+    {
+        if (string.IsNullOrEmpty(updatedValue))
+            return;
+
+        this.ClearConditionList[condition] = int.Parse(updatedValue);
+
+        this.UpdateClearConditions.InvokeAsync(this.ClearConditionList);
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

@@ -1364,7 +1364,7 @@
     },
     "Vbonus_006": {
       "Sora_Bonus1": "ETresVictoryBonusKind::HP_UP10\u0000",
-      "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
+      "Sora_Ability1": "KEY_ITEM17\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
@@ -1417,7 +1417,7 @@
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
     "Vbonus_017": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
+      "Sora_Bonus1": "KEY_ITEM17\u0000",
       "Sora_Ability1": "ETresAbilityKind::AIR_RECOVERY\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
@@ -1442,7 +1442,7 @@
     },
     "Vbonus_021": {
       "Sora_Bonus1": "ETresVictoryBonusKind::MELEM_THUNDER\u0000",
-      "Sora_Ability1": "ETresAbilityKind::NONE\u0000",
+      "Sora_Ability1": "KEY_ITEM17\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
@@ -1471,7 +1471,7 @@
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
     "Vbonus_026": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
+      "Sora_Bonus1": "KEY_ITEM17\u0000",
       "Sora_Ability1": "ETresAbilityKind::GUARD_COUNTER\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
@@ -1501,7 +1501,7 @@
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
     "Vbonus_032": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
+      "Sora_Bonus1": "KEY_ITEM17\u0000",
       "Sora_Ability1": "ETresAbilityKind::REVENGEIMPACT\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
@@ -1555,7 +1555,7 @@
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
     "Vbonus_041": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
+      "Sora_Bonus1": "KEY_ITEM17\u0000",
       "Sora_Ability1": "ETresAbilityKind::AIR_ROLL_BEAT\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
@@ -1615,7 +1615,7 @@
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
     },
     "Vbonus_052": {
-      "Sora_Bonus1": "ETresVictoryBonusKind::NONE\u0000",
+      "Sora_Bonus1": "KEY_ITEM17\u0000",
       "Sora_Ability1": "ETresAbilityKind::FOCUS_ASPIR\u0000",
       "Sora_Bonus2": "ETresVictoryBonusKind::NONE\u0000",
       "Sora_Ability2": "ETresAbilityKind::NONE\u0000"
@@ -5423,6 +5423,3390 @@
     },
     "IS_87": {
       "Reward": "MAT_ITEM12\u0000"
+    }
+  },
+  "BaseCharStat": {
+    "Sora": {
+      "MaxHitPoint": "90",
+      "MaxMagicPoint": "100",
+      "MaxFocusPoint": "100",
+      "AttackPower": "2",
+      "MagicPower": "6",
+      "DefensePower": "2",
+      "AbilityPoint": "2"
+    }
+  },
+  "LevelUpStat": {
+    "1": {
+      "AttackPower": "11",
+      "MagicPower": "12",
+      "DefensePower": "8",
+      "AbilityPoint": "28"
+    },
+    "2": {
+      "AttackPower": "11",
+      "MagicPower": "13",
+      "DefensePower": "9",
+      "AbilityPoint": "28"
+    },
+    "3": {
+      "AttackPower": "12",
+      "MagicPower": "13",
+      "DefensePower": "9",
+      "AbilityPoint": "30"
+    },
+    "4": {
+      "AttackPower": "12",
+      "MagicPower": "14",
+      "DefensePower": "9",
+      "AbilityPoint": "31"
+    },
+    "5": {
+      "AttackPower": "12",
+      "MagicPower": "14",
+      "DefensePower": "10",
+      "AbilityPoint": "33"
+    },
+    "6": {
+      "AttackPower": "13",
+      "MagicPower": "14",
+      "DefensePower": "10",
+      "AbilityPoint": "33"
+    },
+    "7": {
+      "AttackPower": "13",
+      "MagicPower": "16",
+      "DefensePower": "11",
+      "AbilityPoint": "34"
+    },
+    "8": {
+      "AttackPower": "14",
+      "MagicPower": "16",
+      "DefensePower": "11",
+      "AbilityPoint": "36"
+    },
+    "9": {
+      "AttackPower": "14",
+      "MagicPower": "17",
+      "DefensePower": "12",
+      "AbilityPoint": "36"
+    },
+    "10": {
+      "AttackPower": "15",
+      "MagicPower": "17",
+      "DefensePower": "12",
+      "AbilityPoint": "40"
+    },
+    "11": {
+      "AttackPower": "15",
+      "MagicPower": "18",
+      "DefensePower": "13",
+      "AbilityPoint": "40"
+    },
+    "12": {
+      "AttackPower": "16",
+      "MagicPower": "18",
+      "DefensePower": "13",
+      "AbilityPoint": "43"
+    },
+    "13": {
+      "AttackPower": "16",
+      "MagicPower": "19",
+      "DefensePower": "14",
+      "AbilityPoint": "46"
+    },
+    "14": {
+      "AttackPower": "17",
+      "MagicPower": "19",
+      "DefensePower": "15",
+      "AbilityPoint": "46"
+    },
+    "15": {
+      "AttackPower": "17",
+      "MagicPower": "20",
+      "DefensePower": "15",
+      "AbilityPoint": "50"
+    },
+    "16": {
+      "AttackPower": "18",
+      "MagicPower": "20",
+      "DefensePower": "16",
+      "AbilityPoint": "50"
+    },
+    "17": {
+      "AttackPower": "18",
+      "MagicPower": "21",
+      "DefensePower": "16",
+      "AbilityPoint": "54"
+    },
+    "18": {
+      "AttackPower": "19",
+      "MagicPower": "21",
+      "DefensePower": "17",
+      "AbilityPoint": "54"
+    },
+    "19": {
+      "AttackPower": "20",
+      "MagicPower": "22",
+      "DefensePower": "17",
+      "AbilityPoint": "58"
+    },
+    "20": {
+      "AttackPower": "20",
+      "MagicPower": "22",
+      "DefensePower": "18",
+      "AbilityPoint": "62"
+    },
+    "21": {
+      "AttackPower": "21",
+      "MagicPower": "23",
+      "DefensePower": "18",
+      "AbilityPoint": "62"
+    },
+    "22": {
+      "AttackPower": "21",
+      "MagicPower": "24",
+      "DefensePower": "18",
+      "AbilityPoint": "64"
+    },
+    "23": {
+      "AttackPower": "22",
+      "MagicPower": "25",
+      "DefensePower": "19",
+      "AbilityPoint": "64"
+    },
+    "24": {
+      "AttackPower": "22",
+      "MagicPower": "25",
+      "DefensePower": "20",
+      "AbilityPoint": "66"
+    },
+    "25": {
+      "AttackPower": "23",
+      "MagicPower": "25",
+      "DefensePower": "21",
+      "AbilityPoint": "66"
+    },
+    "26": {
+      "AttackPower": "23",
+      "MagicPower": "26",
+      "DefensePower": "21",
+      "AbilityPoint": "68"
+    },
+    "27": {
+      "AttackPower": "24",
+      "MagicPower": "26",
+      "DefensePower": "22",
+      "AbilityPoint": "68"
+    },
+    "28": {
+      "AttackPower": "24",
+      "MagicPower": "27",
+      "DefensePower": "22",
+      "AbilityPoint": "72"
+    },
+    "29": {
+      "AttackPower": "25",
+      "MagicPower": "27",
+      "DefensePower": "23",
+      "AbilityPoint": "72"
+    },
+    "30": {
+      "AttackPower": "25",
+      "MagicPower": "28",
+      "DefensePower": "23",
+      "AbilityPoint": "76"
+    },
+    "31": {
+      "AttackPower": "26",
+      "MagicPower": "28",
+      "DefensePower": "24",
+      "AbilityPoint": "76"
+    },
+    "32": {
+      "AttackPower": "26",
+      "MagicPower": "29",
+      "DefensePower": "24",
+      "AbilityPoint": "78"
+    },
+    "33": {
+      "AttackPower": "27",
+      "MagicPower": "29",
+      "DefensePower": "25",
+      "AbilityPoint": "80"
+    },
+    "34": {
+      "AttackPower": "27",
+      "MagicPower": "30",
+      "DefensePower": "25",
+      "AbilityPoint": "80"
+    },
+    "35": {
+      "AttackPower": "28",
+      "MagicPower": "30",
+      "DefensePower": "26",
+      "AbilityPoint": "82"
+    },
+    "36": {
+      "AttackPower": "28",
+      "MagicPower": "31",
+      "DefensePower": "26",
+      "AbilityPoint": "82"
+    },
+    "37": {
+      "AttackPower": "29",
+      "MagicPower": "31",
+      "DefensePower": "27",
+      "AbilityPoint": "86"
+    },
+    "38": {
+      "AttackPower": "30",
+      "MagicPower": "32",
+      "DefensePower": "27",
+      "AbilityPoint": "86"
+    },
+    "39": {
+      "AttackPower": "30",
+      "MagicPower": "32",
+      "DefensePower": "28",
+      "AbilityPoint": "90"
+    },
+    "40": {
+      "AttackPower": "31",
+      "MagicPower": "33",
+      "DefensePower": "28",
+      "AbilityPoint": "90"
+    },
+    "41": {
+      "AttackPower": "31",
+      "MagicPower": "34",
+      "DefensePower": "29",
+      "AbilityPoint": "94"
+    },
+    "42": {
+      "AttackPower": "32",
+      "MagicPower": "34",
+      "DefensePower": "29",
+      "AbilityPoint": "98"
+    },
+    "43": {
+      "AttackPower": "32",
+      "MagicPower": "35",
+      "DefensePower": "30",
+      "AbilityPoint": "102"
+    },
+    "44": {
+      "AttackPower": "33",
+      "MagicPower": "35",
+      "DefensePower": "31",
+      "AbilityPoint": "102"
+    },
+    "45": {
+      "AttackPower": "33",
+      "MagicPower": "36",
+      "DefensePower": "32",
+      "AbilityPoint": "106"
+    },
+    "46": {
+      "AttackPower": "34",
+      "MagicPower": "36",
+      "DefensePower": "32",
+      "AbilityPoint": "110"
+    },
+    "47": {
+      "AttackPower": "34",
+      "MagicPower": "37",
+      "DefensePower": "33",
+      "AbilityPoint": "110"
+    },
+    "48": {
+      "AttackPower": "35",
+      "MagicPower": "37",
+      "DefensePower": "33",
+      "AbilityPoint": "114"
+    },
+    "49": {
+      "AttackPower": "35",
+      "MagicPower": "38",
+      "DefensePower": "34",
+      "AbilityPoint": "114"
+    },
+    "50": {
+      "AttackPower": "36",
+      "MagicPower": "38",
+      "DefensePower": "34",
+      "AbilityPoint": "118"
+    },
+    "51": {
+      "AttackPower": "36",
+      "MagicPower": "39",
+      "DefensePower": "34",
+      "AbilityPoint": "120"
+    },
+    "52": {
+      "AttackPower": "37",
+      "MagicPower": "39",
+      "DefensePower": "35",
+      "AbilityPoint": "120"
+    },
+    "53": {
+      "AttackPower": "37",
+      "MagicPower": "40",
+      "DefensePower": "35",
+      "AbilityPoint": "124"
+    },
+    "54": {
+      "AttackPower": "38",
+      "MagicPower": "40",
+      "DefensePower": "36",
+      "AbilityPoint": "124"
+    },
+    "55": {
+      "AttackPower": "38",
+      "MagicPower": "41",
+      "DefensePower": "36",
+      "AbilityPoint": "128"
+    },
+    "56": {
+      "AttackPower": "39",
+      "MagicPower": "41",
+      "DefensePower": "37",
+      "AbilityPoint": "128"
+    },
+    "57": {
+      "AttackPower": "40",
+      "MagicPower": "42",
+      "DefensePower": "37",
+      "AbilityPoint": "130"
+    },
+    "58": {
+      "AttackPower": "40",
+      "MagicPower": "42",
+      "DefensePower": "38",
+      "AbilityPoint": "130"
+    },
+    "59": {
+      "AttackPower": "41",
+      "MagicPower": "43",
+      "DefensePower": "38",
+      "AbilityPoint": "132"
+    },
+    "60": {
+      "AttackPower": "41",
+      "MagicPower": "44",
+      "DefensePower": "39",
+      "AbilityPoint": "134"
+    },
+    "61": {
+      "AttackPower": "42",
+      "MagicPower": "44",
+      "DefensePower": "39",
+      "AbilityPoint": "134"
+    },
+    "62": {
+      "AttackPower": "42",
+      "MagicPower": "45",
+      "DefensePower": "40",
+      "AbilityPoint": "136"
+    },
+    "63": {
+      "AttackPower": "43",
+      "MagicPower": "45",
+      "DefensePower": "41",
+      "AbilityPoint": "138"
+    },
+    "64": {
+      "AttackPower": "43",
+      "MagicPower": "46",
+      "DefensePower": "41",
+      "AbilityPoint": "138"
+    },
+    "65": {
+      "AttackPower": "44",
+      "MagicPower": "46",
+      "DefensePower": "42",
+      "AbilityPoint": "140"
+    },
+    "66": {
+      "AttackPower": "44",
+      "MagicPower": "47",
+      "DefensePower": "42",
+      "AbilityPoint": "142"
+    },
+    "67": {
+      "AttackPower": "45",
+      "MagicPower": "47",
+      "DefensePower": "43",
+      "AbilityPoint": "144"
+    },
+    "68": {
+      "AttackPower": "45",
+      "MagicPower": "48",
+      "DefensePower": "43",
+      "AbilityPoint": "144"
+    },
+    "69": {
+      "AttackPower": "46",
+      "MagicPower": "48",
+      "DefensePower": "44",
+      "AbilityPoint": "146"
+    },
+    "70": {
+      "AttackPower": "46",
+      "MagicPower": "49",
+      "DefensePower": "44",
+      "AbilityPoint": "148"
+    },
+    "71": {
+      "AttackPower": "47",
+      "MagicPower": "49",
+      "DefensePower": "45",
+      "AbilityPoint": "150"
+    },
+    "72": {
+      "AttackPower": "47",
+      "MagicPower": "50",
+      "DefensePower": "45",
+      "AbilityPoint": "150"
+    },
+    "73": {
+      "AttackPower": "48",
+      "MagicPower": "50",
+      "DefensePower": "46",
+      "AbilityPoint": "152"
+    },
+    "74": {
+      "AttackPower": "48",
+      "MagicPower": "51",
+      "DefensePower": "46",
+      "AbilityPoint": "154"
+    },
+    "75": {
+      "AttackPower": "49",
+      "MagicPower": "51",
+      "DefensePower": "47",
+      "AbilityPoint": "156"
+    },
+    "76": {
+      "AttackPower": "50",
+      "MagicPower": "52",
+      "DefensePower": "47",
+      "AbilityPoint": "156"
+    },
+    "77": {
+      "AttackPower": "50",
+      "MagicPower": "52",
+      "DefensePower": "48",
+      "AbilityPoint": "158"
+    },
+    "78": {
+      "AttackPower": "51",
+      "MagicPower": "53",
+      "DefensePower": "48",
+      "AbilityPoint": "158"
+    },
+    "79": {
+      "AttackPower": "51",
+      "MagicPower": "54",
+      "DefensePower": "49",
+      "AbilityPoint": "160"
+    },
+    "80": {
+      "AttackPower": "52",
+      "MagicPower": "54",
+      "DefensePower": "49",
+      "AbilityPoint": "162"
+    },
+    "81": {
+      "AttackPower": "52",
+      "MagicPower": "55",
+      "DefensePower": "50",
+      "AbilityPoint": "164"
+    },
+    "82": {
+      "AttackPower": "53",
+      "MagicPower": "55",
+      "DefensePower": "51",
+      "AbilityPoint": "164"
+    },
+    "83": {
+      "AttackPower": "53",
+      "MagicPower": "56",
+      "DefensePower": "51",
+      "AbilityPoint": "166"
+    },
+    "84": {
+      "AttackPower": "54",
+      "MagicPower": "56",
+      "DefensePower": "52",
+      "AbilityPoint": "168"
+    },
+    "85": {
+      "AttackPower": "54",
+      "MagicPower": "57",
+      "DefensePower": "52",
+      "AbilityPoint": "168"
+    },
+    "86": {
+      "AttackPower": "55",
+      "MagicPower": "57",
+      "DefensePower": "53",
+      "AbilityPoint": "170"
+    },
+    "87": {
+      "AttackPower": "55",
+      "MagicPower": "58",
+      "DefensePower": "53",
+      "AbilityPoint": "170"
+    },
+    "88": {
+      "AttackPower": "56",
+      "MagicPower": "58",
+      "DefensePower": "54",
+      "AbilityPoint": "172"
+    },
+    "89": {
+      "AttackPower": "56",
+      "MagicPower": "59",
+      "DefensePower": "54",
+      "AbilityPoint": "172"
+    },
+    "90": {
+      "AttackPower": "57",
+      "MagicPower": "59",
+      "DefensePower": "55",
+      "AbilityPoint": "174"
+    },
+    "91": {
+      "AttackPower": "57",
+      "MagicPower": "60",
+      "DefensePower": "55",
+      "AbilityPoint": "174"
+    },
+    "92": {
+      "AttackPower": "58",
+      "MagicPower": "60",
+      "DefensePower": "56",
+      "AbilityPoint": "176"
+    },
+    "93": {
+      "AttackPower": "58",
+      "MagicPower": "61",
+      "DefensePower": "56",
+      "AbilityPoint": "176"
+    },
+    "94": {
+      "AttackPower": "59",
+      "MagicPower": "61",
+      "DefensePower": "57",
+      "AbilityPoint": "178"
+    },
+    "95": {
+      "AttackPower": "60",
+      "MagicPower": "62",
+      "DefensePower": "57",
+      "AbilityPoint": "178"
+    },
+    "96": {
+      "AttackPower": "60",
+      "MagicPower": "62",
+      "DefensePower": "58",
+      "AbilityPoint": "178"
+    },
+    "97": {
+      "AttackPower": "61",
+      "MagicPower": "63",
+      "DefensePower": "58",
+      "AbilityPoint": "180"
+    },
+    "98": {
+      "AttackPower": "61",
+      "MagicPower": "64",
+      "DefensePower": "59",
+      "AbilityPoint": "180"
+    },
+    "99": {
+      "AttackPower": "62",
+      "MagicPower": "64",
+      "DefensePower": "59",
+      "AbilityPoint": "180"
+    }
+  },
+  "WeaponEnhanceStat": {
+    "IW_0": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_1": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_2": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_3": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_4": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_5": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_6": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_7": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_8": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_9": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_10": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_11": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_12": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_13": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_14": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_15": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_16": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_17": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_18": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_19": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_20": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_21": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_22": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_23": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_24": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_25": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_26": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_27": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_28": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_29": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_30": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_31": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_32": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_33": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_34": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_35": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_36": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_37": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_38": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_39": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_40": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_41": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_42": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_43": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_44": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_45": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_46": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_47": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_48": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_49": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_50": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_51": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_52": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_53": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_54": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_55": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_56": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_57": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_58": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_59": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_60": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_61": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_62": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_63": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_64": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_65": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_66": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_67": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_68": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_69": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_70": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_71": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_72": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_73": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_74": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_75": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_76": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_77": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_78": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_79": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_80": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_81": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_82": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_83": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_84": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_85": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_86": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_87": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_88": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_89": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_90": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_91": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_92": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_93": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_94": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_95": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_96": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_97": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_98": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_99": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_100": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_101": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_102": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_103": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_104": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_105": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_106": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_107": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_108": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_109": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_110": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_111": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_112": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_113": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_114": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_115": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_116": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_117": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_118": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_119": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_120": {
+      "AttackPlus": "1",
+      "MagicPlus": "1"
+    },
+    "IW_121": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_122": {
+      "AttackPlus": "1",
+      "MagicPlus": "1"
+    },
+    "IW_123": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_124": {
+      "AttackPlus": "1",
+      "MagicPlus": "1"
+    },
+    "IW_125": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_126": {
+      "AttackPlus": "1",
+      "MagicPlus": "1"
+    },
+    "IW_127": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_128": {
+      "AttackPlus": "1",
+      "MagicPlus": "1"
+    },
+    "IW_129": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_150": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_151": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_152": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_153": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_154": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_155": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_156": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_157": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_158": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_159": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_160": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_161": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_162": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_163": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_164": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_165": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_166": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_167": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_168": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_169": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_170": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_171": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_172": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_173": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_174": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_175": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_176": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_177": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_178": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_179": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_180": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_181": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_182": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_183": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_184": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_185": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_186": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_187": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    },
+    "IW_188": {
+      "AttackPlus": "0",
+      "MagicPlus": "1"
+    },
+    "IW_189": {
+      "AttackPlus": "1",
+      "MagicPlus": "0"
+    }
+  },
+  "EquipItemStat": {
+    "I03001": {
+      "AP": "0",
+      "AttackPlus": "4",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03002": {
+      "AP": "0",
+      "AttackPlus": "5",
+      "MagicPlus": "2",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03003": {
+      "AP": "0",
+      "AttackPlus": "3",
+      "MagicPlus": "5",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03004": {
+      "AP": "0",
+      "AttackPlus": "5",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03005": {
+      "AP": "0",
+      "AttackPlus": "2",
+      "MagicPlus": "6",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03006": {
+      "AP": "0",
+      "AttackPlus": "6",
+      "MagicPlus": "2",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03007": {
+      "AP": "0",
+      "AttackPlus": "3",
+      "MagicPlus": "6",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03008": {
+      "AP": "0",
+      "AttackPlus": "4",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03009": {
+      "AP": "0",
+      "AttackPlus": "5",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03010": {
+      "AP": "0",
+      "AttackPlus": "6",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03011": {
+      "AP": "0",
+      "AttackPlus": "4",
+      "MagicPlus": "6",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03012": {
+      "AP": "0",
+      "AttackPlus": "6",
+      "MagicPlus": "9",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03013": {
+      "AP": "0",
+      "AttackPlus": "7",
+      "MagicPlus": "7",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03014": {
+      "AP": "0",
+      "AttackPlus": "8",
+      "MagicPlus": "6",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03015": {
+      "AP": "0",
+      "AttackPlus": "8",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03018": {
+      "AP": "0",
+      "AttackPlus": "4",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I03019": {
+      "AP": "0",
+      "AttackPlus": "4",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04001": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "20",
+      "AttrResistWater": "20",
+      "AttrResistAero": "20",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04002": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "20",
+      "AttrResistBlizzard": "20",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "20",
+      "AttrResistNoType": "0"
+    },
+    "I04003": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04004": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04005": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04006": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04007": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "5",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04008": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "5",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "10",
+      "AttrResistBlizzard": "10",
+      "AttrResistThunder": "10",
+      "AttrResistWater": "10",
+      "AttrResistAero": "10",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04009": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "6",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04010": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "6",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "10",
+      "AttrResistBlizzard": "10",
+      "AttrResistThunder": "10",
+      "AttrResistWater": "10",
+      "AttrResistAero": "10",
+      "AttrResistDark": "10",
+      "AttrResistNoType": "0"
+    },
+    "I04011": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "20",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04012": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "30",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04013": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "5",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "35",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04014": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "50",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04015": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "20",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04016": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "25",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04017": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "30",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04018": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "50",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04019": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "20",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04020": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "30",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04021": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "5",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "35",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04022": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "50",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04023": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "25",
+      "AttrResistNoType": "0"
+    },
+    "I04024": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "30",
+      "AttrResistNoType": "0"
+    },
+    "I04025": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "5",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "35",
+      "AttrResistNoType": "0"
+    },
+    "I04026": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "50",
+      "AttrResistNoType": "0"
+    },
+    "I04027": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "30",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04028": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "20",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04029": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "50",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04030": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "20",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04031": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "30",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04032": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "50",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04033": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "15",
+      "AttrResistBlizzard": "15",
+      "AttrResistThunder": "15",
+      "AttrResistWater": "15",
+      "AttrResistAero": "15",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04034": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "20",
+      "AttrResistBlizzard": "20",
+      "AttrResistThunder": "20",
+      "AttrResistWater": "20",
+      "AttrResistAero": "20",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04035": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "5",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "20",
+      "AttrResistBlizzard": "20",
+      "AttrResistThunder": "20",
+      "AttrResistWater": "20",
+      "AttrResistAero": "20",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04036": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "20",
+      "AttrResistBlizzard": "20",
+      "AttrResistThunder": "20",
+      "AttrResistWater": "20",
+      "AttrResistAero": "20",
+      "AttrResistDark": "20",
+      "AttrResistNoType": "0"
+    },
+    "I04037": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "30",
+      "AttrResistBlizzard": "30",
+      "AttrResistThunder": "30",
+      "AttrResistWater": "30",
+      "AttrResistAero": "30",
+      "AttrResistDark": "30",
+      "AttrResistNoType": "0"
+    },
+    "I04038": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "25",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04039": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "5",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "35",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04040": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "35",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04041": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "20",
+      "AttrResistNoType": "0"
+    },
+    "I04042": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "15",
+      "AttrResistBlizzard": "15",
+      "AttrResistThunder": "15",
+      "AttrResistWater": "15",
+      "AttrResistAero": "15",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04043": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "20",
+      "AttrResistBlizzard": "20",
+      "AttrResistThunder": "20",
+      "AttrResistWater": "20",
+      "AttrResistAero": "20",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04044": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "4",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "40",
+      "AttrResistBlizzard": "40",
+      "AttrResistThunder": "40",
+      "AttrResistWater": "40",
+      "AttrResistAero": "40",
+      "AttrResistDark": "40",
+      "AttrResistNoType": "0"
+    },
+    "I04045": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "20",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "10",
+      "AttrResistNoType": "0"
+    },
+    "I04046": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "20",
+      "AttrResistAero": "0",
+      "AttrResistDark": "10",
+      "AttrResistNoType": "0"
+    },
+    "I04047": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "20",
+      "AttrResistDark": "10",
+      "AttrResistNoType": "0"
+    },
+    "I04048": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "20",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "10",
+      "AttrResistNoType": "0"
+    },
+    "I04049": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "20",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "10",
+      "AttrResistNoType": "0"
+    },
+    "I04050": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04051": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "3",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I04052": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "7",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "20",
+      "AttrResistNoType": "0"
+    },
+    "I05001": {
+      "AP": "6",
+      "AttackPlus": "3",
+      "MagicPlus": "2",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05002": {
+      "AP": "8",
+      "AttackPlus": "2",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05003": {
+      "AP": "10",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05004": {
+      "AP": "14",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05005": {
+      "AP": "20",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05006": {
+      "AP": "24",
+      "AttackPlus": "2",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05007": {
+      "AP": "30",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05008": {
+      "AP": "36",
+      "AttackPlus": "2",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05009": {
+      "AP": "20",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05010": {
+      "AP": "40",
+      "AttackPlus": "2",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05011": {
+      "AP": "80",
+      "AttackPlus": "3",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05012": {
+      "AP": "2",
+      "AttackPlus": "2",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05013": {
+      "AP": "4",
+      "AttackPlus": "3",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05014": {
+      "AP": "6",
+      "AttackPlus": "4",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05015": {
+      "AP": "8",
+      "AttackPlus": "5",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05016": {
+      "AP": "10",
+      "AttackPlus": "6",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05017": {
+      "AP": "2",
+      "AttackPlus": "0",
+      "MagicPlus": "2",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05018": {
+      "AP": "4",
+      "AttackPlus": "0",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05019": {
+      "AP": "6",
+      "AttackPlus": "0",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05020": {
+      "AP": "8",
+      "AttackPlus": "0",
+      "MagicPlus": "5",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05021": {
+      "AP": "10",
+      "AttackPlus": "0",
+      "MagicPlus": "5",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05022": {
+      "AP": "5",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05023": {
+      "AP": "10",
+      "AttackPlus": "2",
+      "MagicPlus": "2",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05024": {
+      "AP": "16",
+      "AttackPlus": "3",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05025": {
+      "AP": "7",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05026": {
+      "AP": "7",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05027": {
+      "AP": "7",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05028": {
+      "AP": "0",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05029": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05030": {
+      "AP": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05031": {
+      "AP": "0",
+      "AttackPlus": "3",
+      "MagicPlus": "5",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05032": {
+      "AP": "6",
+      "AttackPlus": "3",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05033": {
+      "AP": "8",
+      "AttackPlus": "4",
+      "MagicPlus": "2",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05034": {
+      "AP": "6",
+      "AttackPlus": "1",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05035": {
+      "AP": "8",
+      "AttackPlus": "2",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05036": {
+      "AP": "8",
+      "AttackPlus": "2",
+      "MagicPlus": "2",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05037": {
+      "AP": "10",
+      "AttackPlus": "3",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05038": {
+      "AP": "12",
+      "AttackPlus": "4",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05039": {
+      "AP": "16",
+      "AttackPlus": "5",
+      "MagicPlus": "5",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05040": {
+      "AP": "3",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05041": {
+      "AP": "3",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05042": {
+      "AP": "3",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05043": {
+      "AP": "3",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05044": {
+      "AP": "3",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05045": {
+      "AP": "5",
+      "AttackPlus": "2",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05046": {
+      "AP": "4",
+      "AttackPlus": "2",
+      "MagicPlus": "3",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05047": {
+      "AP": "8",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05048": {
+      "AP": "8",
+      "AttackPlus": "1",
+      "MagicPlus": "2",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05049": {
+      "AP": "8",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05050": {
+      "AP": "0",
+      "AttackPlus": "4",
+      "MagicPlus": "4",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05111": {
+      "AP": "15",
+      "AttackPlus": "7",
+      "MagicPlus": "0",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    },
+    "I05112": {
+      "AP": "25",
+      "AttackPlus": "6",
+      "MagicPlus": "6",
+      "DefensePlus": "0",
+      "AttrResistPhysical": "0",
+      "AttrResistFire": "0",
+      "AttrResistBlizzard": "0",
+      "AttrResistThunder": "0",
+      "AttrResistWater": "0",
+      "AttrResistAero": "0",
+      "AttrResistDark": "0",
+      "AttrResistNoType": "0"
+    }
+  },
+  "FoodItemEffectStat": {
+    "FOOD_ITEM01": {
+      "MaxHPPlus": "8",
+      "MaxMPPlus": "2",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM02": {
+      "MaxHPPlus": "10",
+      "MaxMPPlus": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM03": {
+      "MaxHPPlus": "16",
+      "MaxMPPlus": "3",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM04": {
+      "MaxHPPlus": "18",
+      "MaxMPPlus": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM05": {
+      "MaxHPPlus": "18",
+      "MaxMPPlus": "3",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM06": {
+      "MaxHPPlus": "4",
+      "MaxMPPlus": "10",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM07": {
+      "MaxHPPlus": "2",
+      "MaxMPPlus": "18",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM08": {
+      "MaxHPPlus": "2",
+      "MaxMPPlus": "8",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM09": {
+      "MaxHPPlus": "6",
+      "MaxMPPlus": "12",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM10": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "14",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM11": {
+      "MaxHPPlus": "2",
+      "MaxMPPlus": "0",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM12": {
+      "MaxHPPlus": "4",
+      "MaxMPPlus": "2",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM13": {
+      "MaxHPPlus": "8",
+      "MaxMPPlus": "2",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2"
+    },
+    "FOOD_ITEM14": {
+      "MaxHPPlus": "6",
+      "MaxMPPlus": "3",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2"
+    },
+    "FOOD_ITEM15": {
+      "MaxHPPlus": "2",
+      "MaxMPPlus": "3",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM16": {
+      "MaxHPPlus": "4",
+      "MaxMPPlus": "3",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM17": {
+      "MaxHPPlus": "4",
+      "MaxMPPlus": "0",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM18": {
+      "MaxHPPlus": "6",
+      "MaxMPPlus": "0",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM19": {
+      "MaxHPPlus": "8",
+      "MaxMPPlus": "0",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM20": {
+      "MaxHPPlus": "10",
+      "MaxMPPlus": "0",
+      "AttackPlus": "2",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM21": {
+      "MaxHPPlus": "4",
+      "MaxMPPlus": "0",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM22": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "4",
+      "AttackPlus": "0",
+      "MagicPlus": "2",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM23": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "2",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM24": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "6",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM25": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "8",
+      "AttackPlus": "0",
+      "MagicPlus": "2",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM26": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "4",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM27": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "4",
+      "AttackPlus": "1",
+      "MagicPlus": "2",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM28": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "8",
+      "AttackPlus": "1",
+      "MagicPlus": "2",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM29": {
+      "MaxHPPlus": "10",
+      "MaxMPPlus": "4",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM30": {
+      "MaxHPPlus": "12",
+      "MaxMPPlus": "2",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM31": {
+      "MaxHPPlus": "18",
+      "MaxMPPlus": "5",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM32": {
+      "MaxHPPlus": "20",
+      "MaxMPPlus": "2",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM33": {
+      "MaxHPPlus": "20",
+      "MaxMPPlus": "5",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM34": {
+      "MaxHPPlus": "6",
+      "MaxMPPlus": "12",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM35": {
+      "MaxHPPlus": "4",
+      "MaxMPPlus": "20",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM36": {
+      "MaxHPPlus": "4",
+      "MaxMPPlus": "10",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM37": {
+      "MaxHPPlus": "8",
+      "MaxMPPlus": "14",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM38": {
+      "MaxHPPlus": "2",
+      "MaxMPPlus": "16",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM39": {
+      "MaxHPPlus": "4",
+      "MaxMPPlus": "3",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM40": {
+      "MaxHPPlus": "6",
+      "MaxMPPlus": "4",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM41": {
+      "MaxHPPlus": "10",
+      "MaxMPPlus": "4",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2"
+    },
+    "FOOD_ITEM42": {
+      "MaxHPPlus": "8",
+      "MaxMPPlus": "5",
+      "AttackPlus": "0",
+      "MagicPlus": "0",
+      "DefensePlus": "2"
+    },
+    "FOOD_ITEM43": {
+      "MaxHPPlus": "4",
+      "MaxMPPlus": "5",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM44": {
+      "MaxHPPlus": "6",
+      "MaxMPPlus": "5",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM45": {
+      "MaxHPPlus": "6",
+      "MaxMPPlus": "0",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM46": {
+      "MaxHPPlus": "8",
+      "MaxMPPlus": "0",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM47": {
+      "MaxHPPlus": "10",
+      "MaxMPPlus": "0",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM48": {
+      "MaxHPPlus": "12",
+      "MaxMPPlus": "0",
+      "AttackPlus": "2",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM49": {
+      "MaxHPPlus": "6",
+      "MaxMPPlus": "0",
+      "AttackPlus": "1",
+      "MagicPlus": "0",
+      "DefensePlus": "1"
+    },
+    "FOOD_ITEM50": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "6",
+      "AttackPlus": "0",
+      "MagicPlus": "2",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM51": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "4",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM52": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "8",
+      "AttackPlus": "0",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM53": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "10",
+      "AttackPlus": "0",
+      "MagicPlus": "2",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM54": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "6",
+      "AttackPlus": "1",
+      "MagicPlus": "1",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM55": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "6",
+      "AttackPlus": "1",
+      "MagicPlus": "2",
+      "DefensePlus": "0"
+    },
+    "FOOD_ITEM56": {
+      "MaxHPPlus": "0",
+      "MaxMPPlus": "10",
+      "AttackPlus": "1",
+      "MagicPlus": "2",
+      "DefensePlus": "0"
+    }
+  },
+  "EXP": {
+    "EXP": {
+      "Multiplier": "1"
     }
   }
 }

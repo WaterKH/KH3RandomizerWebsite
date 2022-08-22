@@ -1,0 +1,66 @@
+﻿@using UE4DataTableInterpreter.Enums
+@using KH3Randomizer.Models.Stats
+
+@inject RandomizerService RandomizerService
+
+<Table Items="this.LevelUpStats" Context="LevelUpStat" CurrentPage="1">
+    <TableHeader>
+        <th>Level</th>
+        <th>AP</th>
+        <th>Attack</th>
+        <th>Magic</th>
+        <th>Defense</th>
+        <th>Action</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@LevelUpStat.Level</td>
+        <td>@LevelUpStat.AP</td>
+        <td>@LevelUpStat.Attack</td>
+        <td>@LevelUpStat.Magic</td>
+        <td>@LevelUpStat.Defense</td>
+        <td><a href="#" @onclick="() => OpenModal(LevelUpStat)" @onclick:preventDefault>Change</a></td>
+    </RowTemplate>
+</Table>
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public string LevelUpStatName { get; set; }
+
+    [Parameter] public Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>> UpdateStat { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    private List<LevelUpStat> LevelUpStats { get; set; }
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<string>(nameof(this.LevelUpStatName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
+        {
+            this.randomizedOptions = options;
+            this.LevelUpStats = this.RandomizerService.GetAvailableLevelUpStats(value, ref this.randomizedOptions);
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    private void OpenModal(LevelUpStat levelUpStat)
+    {
+        var parameters = new ModalParameters();
+
+        var levelUpStats = new Dictionary<string, string> {
+            { "AbilityPoint", levelUpStat.AP }, { "AttackPower", levelUpStat.Attack }, { "MagicPower", levelUpStat.Magic }, { "DefensePower", levelUpStat.Defense },
+        };
+
+        parameters.Add("Category", DataTableEnum.LevelUpStat);
+        parameters.Add("SubCategory", levelUpStat.Level);
+        parameters.Add("OriginalStats", levelUpStats);
+        parameters.Add("UpdatedStats", levelUpStats.ToDictionary(x => x.Key, y => y.Value));
+
+        parameters.Add("UpdateStat", UpdateStat);
+
+        var options = new ModalOptions { Class = "modal-custom" };
+
+        Modal.Show<ChangeStat>($"Change Level {levelUpStat.Level} Stats", parameters, options);
+    }
+}

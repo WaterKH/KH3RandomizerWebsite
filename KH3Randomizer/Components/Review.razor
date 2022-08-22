@@ -1,16 +1,26 @@
-﻿@using UE4DataTableInterpreter.Enums
-@using Enums;
+﻿@using Enums;
+@using Models.Configuration;
+@using UE4DataTableInterpreter.Enums;
+@using UE4DataTableInterpreter.Models;
 
 @inject RandomizerService RandomizerService
-@inject HintService HintService
 @inject IJSRuntime js
 
 <div class="review-section">
     <div class="review-subsection">
         <div class="review-sub-subsection">
-            <div class="review-header">
-                <h3 for="seed" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #aeecff;"></span><b>Seed Name: </b></h3>
-                <label id="seed" name="seed" style="margin-left: 50px; margin-top: 2px; font-weight: 600;">@(string.IsNullOrEmpty(this.CurrentSeed) ? "The Seed Name is blank." : this.CurrentSeed)</label>
+            <div class="review-header" style="display: unset;">
+                <div class="row">
+                    <div class="col-md-7" style="display: flex;">
+                        <h3 for="seed" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #aeecff;"></span><b>Seed Name: </b></h3>
+                        <label id="seed" name="seed" style="margin-left: 50px; margin-top: 2px; font-weight: 600;">@(string.IsNullOrEmpty(this.CurrentSeed) ? "The Seed Name is blank." : this.CurrentSeed)</label>
+                    </div>
+
+                    <div class="col-md-5" style="display: flex;">
+                        <h3 for="exp" style="font-size: 1.3rem;"><b>EXP Multiplier: </b></h3>
+                        <label id="exp" name="exp" style="margin-left: 50px; margin-top: 2px; font-weight: 600;">@(this.EXPMultiplier)x</label>
+                    </div>
+                </div>
             </div>
 
             <div class="review-content">
@@ -22,7 +32,7 @@
                 <h3 for="pools" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #c9aeff;"></span><b>Pools: </b></h3>
             </div>
             <div class="review-content" style="max-height: 600px; overflow-y: auto;">
-                @if (this.AvailablePools.Where(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Randomize).Count() > 0)
+                @if (this.AvailablePools.Any(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Randomize))
                 {
                     <h4 for="pools" style="font-size: 1.0rem; margin-left: 10px;"><u><b>Randomized: </b></u></h4>
                     @foreach (var pool in this.AvailablePools.Where(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Randomize))
@@ -35,11 +45,11 @@
                     }
                 }
 
-                <br />
-                <br />
-
-                @if (this.AvailablePools.Where(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Replace).Count() > 0)
+                @if (this.AvailablePools.Any(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Replace))
                 {
+                    <br />
+                    <br />
+
                     <h4 for="pools" style="font-size: 1.0rem; margin-left: 10px;"><u><b>Replace: </b></u></h4>
                     @foreach (var pool in this.AvailablePools.Where(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Replace))
                     {
@@ -51,11 +61,11 @@
                     }
                 }
 
-                <br />
-                <br />
-
-                @if (this.AvailablePools.Where(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Vanilla).Count() > 0)
+                @if (this.AvailablePools.Any(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Vanilla))
                 {
+                    <br />
+                    <br />
+
                     <h4 for="pools" style="font-size: 1.0rem; margin-left: 10px;"><u><b>Vanilla: </b></u></h4>
                     @foreach (var pool in this.AvailablePools.Where(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Vanilla))
                     {
@@ -66,27 +76,48 @@
                         </div>
                     }
                 }
+
+                @if (this.AvailablePools.Any(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Balanced))
+                {
+                    <br />
+                    <br />
+
+                    <h4 for="pools" style="font-size: 1.0rem; margin-left: 10px;"><u><b>Balanced: </b></u></h4>
+                    @foreach (var pool in this.AvailablePools.Where(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Balanced))
+                    {
+                        <div style="display: inline-flex;">
+                            <div id="@(pool.Key)_value" style="display: inline;">
+                                <span class="sub-option-bubble" style="@poolColors["Randomize"]">@pool.Key</span>
+                            </div>
+                        </div>
+                    }
+                }
+
+                @if (this.AvailablePools.Any(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Boosted))
+                {
+                    <br />
+                    <br />
+
+                    <h4 for="pools" style="font-size: 1.0rem; margin-left: 10px;"><u><b>Boosted: </b></u></h4>
+                    @foreach (var pool in this.AvailablePools.Where(x => x.Key != "Always On" && x.Value == RandomizeOptionEnum.Boosted))
+                    {
+                        <div style="display: inline-flex;">
+                            <div id="@(pool.Key)_value" style="display: inline;">
+                                <span class="sub-option-bubble" style="@poolColors["Replace"]">@pool.Key</span>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
 
-        @if (this.Exceptions.Where(x => x.Value).Count() > 0 || this.CanBeNone)
+        @if (this.Exceptions.Where(x => x.Value).Count() > 0)
         {
             <div class="review-sub-subsection">
                 <div class="review-header">
                     <h3 for="exceptions" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #f37d9d;"></span><b>Exceptions: </b></h3>
                 </div>
                 <div class="review-content" style="max-height: 600px; overflow-y: auto;">
-                    @if (this.CanBeNone)
-                    {
-                        <div style="display: inline-flex; width: 100%">
-                            <div style="display: inline-flex;">
-                                <div id="canBeNone_value" style="display: inline;">
-                                    <span class="sub-option-bubble" style="background: #f95968;">Can Be None</span>
-                                </div>
-                            </div>
-                        </div>
-                    }
-
                     @foreach (var exception in this.Exceptions.Where(x => x.Value))
                     {
                         <div style="display: inline-flex;">
@@ -178,11 +209,32 @@
                 <div class="review-content" style="max-height: 600px; overflow-y: auto;">
                     <h4 style="font-size: 1.0rem; margin-left: 10px;"><u><b>Hint Selection Type: @this.HintSelectionType</b></u></h4>
 
-                    @foreach (var ic in this.ImportantChecks)
-                    { 
+                    @foreach (var importantCheck in this.ImportantChecks)
+                    {
                         <div style="display: inline-flex;">
-                            <div id="@(ic)_value" style="display: inline;">
-                                <span class="sub-option-bubble" style="background: #ffac2f;">@ic</span>
+                            <div id="@(importantCheck)_value" style="display: inline;">
+                                <span class="sub-option-bubble" style="background: #ffac2f;">@importantCheck</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (this.ClearConditions.Count > 0 && !this.ClearConditionSelectionType.Equals("None"))
+        {
+            <div class="review-sub-subsection">
+                <div class="review-header">
+                    <h3 for="clear_conditions" style="font-size: 1.3rem;"><span class="header-color" style="background-color: #00c0fa;"></span><b>Clear Conditions: </b></h3>
+                </div>
+                <div class="review-content" style="max-height: 600px; overflow-y: auto;">
+                    <h4 style="font-size: 1.0rem; margin-left: 10px;"><u><b>Clear Condition Selection Type: @this.ClearConditionSelectionType</b></u></h4>
+
+                    @foreach (var condition in this.ClearConditions)
+                    {
+                        <div style="display: inline-flex;">
+                            <div id="@(condition)_value" style="display: inline;">
+                                <span class="sub-option-bubble" style="background: #00c0fa;">@condition.Key.ValueIdToDisplay()</span>
                             </div>
                         </div>
                     }
@@ -191,8 +243,8 @@
         }
     </div>
 
-    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Hints...</button>
-    <button class="btn kh-button" @onclick="() => this.GenerateSeed()" style="float: right;" disabled="@this.isGeneratingSeed">@(!this.isGeneratingSeed ? "Generate Seed" : "Generating Seed...")</button>
+    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to @(this.IsPlando ? "Options" : "Clear Conditions")...</button>
+    <button class="btn @(this.isGeneratingSeed ? "kh-button-disabled" : "kh-button")" @onclick="() => this.ClickGenerateSeed()" style="float: right;" disabled="@this.isGeneratingSeed">@(!this.isGeneratingSeed ? "Generate Seed" : "Generating Seed...")</button>
 </div>
 @code {
     [Inject] IBlazorDownloadFileService BlazorDownloadFileService { get; set; }
@@ -202,63 +254,38 @@
     [Parameter] public Action BackTo { get; set; }
     [Parameter] public string CurrentSeed { get; set; }
 
-    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
-
     [Parameter] public Dictionary<string, RandomizeOptionEnum> AvailablePools { get; set; }
+    [Parameter] public float EXPMultiplier { get; set; }
     [Parameter] public Dictionary<string, bool> Exceptions { get; set; }
-    // [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
+    [Parameter] public Dictionary<string, int> Limiters { get; set; }
     [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
+
     [Parameter] public string HintSelectionType { get; set; }
     [Parameter] public List<string> ImportantChecks { get; set; }
-    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableQualityOfLifeSettings { get; set; }
-    [Parameter] public bool CanBeNone { get; set; }
 
-    private List<string> pools { get; set; } = new();
-    private Dictionary<string, List<string>> hintValues = new();
-    private Dictionary<string, bool> qolValues = new();
-    // private Dictionary<string, string> options { get; set; } = new();
-    private List<string> modifications { get; set; } = new();
+    [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableQualityOfLifeSettings { get; set; }
+
+    [Parameter] public string ClearConditionSelectionType { get; set; }
+    [Parameter] public Dictionary<string, int> ClearConditions { get; set; }
+
+    [Parameter] public bool IsPlando { get; set; }
+
 
     private Dictionary<string, string> poolColors = new Dictionary<string, string>
-    {
+{
         { "Randomize", "background: #a076f5;" },
         { "Replace", "background: #b189ff;" },
         { "Vanilla", "background: #c9aeff;" },
-
-
-        //{ "Olympus", "background: #56adff;" },
-        //{ "Twilight Town", "background: #56adff;" },
-        //{ "Kingdom of Corona", "background: #56adff;" },
-        //{ "Toy Box", "background: #56adff;" },
-        //{ "Monstropolis", "background: #56adff;" },
-        //{ "100 Acre Wood", "background: #56adff;" },
-        //{ "Arendelle", "background: #56adff;" },
-        //{ "San Fransokyo", "background: #56adff;" },
-        //{ "The Caribbean", "background: #56adff;" },
-        //{ "Keyblade Graveyard", "background: #56adff;" },
-        //{ "Re:Mind", "background: #56adff;" },
-        //{ "Dark World", "background: #56adff;" },
-        //{ "Unreality", "background: #56adff;" },
-
-        //{ "Sora", "background: #56adff;" },
-        //{ "Equipment Abilities", "background: #56adff;" },
-        //{ "Data Battle Rewards", "background: #56adff;" },
-        //{ "Moogle Workshop", "background: #56adff;" },
-        //{ "Fullcourse Abilities", "background: #56adff;" },
-        //{ "Lucky Emblems", "background: #56adff;" },
-        //{ "Flantastic Flans", "background: #56adff;" },
-        //{ "Minigames", "background: #56adff;" },
-        //{ "Battle Portals", "background: #56adff;" }
     };
 
     private Dictionary<string, string> exceptionColors = new Dictionary<string, string>
-    {
+{
         { "Can Be None", "background: #56adff;" },
         { "Default Abilities", "background: #56adff;" },
     };
 
     private Dictionary<string, string> hintColors = new Dictionary<string, string>
-    {
+{
         { "Proofs", "background: #56adff;" },
         { "Abilities", "background: #56adff;" },
         { "Heartbinders", "background: #56adff;" },
@@ -268,65 +295,60 @@
     };
 
     private Dictionary<string, string> qolColors = new Dictionary<string, string>
-    {
+{
         { "Bosses", "background: #54ed61;" },
         { "Events", "background: #66ff73;" },
         { "Items", "background: #92ff9b;" },
-
-        //{ "Easier Mini-UFO", "background: #56adff;" },
-        //{ "Faster Raging Vulture", "background: #56adff;" },
-        //{ "Dark Baymax Phase 1 Skip", "background: #56adff;" },
-        //{ "Faster Lich Sequence", "background: #56adff;" },
-
-        //{ "Frozen Chase Skip", "background: #56adff;" },
-        //{ "Faster Crab Collection", "background: #56adff;" },
-        //{ "Big Hero Rescue Skip", "background: #56adff;" },
-        //{ "Faster Sora Collection", "background: #56adff;" },
-        //{ "Union χ Skip", "background: #56adff;" },
-        //{ "Guardians of Light Skip", "background: #56adff;" },
-        //{ "Slow Mickey Skip", "background: #56adff;" },
-
-        //{ "All Maps Unlocked", "background: #56adff;" },
     };
 
     bool isGeneratingSeed { get; set; }
 
-    protected override void OnInitialized()
-    {
 
-    }
-
-    public async Task GenerateSeed()
+    public void ClickGenerateSeed()
     {
         this.isGeneratingSeed = true;
 
-        await InvokeAsync(() =>
+        InvokeAsync(() =>
         {
             StateHasChanged();
         });
 
-        // Generate Hints
-        byte[] hintResults = this.HintService.GenerateHints(this.CurrentSeed, this.RandomizedOptions, this.AvailablePools, this.HintSelectionType, this.ImportantChecks, ref this.hintValues);
+        Task.Run(async () => { await this.GenerateSeed(); });
+    }
 
-        // Generate QoL Settings
-        this.qolValues = new();
-
-        foreach (var (category, values) in this.AvailableQualityOfLifeSettings)
+    public async Task GenerateSeed()
+    {
+        var poolConfiguration = new Pool
         {
-            foreach (var (name, active) in values)
-            {
-                var id = name.QoLKeyToId();
+            Selections = this.AvailablePools,
+            Exceptions = this.Exceptions,
+            Limiters = this.Limiters,
+            EXPMultiplier = this.EXPMultiplier
+        };
 
-                qolValues.Add(id, active);
-            }
-        }
+        var qolConfiguration = new QoL
+        {
+            Selections = this.AvailableQualityOfLifeSettings
+        };
+
+        var hintConfiguration = new Hint
+        {
+            Type = this.HintSelectionType,
+            Checks = this.ImportantChecks
+        };
+
+        var clearConditionConfiguration = new ClearCondition
+        {
+            Type = this.ClearConditionSelectionType,
+            Conditions = this.ClearConditions
+        };
 
         // Generate Randomized Seed
-        var file = this.RandomizerService.GenerateRandomizerSeed(this.CurrentSeed, this.RandomizedOptions, this.AvailablePools, this.Modifications, this.Exceptions, hintResults, this.hintValues, qolValues);
+        var file = await this.RandomizerService.GenerateRandomizerSeed(this.CurrentSeed, poolConfiguration, qolConfiguration, hintConfiguration, clearConditionConfiguration, this.Modifications);
 
         await js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".zip", Convert.ToBase64String(file));
-        // js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".pak", Convert.ToBase64String(files[0]));
-        // js.InvokeAsync<object>("saveAsFile", "SpoilerLog-" + this.CurrentSeed + ".json", Convert.ToBase64String(files[1]));
+        //await js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.CurrentSeed + ".pak", Convert.ToBase64String(files[0]));
+        //await js.InvokeAsync<object>("saveAsFile", "SpoilerLog-" + this.CurrentSeed + ".json", Convert.ToBase64String(files[1]));
 
         this.RandomizerService.DeleteRandomizerSeed(this.CurrentSeed);
 

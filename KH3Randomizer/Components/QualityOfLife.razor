@@ -1,6 +1,19 @@
 ﻿@inject KH3Randomizer.Data.RandomizerService RandomizerService
 
 <div class="qol-section">
+    <div class="row" style="width: 100%; margin-top: 25px;">
+        <div class="col-md-2">
+            <label style="margin-top: 8px; font-size: larger; font-weight: 500;"><b>QoL Toggles: </b></label>
+        </div>
+
+        @foreach (var group in this.qolGroups)
+        {
+            <div class="col-md-2">
+                <a class="rounded-selector a-tag-selector @(this.CheckGroupEnabled(group.Key) ? "a-tag-selected rounded-selected" : "")" href="" @onclick="@(() => { ToggleCheckGroup(group.Key); })" @onclick:preventDefault>@group.Key</a>
+            </div>
+        }
+    </div>
+
     <div class="qol-subsection">
         <h3>Quality of Life</h3>
 
@@ -18,30 +31,22 @@
                 <div class="col-md-12">
                     <h3>@category</h3>
 
-                    <div class="row">
+                    <div class="row" style="margin-left: unset;">
                         @foreach (var (name, value) in subOptions)
                         {
                             <div class="col-md-4" style="margin: 15px 0px;">
                                 <div class="row">
-                                    <div class="col-md-2">
-                                        <label class="switch">
-                                            <input type="checkbox" @onchange="@((value) => { qolOptions[category][name] = (bool)value.Value; this.UpdateQoLOptionsText(); })" checked="@value" disabled="@(name == "Faster Crab Collection" || name == "Faster Sora Collection")">
-                                            <span class="slider round"></span>
-                                        </label>
-                                    </div>
-
                                     <div class="col-md-5" style="padding: unset;">
-                                        @if (name == "Faster Crab Collection" || name == "Faster Sora Collection")
-                                        {
-                                            <label><s><b>@name</b></s></label>
-                                        }
-                                        else
-                                        {
-                                            <label><b>@name</b></label>
-                                        }
+                                        <label><b>@name</b></label>
                                     </div>
 
                                     <div class="col-md-1">
+                                        <Tooltip Text="@qolOptionDescriptions[name]">
+                                            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
+                                        </Tooltip>
+                                    </div>
+
+                                    <div class="col-md-1" style="margin-right: 5px;">
                                         @if (this.qolOptionDisclaimers.ContainsKey(name))
                                         {
                                             <Tooltip Text="@this.qolOptionDisclaimers[name]">
@@ -50,10 +55,11 @@
                                         }
                                     </div>
 
-                                    <div class="col-md-1">
-                                        <Tooltip Text="@qolOptionDescriptions[name]">
-                                            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
-                                        </Tooltip>
+                                    <div class="col-md-2">
+                                        <label class="switch">
+                                            <input type="checkbox" @onchange="@((value) => { qolOptions[category][name] = (bool)value.Value; this.UpdateQoLOptionsText(); })" checked="@value">
+                                            <span class="slider round"></span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -88,18 +94,16 @@
         { "Faster Lich Sequence", "Skips the in-between fights against the Lich. Only the first and last battle are required." },
 
         { "Frozen Chase Skip", "Skips the Frozen Slider Minigame, since this is somewhat difficult on Critical." },
-        { "Faster Crab Collection", "Sets the threshold to a lower amount of crabs that needs to be collected in Port Royal." },
-        { "Shugyo Training Skip", "Skips the first flashtracer minigame in San Fransokyo." },
+        { "Faster Crab Collection", "Makes the dive gimmick box in Port Royal contain all the crabs needed to be collected." },
         { "Big Hero Rescue Skip", "Skips saving the Big Hero 6 members from the Darkubes." },
-        { "Faster Sora Collection", "Sets the threshold from collecting 111, 222 & 333 Soras in The Final World to a smaller amount." },
+        { "Faster Sora Collection", "Moves all ghost Soras to Sora when dropping into the Final World." },
         { "Union χ Skip", "Skips the tornado sequence where you spam triangle in The Keyblade Graveyard." },
-        { "Guardians of Light Skip", "Skips the cutscene fight with all of the Guardians of Light vs the Replica Xehanorts." },
-        { "Slow Mickey Skip", "Skips the fight with the Replica Xehanorts and Mickey Mouse." },
+        { "Guardians of Light Skip", "Skips the fight with all of the Guardians of Light vs the Replica Xehanorts." },
 
         { "All Maps Unlocked", "Gives all of the maps in the game to Sora from the start." },
-        { "Fully Upgraded Keyblades", "Sets all of the keyblades' levels to max." },
+        { "Easily Upgraded Keyblades", "Sets all of the keyblades' synthesis materials to 0 to make level ups free." },
         { "CK Auto-Highscore", "Set Classic Kingdom highscores when obtained so that on obtaining the last CK game, the reward will be given." },
-        { "Max Level Leviathan", "Start with your Leviathan boat at the Max Level to give max damage and speed." }
+        { "Max Level Ship", "Start with the Black Pearl in Port Royal to give max damage and speed." }
     };
 
     private Dictionary<string, string> qolOptionDisclaimers = new Dictionary<string, string>
@@ -107,7 +111,19 @@
         { "Frozen Chase Skip", "This skip will cause music to stop playing during this particular fight. Finish the fight or die and retry to restore audio." },
         { "Union χ Skip", "This may skip giving the Starlight check. This skip spawns Sora back at the beginning of The Keyblade Graveyard." },
         { "Guardians of Light Skip", "This skip will cause music to stop playing during this particular fight. Finish the fight or die and retry to restore audio." },
-        { "Slow Mickey Skip", "This skip will cause music to stop playing during this particular fight. Finish the fight or die and retry to restore audio." },
+    };
+
+    private Dictionary<string, List<string>> qolGroups = new Dictionary<string, List<string>> {
+        { "Bosses", new List<string> {
+            "Easier Mini-UFO", "Faster Raging Vulture", "Faster Lich Sequence", "Dark Baymax Phase 1 Skip"
+        } },
+        { "Events", new List<string> {
+            "Frozen Chase Skip", "Faster Crab Collection", "Big Hero Rescue Skip", "Faster Sora Collection",
+            "Union χ Skip", "Guardians of Light Skip"
+        } },
+        { "Items", new List<string> {
+            "All Maps Unlocked", "Easily Upgraded Keyblades", "Max Level Ship"
+        } }
     };
 
     protected override void OnInitialized()
@@ -149,5 +165,47 @@
             this.allOptionText = "ON";
         else
             this.allOptionText = "OFF";
+    }
+
+
+    private bool CheckGroupEnabled(string group)
+    {
+        bool hasAll = true;
+
+        if (this.qolOptions.ContainsKey(group))
+        {
+            foreach (var qol in this.qolOptions[group])
+            {
+                if (!qol.Value)
+                {
+                    hasAll = false;
+
+                    break;
+                }
+            }
+        }
+
+        return hasAll;
+    }
+
+    private void ToggleCheckGroup(string group)
+    {
+        if (this.qolOptions.ContainsKey(group))
+        {
+            if (this.CheckGroupEnabled(group))
+            {
+                foreach (var qol in this.qolOptions[group])
+                {
+                    this.qolOptions[group][qol.Key] = false;
+                }
+            }
+            else
+            {
+                foreach (var qol in this.qolOptions[group])
+                {
+                    this.qolOptions[group][qol.Key] = true;
+                }
+            }
+        }
     }
 }

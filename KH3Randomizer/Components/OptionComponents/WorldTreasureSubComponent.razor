@@ -10,7 +10,7 @@
     </TableHeader>
     <RowTemplate>
         <td>
-            @Treasure.Id.KeyIdToDisplay()
+            @(this.GetGummiphoneTreasure(Treasure.Id.KeyIdToDisplay()))
             <Tooltip Text="@Treasure.Id.KeyIdToDisplay().GetChestLocation(GetDataTableEnumFromSelection(this.WorldName))">
                 <i class="bi bi-question-circle" style="font-size: 1rem; color: #0366de;"></i>
             </Tooltip>
@@ -125,10 +125,17 @@
                 return DataTableEnum.TreasureKG;
             case "The Final World":
                 return DataTableEnum.TreasureEW;
-            case "Scala Ad Caelum":
+            case "Re+Mind":
                 return DataTableEnum.TreasureBT;
             default:
                 return DataTableEnum.None;
         }
+    }
+
+    private string GetGummiphoneTreasure(string display)
+    {
+        var temp = display.GetChestLocation(GetDataTableEnumFromSelection(this.WorldName));
+
+        return temp.Split(" (")[0];
     }
 }

@@ -1,0 +1,60 @@
+﻿@using UE4DataTableInterpreter.Enums
+@using KH3Randomizer.Models.Stats
+
+@inject RandomizerService RandomizerService
+
+<Table Items="this.EXPStats" Context="EXPStat" CurrentPage="1">
+    <TableHeader>
+        <th>Name</th>
+        <th>Multiplier</th>
+        <th>Action</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>EXP Multiplier</td>
+        <td>@EXPStat.EXPMultiplier</td>
+        <td><a href="#" @onclick="() => OpenModal(EXPStat)" @onclick:preventDefault>Change</a></td>
+    </RowTemplate>
+</Table>
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public string EXPStatName { get; set; }
+
+    [Parameter] public Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>> UpdateStat { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    private List<EXPStat> EXPStats { get; set; }
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<string>(nameof(this.EXPStatName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
+        {
+            this.randomizedOptions = options;
+            this.EXPStats = this.RandomizerService.GetAvailableEXPStats(value, ref this.randomizedOptions);
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    private void OpenModal(EXPStat expStat)
+    {
+        var parameters = new ModalParameters();
+
+        var expStats = new Dictionary<string, string> {
+            { "Multiplier", expStat.EXPMultiplier }
+        };
+
+        parameters.Add("Category", DataTableEnum.EXP);
+        parameters.Add("SubCategory", "EXP"); 
+        parameters.Add("OriginalStats", expStats);
+        parameters.Add("UpdatedStats", expStats.ToDictionary(x => x.Key, y => y.Value));
+
+        parameters.Add("UpdateStat", UpdateStat);
+
+        var options = new ModalOptions { Class = "modal-custom" };
+
+        Modal.Show<ChangeStat>($"Change EXP Multiplier", parameters, options);
+    }
+}

@@ -1,0 +1,249 @@
+﻿@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IJSRuntime js
+
+@using Models.Configuration;
+@using System.IO;
+@using System.Text;
+@using System.Text.Json;
+
+<div class="simple-form configuration-modal" style="min-width: 60vw; background-color: #F2F2F2; overflow-y: auto; overflow-x: hidden;">
+    <div class="row">
+        <div class="col-md-12">
+            @foreach (var configurationName in this.configurationNames)
+            {
+                @if (this.configurations != null)
+                {
+                    <Collapsable CurrentOption="@this.currentSection" ToggleCollapsables="this.ToggleCollapsables" Title="@configurationName" ActionType="@("Modal")">
+                        <div class="row" style="margin-left: 15px;">
+                            @if (this.configurations.Any(x => x.Contains(configurationName)))
+                            {
+                                @foreach (var configuration in this.configurations.Where(x => x.Contains(configurationName)))
+                                {
+                                    <div class="col-md-3 @(SelectedConfigurations[configurationName] == configuration ? "configuration-bubble-active" : "configuration-bubble")">
+                                        <div style="padding-top: 5px;">
+                                            <label><b>@(configuration.Split('_')[1])</b></label>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <span @onclick="(() => SelectConfiguration(configuration))">
+                                                    <i class="bi @(SelectedConfigurations[configurationName] == configuration ? "bi-check-circle-fill" : "bi-check-circle") config-icon" style="color: dodgerblue;"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <span @onclick="(() => DownloadConfiguration(configuration))"><i class="bi bi-download config-icon" style="color: dodgerblue;"></i></span>
+                                            </div>
+                                            <div class="col-md-6"></div>
+                                            <div class="col-md-2">
+                                                <span @onclick="(() => RemoveConfiguration(configuration))"><i class="bi bi-trash config-icon" style="color: #e53d3d;"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div class="col-md-12" style="text-align: center;">
+                                    <h4>No @(configurationName) Configurations could be found.</h4>
+                                </div>
+                            }
+                        </div>
+                    </Collapsable>
+                }
+            }
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="upload-section">
+                <label for="input" class="upload-sub-section">
+                    <div class="upload-border" style="display: inline-flex;">
+                        <span class="bi bi-file-earmark-fill" aria-hidden="true" style="color: grey; font-size: 5rem;"></span>
+                        <h4 style="align-self: center; margin-left: 25px; margin-top: 10px;"><b style="color: dodgerblue;">Click</b><b style="color: black"> to upload Configuration File...</b></h4>
+                    </div>
+                </label>
+
+                <InputFile id="input" class="sr-only" OnChange="@UploadConfiguration" />
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <button @onclick="RemoveAllConfigurations" class="btn kh-button-remove" style="margin-left: 15px;">Remove All Configurations</button>
+                <button @onclick="ModalInstance.CancelAsync" class="btn kh-button-cancel" style="margin-left: 15px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter] public string Section { get; set; }
+    [Parameter] public Dictionary<string, string> SelectedConfigurations { get; set; }
+    [Parameter] public EventCallback<string> UpdateSectionConfiguration { get; set; }
+
+    private string localStorageName { get; set; }
+    private IEnumerable<string> configurations { get; set; }
+
+    private string currentSection { get; set; }
+    private string currentConfiguration { get; set; }
+
+    private List<string> configurationNames = new List<string> { "Pools", "QoL", "Hints", "Clear Conditions" };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            this.currentSection = this.Section;
+            this.configurations = await this.GetConfigurations();
+
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+
+        base.OnParametersSet();
+    }
+
+    public async Task RemoveConfiguration(string configurationName)
+    {
+        await localStorage.RemoveItemAsync(configurationName);
+
+        this.configurations = await this.GetConfigurations();
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public async Task RemoveAllConfigurations()
+    {
+        var keys = await localStorage.KeysAsync();
+
+        await localStorage.RemoveItemsAsync(keys);
+
+        this.configurations = await this.GetConfigurations();
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public async Task SelectConfiguration(string configurationName)
+    {
+        await this.UpdateSectionConfiguration.InvokeAsync(configurationName);
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public async Task DownloadConfiguration(string configurationName)
+    {
+        byte[] configurationBytes = null;
+
+        if (configurationName.Contains("Pools"))
+        {
+            var configuration = await localStorage.GetItemAsync<Pool>(configurationName);
+
+            configurationBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(configuration));
+        }
+        else if (configurationName.Contains("QoL"))
+        {
+            var configuration = await localStorage.GetItemAsync<QoL>(configurationName);
+
+            configurationBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(configuration));
+        }
+        else if (configurationName.Contains("Hints"))
+        {
+            var configuration = await localStorage.GetItemAsync<Hint>(configurationName);
+
+            configurationBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(configuration));
+        }
+        else if (configurationName.Contains("Clear Conditions"))
+        {
+            //var configuration = await localStorage.GetItemAsync<Hint>(configurationName);
+
+            //configurationBytes = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(configuration));
+        }
+
+        await js.InvokeAsync<object>("saveAsFile", $"{configurationName}.json", Convert.ToBase64String(configurationBytes));
+    }
+
+    public async void UploadConfiguration(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+
+        var reader = await new StreamReader(file.OpenReadStream()).ReadToEndAsync();
+
+        if (file.Name.Contains("Pools"))
+        {
+            var pool = JsonSerializer.Deserialize<Pool>(reader);
+
+            await this.localStorage.SetItemAsync(file.Name.Split('.')[0], pool);
+        }
+        else if (file.Name.Contains("QoL"))
+        {
+            var qol = JsonSerializer.Deserialize<QoL>(reader);
+
+            await this.localStorage.SetItemAsync(file.Name.Split('.')[0], qol);
+        }
+        else if (file.Name.Contains("Hints"))
+        {
+            var hint = JsonSerializer.Deserialize<Hint>(reader);
+
+            await this.localStorage.SetItemAsync(file.Name.Split('.')[0], hint);
+        }
+        else if (file.Name.Contains("Clear Conditions"))
+        {
+            //var hint = JsonSerializer.Deserialize<Hint>(reader);
+
+            //await this.localStorage.SetItemAsync(file.Name.Split('.')[0], hint);
+        }
+
+        this.configurations = await this.GetConfigurations();
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+
+    private async Task<IEnumerable<string>> GetConfigurations()
+    {
+        return await this.localStorage.KeysAsync();
+    }
+
+    private void ToggleCollapsables(string currentOption)
+    {
+        this.currentSection = currentOption;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

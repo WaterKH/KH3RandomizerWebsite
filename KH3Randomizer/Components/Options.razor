@@ -1,8 +1,8 @@
 ﻿@inject KH3Randomizer.Data.RandomizerService RandomizerService
 
 @using UE4DataTableInterpreter.Enums
+@using UE4DataTableInterpreter.Models
 @using Enums;
-@using System.Text.RegularExpressions; 
 
 <div class="options-section">
     <div class="options-subsection">
@@ -13,7 +13,7 @@
                         <label for="seed" style="font-size: 1.3rem; padding: 5px 0px 0px 0px;">Seed Name: </label>
                     </div>
                     <div class="col-md-6">
-                        <input id="seed" name="seed" class="kh-inputfield" @onchange="RandomizeOptions" placeholder="Enter a seed name..." value="@(string.IsNullOrEmpty(this.currentSeed) ? "" : this.currentSeed)" disabled="@(!this.isSpoilerChecked || this.isDisabled)" />
+                        <input id="seed" name="seed" class="kh-inputfield" placeholder="Enter a seed name..." value="@(string.IsNullOrEmpty(this.currentSeed) ? "" : this.currentSeed)" disabled="@(!this.isSpoilerChecked || this.isDisabled)" />
                     </div>
                     <div class="col-md-1" style="margin-top: 8px; float: right;">
                         <Tooltip Text="This is what is used to randomize the items. You can generate a duplicate seed if the same name is used.">
@@ -44,12 +44,15 @@
         <br />
 
         <OptionsSubsection UpdateAvailableOptions="@this.UpdateAvailableOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                           CurrentSeed="@this.currentSeed" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions"
+                           CurrentSeed="@this.currentSeed" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" 
+                           FilteredRandomizedEnemies="@this.filteredRandomizedEnemies" RandomizedEnemies="@this.randomizedEnemies" UpdateRandomizedEnemies="@this.UpdateRandomizedEnemies"
+                           RandomizedBosses="@this.randomizedBosses" UpdateRandomizedBosses="@this.UpdateRandomizedBosses"
+                           RandomizedPartyMembers="@this.randomizedPartyMembers" UpdateRandomizedPartyMembers="@this.UpdateRandomizedPartyMembers"
                            SpoilerChecked="@this.isSpoilerChecked" />
     </div>
 
-    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Pools...</button>
-    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to Quality of Life...</button>
+    <button class="btn kh-button" onclick="@BackTo" style="float: left;">Back to Clear Conditions...</button>
+    <button class="btn kh-button" onclick="@ContinueTo" style="float: right;">Continue to Review...</button>
 </div>
 
 @code {
@@ -62,12 +65,18 @@
     [Parameter] public EventCallback<Dictionary<string, Dictionary<string, bool>>> UpdateAvailableOptions { get; set; }
     [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
     [Parameter] public Action<Option, Option> UpdateModifications { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, Enemy>> UpdateRandomizedEnemies { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, string>> UpdateRandomizedBosses { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, string>> UpdateRandomizedPartyMembers { get; set; }
 
     [Parameter] public string CurrentSeed { get; set; }
     [Parameter] public Dictionary<string, RandomizeOptionEnum> AvailablePools { get; set; }
     [Parameter] public Dictionary<string, Dictionary<string, bool>> AvailableOptions { get; set; }
     [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
     [Parameter] public List<Tuple<Option, Option>> Modifications { get; set; }
+    [Parameter] public Dictionary<string, Enemy> RandomizedEnemies { get; set; }
+    [Parameter] public Dictionary<string, string> RandomizedBosses { get; set; }
+    [Parameter] public Dictionary<string, string> RandomizedPartyMembers { get; set; }
     [Parameter] public bool IsGoingBack { get; set; }
     [Parameter] public bool IsDisabled { get; set; }
 
@@ -78,10 +87,14 @@
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
     private List<Tuple<Option, Option>> modifications = new();
+    private Dictionary<string, Enemy> randomizedEnemies = new();
+    private Dictionary<string, Dictionary<string, bool>> filteredRandomizedEnemies = new();
+    private Dictionary<string, string> randomizedBosses = new();
+    private Dictionary<string, string> randomizedPartyMembers = new();
 
     private string currentSelection = "";
     private string currentSeed = "";
-    private bool isSpoilerChecked = true;
+    private bool isSpoilerChecked = false;
     private bool isDisabled = false;
 
     protected override void OnInitialized()
@@ -94,9 +107,25 @@
         this.isDisabled = this.IsDisabled;
 
         this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, this.IsGoingBack);
+
+        // Add Exp Multiplier
+        if (randomizedOptions.ContainsKey(DataTableEnum.EXP))
+        {
+            if (!this.availableOptions.ContainsKey("EXP Multiplier"))
+                this.availableOptions.Add("EXP Multiplier", new Dictionary<string, bool> { { "EXP Multiplier", true } });
+        }
+
         //this.tempRandomizedItems = this.RandomizerService.GetRandomizedItems();
         this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
-        this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+        //this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+
+        this.randomizedEnemies = this.RandomizedEnemies;
+        this.RandomizerService.GetAvailableEnemies(this.randomizedEnemies, ref this.filteredRandomizedEnemies);
+
+        this.randomizedBosses = this.RandomizedBosses;
+        this.randomizedPartyMembers = this.RandomizedPartyMembers;
+
+        //this.RandomizerService.GetAvailableEnemies(this.availableEnemies, ref this.availableOptions, this.IsGoingBack);
 
         InvokeAsync(() =>
         {
@@ -104,50 +133,50 @@
         });
     }
 
-    protected override void OnParametersSet()
-    {
-        this.currentSeed = this.CurrentSeed;
-        this.availablePools = this.AvailablePools;
-        this.availableOptions = this.AvailableOptions;
-        this.randomizedOptions = this.RandomizedOptions;
-        this.modifications = this.Modifications;
+    //protected override void OnParametersSet()
+    //{
+    //    this.currentSeed = this.CurrentSeed;
+    //    this.availablePools = this.AvailablePools;
+    //    this.availableOptions = this.AvailableOptions;
+    //    this.randomizedOptions = this.RandomizedOptions;
+    //    this.modifications = this.Modifications;
 
-        base.OnParametersSet();
-    }
+    //    base.OnParametersSet();
+    //}
 
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            if (!string.IsNullOrEmpty(this.currentSeed))
-                this.RandomizeOptions(new ChangeEventArgs { Value = this.currentSeed });
+    //protected override void OnAfterRender(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        //if (!string.IsNullOrEmpty(this.currentSeed))
+    //        //    this.RandomizeOptions(new ChangeEventArgs { Value = this.currentSeed });
 
-            foreach (var (initialOption, swapOption) in this.modifications)
-                this.RandomizerService.UpdateRandomizedItem(ref this.randomizedOptions, initialOption.Category, initialOption.SubCategory, initialOption.Name, initialOption.Value,
-                                                            swapOption.Category, swapOption.SubCategory, swapOption.Name, swapOption.Value);
+    //        //foreach (var (initialOption, swapOption) in this.modifications)
+    //        //    this.RandomizerService.UpdateRandomizedItem(ref this.randomizedOptions, initialOption.Category, initialOption.SubCategory, initialOption.Name, initialOption.Value,
+    //        //                                                swapOption.Category, swapOption.SubCategory, swapOption.Name, swapOption.Value);
 
-            this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
-        }
-    }
+    //        //this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+    //    }
+    //}
 
-    private void RandomizeOptions(ChangeEventArgs e)
-    {
-        this.currentSeed = e.Value.ToString();
+    //private void RandomizeOptions(ChangeEventArgs e)
+    //{
+    //    this.currentSeed = e.Value.ToString();
 
-        this.currentSeed = Regex.Replace(this.currentSeed, @"[^\w\-]", "");
+    //    this.currentSeed = Regex.Replace(this.currentSeed, @"[^\w\-]", "");
 
-        this.UpdateCurrentSeed.InvokeAsync(this.currentSeed);
+    //    this.UpdateCurrentSeed.InvokeAsync(this.currentSeed);
 
-        //this.RandomizerService.SetAvailableOptions(this.tempOptions);
-        // this.RandomizerService.RandomizeItems(this.currentSeed, ref this.availableOptions, ref this.randomizedOptions);
+    //    //this.RandomizerService.SetAvailableOptions(this.tempOptions);
+    //    // this.RandomizerService.RandomizeItems(this.currentSeed, ref this.availableOptions, ref this.randomizedOptions);
 
-        this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
-        this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
+    //    this.UpdateAvailableOptions.InvokeAsync(this.availableOptions);
+    //    this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);
 
-        // TODO check which section is open, then update that section with the below logic
-        //var t = new Dictionary<string, object> { { "WorldName", this.currentSelection } };
-        //TreasureSubComponent.SetParametersAsync(ParameterView.FromDictionary(t));
-    }
+    //    // TODO check which section is open, then update that section with the below logic
+    //    //var t = new Dictionary<string, object> { { "WorldName", this.currentSelection } };
+    //    //TreasureSubComponent.SetParametersAsync(ParameterView.FromDictionary(t));
+    //}
 
     private void UpdateCurrentSelection(string selection)
     {
@@ -172,7 +201,6 @@
         {
             this.RandomizerService.UpdateRandomizedItem(ref this.randomizedOptions, initialOption.Category, initialOption.SubCategory, initialOption.Name, swapOption.Value,
                                                         swapOption.Category, swapOption.SubCategory, swapOption.Name, initialOption.Value);
-
         }
 
         this.UpdateRandomizedOptions.InvokeAsync(this.randomizedOptions);

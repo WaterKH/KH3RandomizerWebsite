@@ -1,44 +1,67 @@
 ﻿@page "/"
 
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-@using UE4DataTableInterpreter.Enums
-@using Enums; 
+@using UE4DataTableInterpreter.Enums;
+@using UE4DataTableInterpreter.Models;
+@using Enums;
+@using Models.Configuration; 
 
 @inject KH3Randomizer.Data.RandomizerService RandomizerService
 
 <div class="randomizer-content">
-    <SectionBar CurrentSection="@this.currentSection" IsPlando="@this.IsPlando"></SectionBar>
+    <SectionBar CurrentSection="@this.currentSection" IsPlando="@this.IsPlando" SelectedConfigurations="@this.selectedConfigurations" SaveSectionConfiguration="@this.SaveSectionConfiguration" UpdateSectionConfiguration="@this.SelectSectionConfiguration"></SectionBar>
 
     @if (this.currentSection == "Pools")
     {
-        <Pools ContinueTo="@(() => ContinueTo(this.IsPlando ? "Options" : "QoL"))" AvailablePools="@this.availablePools" IsPlando="@this.IsPlando" CanBeNone="@this.CanBeNone" CurrentSeed="@this.CurrentSeed" Exceptions="@this.exceptions"
-               UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdatePlando="@(isPlando => UpdatePlandoOption(isPlando))" UpdateCanBeNone="@(canBeNone => UpdateCanBeNone(canBeNone))" 
-               UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateExceptions="@(exceptions => UpdateExceptions(exceptions))">
+        <Pools ContinueTo="@(() => ContinueTo("QoL"))" AvailablePools="@this.availablePools" IsPlando="@this.IsPlando" CurrentSeed="@this.CurrentSeed" 
+               Exceptions="@this.exceptions" Limiters="@this.limiters" EXPMultiplier="@this.expMultiplier"
+               UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdatePlando="@(isPlando => UpdatePlandoOption(isPlando))"
+               UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" 
+               UpdateRandomizedEnemies="@(randEnemies => UpdateRandomizedEnemies(randEnemies))" UpdateRandomizedBosses="@(randBosses => UpdateRandomizedBosses(randBosses))" 
+               UpdateRandomizedPartyMembers="@(randPartyMembers => UpdateRandomizedPartyMembers(randPartyMembers))"
+               UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))"
+               UpdateExceptions="@(exceptions => UpdateExceptions(exceptions))" UpdateLimiters="@(limiters => UpdateLimiters(limiters))" UpdateEXPMultiplier="@(multiplier => UpdateEXPMultiplier(multiplier))" >
         </Pools>
-    }
-    else if (this.currentSection == "Options" && this.IsPlando)
-    {
-        <Options ContinueTo="@(() => ContinueTo("QoL"))" BackTo="@(() => BackTo("Pools"))"
-                 UpdateAvailableOptions="@(options => UpdateAvailableOptions(options))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateModifications="@((option1, option2) => UpdateModifications(option1, option2))"
-                 CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" IsGoingBack="this.isGoingBack" IsDisabled="true">
-        </Options>
     }
     else if (this.currentSection == "QoL")
     {
-        <QualityOfLife ContinueTo="@(() => ContinueTo("Hints"))" BackTo="@(() => BackTo(this.IsPlando ? "Options" : "Pools"))"
+        <QualityOfLife ContinueTo="@(() => ContinueTo("Hints"))" BackTo="@(() => BackTo("Pools"))"
                        UpdateAvailableQoLOptions="@(options => UpdateAvailableQualityOfLifeOptions(options))" AvailableQoLOptions="@this.availableQualityOfLifeOptions">
         </QualityOfLife>
     }
     else if (this.currentSection == "Hints")
     {
-        <Hints ContinueTo="@(() => ContinueTo("Review"))" BackTo="@(() => BackTo("QoL"))" HintSelectionType="@this.hintSelectionType" ImportantChecks="@this.importantChecks" UpdateHintSelection="@(selection => UpdateHintSelection(selection))" UpdateImportantChecks="@(importantChecks => UpdateImportantChecks(importantChecks))"></Hints>
+        <Hints ContinueTo="@(() => ContinueTo("Clear Conditions"))" BackTo="@(() => BackTo("QoL"))" HintSelectionType="@this.hintSelectionType" ImportantChecks="@this.importantChecks" 
+               UpdateHintSelection="@(selection => UpdateHintSelection(selection))" UpdateImportantChecks="@(importantChecks => UpdateImportantChecks(importantChecks))">
+        </Hints>
+    }
+    else if (this.currentSection == "Clear Conditions")
+    {
+        <ClearConditions ContinueTo="@(() => ContinueTo(this.IsPlando ? "Options" : "Review"))" BackTo="@(() => BackTo("Hints"))" IsPlando="@this.IsPlando"
+                         UpdateSelectedClearConditionType="@(type => UpdateSelectedClearConditionType(type))" SelectedClearConditionType="@this.selectedClearConditionType"
+                         UpdateClearConditions="@(clearConditions => UpdateClearConditions(clearConditions))" ClearConditionList="@this.clearConditions">
+        </ClearConditions>
+    }
+    else if (this.currentSection == "Options" && this.IsPlando)
+    {
+        <Options ContinueTo="@(() => ContinueTo("Review"))" BackTo="@(() => BackTo("Clear Conditions"))"
+                 UpdateAvailableOptions="@(options => UpdateAvailableOptions(options))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateModifications="@((option1, option2) => UpdateModifications(option1, option2))"
+                 CurrentSeed="@this.CurrentSeed" AvailablePools="@this.availablePools" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions" Modifications="@this.modifications" 
+                 RandomizedEnemies="@this.randomizedEnemies" UpdateRandomizedEnemies="@(randEnemies => UpdateRandomizedEnemies(randEnemies))"
+                 RandomizedBosses="@this.randomizedBosses" UpdateRandomizedBosses="@(randBosses => UpdateRandomizedBosses(randBosses))"
+                 RandomizedPartyMembers="@this.randomizedPartyMembers" UpdateRandomizedPartyMembers="@(randPartyMembers => UpdateRandomizedPartyMembers(randomizedPartyMembers))"
+                 IsGoingBack="this.isGoingBack" IsDisabled="true">
+        </Options>
     }
     else if (this.currentSection == "Review")
     {
-        <Review BackTo="@(() => BackTo("Hints"))" CurrentSeed="@this.CurrentSeed" RandomizedOptions="@this.randomizedOptions"
-                AvailablePools="@this.availablePools" Exceptions="this.exceptions" Modifications="@this.modifications"
-                ImportantChecks="@this.importantChecks" HintSelectionType="@this.hintSelectionType" CanBeNone="@this.CanBeNone"
-                AvailableQualityOfLifeSettings="@this.availableQualityOfLifeOptions"></Review>
+        <Review BackTo="@(() => BackTo(this.IsPlando ? "Options" : "Clear Conditions"))" CurrentSeed="@this.CurrentSeed" IsPlando="@this.IsPlando"
+                AvailablePools="@this.availablePools" EXPMultiplier="@this.expMultiplier" Exceptions="@this.exceptions" Limiters="@this.limiters" Modifications="@this.modifications"
+                ImportantChecks="@this.importantChecks" HintSelectionType="@this.hintSelectionType" 
+                AvailableQualityOfLifeSettings="@this.availableQualityOfLifeOptions" 
+                ClearConditions="@this.clearConditions" ClearConditionSelectionType="@this.selectedClearConditionType">
+        </Review>
     }
 </div>
 
@@ -46,44 +69,74 @@
 @code {
     public string CurrentSeed { get; set; }
     public bool IsPlando { get; set; } = false;
-    public bool CanBeNone { get; set; } = false;
-
-    //private Dictionary<string, bool> availablePlandoPools = new Dictionary<string, bool> {
-    //    { "Treasures", true }, { "Events", true }, { "Starting Stats", true }, { "Lucky Emblems", false }, { "Bonuses", true },
-    //    { "Fullcourse Abilities", true }, { "Level Ups", true }, { "Weapon Upgrades", true }, {"Equippables", true },
-    //    { "Synthesis Items", true },
-
-    //    { "Bosses", false }, { "Enemies", false }, { "General Stats", false }
-    //};
 
     private Dictionary<string, RandomizeOptionEnum> availablePools = new Dictionary<string, RandomizeOptionEnum>
     {
         // World Categories - Custom Categories that contain Treasures, Events & Bonuses
         { "Olympus", RandomizeOptionEnum.Randomize }, { "Twilight Town", RandomizeOptionEnum.Randomize }, { "Toy Box", RandomizeOptionEnum.Randomize },
-        { "Kingdom of Corona", RandomizeOptionEnum.Randomize }, { "Monstropolis", RandomizeOptionEnum.Randomize }, { "100 Acre Wood", RandomizeOptionEnum.Randomize },
+        { "Kingdom of Corona", RandomizeOptionEnum.Randomize }, { "Monstropolis", RandomizeOptionEnum.Randomize }, { "100 Acre Wood", RandomizeOptionEnum.Replace },
         { "Arendelle", RandomizeOptionEnum.Randomize }, { "San Fransokyo", RandomizeOptionEnum.Randomize }, { "The Caribbean", RandomizeOptionEnum.Randomize },
-        { "Keyblade Graveyard", RandomizeOptionEnum.Randomize }, { "Re:Mind", RandomizeOptionEnum.Randomize }, { "Dark World", RandomizeOptionEnum.Randomize },
+        { "Keyblade Graveyard", RandomizeOptionEnum.Randomize }, { "Re+Mind", RandomizeOptionEnum.Randomize }, { "Dark World", RandomizeOptionEnum.Randomize },
         { "Unreality", RandomizeOptionEnum.Randomize },
 
         // Miscellaneous Categories
-        { "Sora", RandomizeOptionEnum.Randomize }, { "Equipment Abilities", RandomizeOptionEnum.Replace }, { "Data Battle Rewards", RandomizeOptionEnum.Replace },
+        { "Sora", RandomizeOptionEnum.Randomize }, { "Equipment Abilities", RandomizeOptionEnum.Randomize }, { "Data Battle Rewards", RandomizeOptionEnum.Randomize },
         { "Moogle Workshop", RandomizeOptionEnum.Randomize }, { "Fullcourse Abilities", RandomizeOptionEnum.Vanilla }, { "Lucky Emblems", RandomizeOptionEnum.Randomize },
-        { "Flantastic Flans", RandomizeOptionEnum.Replace }, { "Minigames", RandomizeOptionEnum.Replace }, { "Battle Portals", RandomizeOptionEnum.Replace },
+        { "Flantastic Flans", RandomizeOptionEnum.Replace }, { "Minigames", RandomizeOptionEnum.Replace }, { "Battle Portals", RandomizeOptionEnum.Randomize },
+
+        // Stat Categories
+        { "Base Sora Stats", RandomizeOptionEnum.Balanced }, { "Level Up Stats", RandomizeOptionEnum.Balanced }, { "Keyblade Enhance Stats", RandomizeOptionEnum.Boosted },
+        { "Equipment Stats", RandomizeOptionEnum.Balanced }, { "Food Effect Stats", RandomizeOptionEnum.Balanced },
+
+        // Enemy Categories
+        { "Enemies", RandomizeOptionEnum.Randomize }, { "Bosses", RandomizeOptionEnum.Randomize }, 
+        
+        // Party Categories
+        { "Party Members", RandomizeOptionEnum.Randomize },
 
         // Always On - Proofs, Oathkeeper, Oblivion, Meow Wow, Gummiphone
         { "Always On", RandomizeOptionEnum.Replace }
     };
 
+    private float expMultiplier { get; set; } = 1.0f;
+
     private Dictionary<string, bool> exceptions = new Dictionary<string, bool>
     {
+        { "Can Be None", false },
         { "Default Abilities", false },
         { "Default Critical Abilities", true },
-        { "Early Critical Abilities", false }
+        { "Early Critical Abilities", false },
+        { "Extra Movement", true },
+        { "Safe Magic Locations", true },
+
+        { "Replace Classic Kingdom Reward", true },
+        { "Replace Little Chef's Reward", true },
+        { "Replace Golden Herc Rewards", true },
+        { "Replace Sora Collection Rewards", true },
+        { "Replace Photo Missions", true },
+
+        { "Allow All Stats", false },
+        { "Allow Negative Stats", false },
+
+        { "Default Data Battles", true },
+        { "Default End Game Battles", true },
+        { "Default Yozora Battle", true },
+        { "Default Donald & Goofy", false },
+        { "Enemy Chaos", false },
+        { "Party Chaos", false }
+    };
+
+    public Dictionary<string, int> limiters = new Dictionary<string, int>
+    {
+        { "Level Up Limit", 35 }, { "Lucky Emblem Limit", 50 }, { "Moogle Synthesis Limit", 15 }
     };
 
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
 
     private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+    private Dictionary<string, Enemy> randomizedEnemies = new();
+    private Dictionary<string, string> randomizedBosses = new();
+    private Dictionary<string, string> randomizedPartyMembers = new();
 
     private List<Tuple<Option, Option>> modifications = new();
 
@@ -98,24 +151,36 @@
         "Magic: Fire", "Magic: Thunder", "Magic: Water",
         "\'Ohana Heartbinder", "Dream Heartbinder", "Ocean Heartbinder",
         "Pixel Heartbinder", "Pride Heartbinder",
-        "Ability: Air Slide", "Ability: Block", "Ability: Dodge Roll", "Ability: Pole Spin", "Ability: Second Chance", "Ability: Withstand Combo"
+        "Ability: Air Slide", "Ability: Block", "Ability: Dodge Roll", "Ability: Pole Spin", "Ability: Second Chance", "Ability: Withstand Combo", "Ability: Doubleflight"
     };
 
-    private Dictionary<string, Dictionary<string, bool>> availableQualityOfLifeOptions = new Dictionary<string, Dictionary<string, bool>> {
-        { "Bosses", new Dictionary<string, bool>
-        { { "Easier Mini-UFO", true }, { "Faster Raging Vulture", true }, { "Dark Baymax Phase 1 Skip", true }, { "Faster Lich Sequence", false } }
+    private Dictionary<string, Dictionary<string, bool>> availableQualityOfLifeOptions = new Dictionary<string, Dictionary<string, bool>>
+    {
+        { "Bosses", new Dictionary<string, bool> {
+            { "Easier Mini-UFO", true }, { "Faster Raging Vulture", true }, { "Faster Lich Sequence", true }, { "Dark Baymax Phase 1 Skip", true } }
         },
-        { "Events", new Dictionary<string, bool>
-        { { "Frozen Chase Skip", true },  { "Faster Crab Collection", false }, { "Big Hero Rescue Skip", false },
-            { "Faster Sora Collection", false }, { "Union χ Skip", false }, { "Guardians of Light Skip", false }, { "Slow Mickey Skip", true } }
+        { "Events", new Dictionary<string, bool> {
+            { "Frozen Chase Skip", true },  { "Faster Crab Collection", true }, { "Big Hero Rescue Skip", false },
+            { "Faster Sora Collection", true }, { "Union χ Skip", false }, { "Guardians of Light Skip", true } }
         },
-        { "Items", new Dictionary<string, bool>
-        { { "All Maps Unlocked", false } }
+        { "Items", new Dictionary<string, bool> {
+            { "All Maps Unlocked", false }, { "Easily Upgraded Keyblades", false }, { "Max Level Ship", true } }
         }
+    };
+
+    private string selectedClearConditionType = "3 Proofs";
+    private Dictionary<string, int> clearConditions = new Dictionary<string, int>
+    {
+        { "KEY_ITEM15\u0000", 1 }, { "KEY_ITEM16\u0000", 1 }, { "KEY_ITEM14\u0000", 1 }
     };
 
     private string currentSection = "Pools";
     private bool isGoingBack = false;
+
+    private Dictionary<string, string> selectedConfigurations = new Dictionary<string, string>()
+    {
+        { "Pools", "" }, { "QoL", "" }, { "Hints", "" }, { "Clear Conditions", "" }
+    };
 
 
     public void ContinueTo(string section)
@@ -197,6 +262,36 @@
         });
     }
 
+    public void UpdateRandomizedEnemies(Dictionary<string, Enemy> randomizedEnemies)
+    {
+        this.randomizedEnemies = randomizedEnemies;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateRandomizedBosses(Dictionary<string, string> randomizedBosses)
+    {
+        this.randomizedBosses = randomizedBosses;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateRandomizedPartyMembers(Dictionary<string, string> randomizedPartyMembers)
+    {
+        this.randomizedPartyMembers = randomizedPartyMembers;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
     public void UpdateModifications(Option initalOption, Option swapOption)
     {
         if (initalOption == null && swapOption == null)
@@ -208,16 +303,31 @@
     public void UpdateHintSelection(string selection)
     {
         this.hintSelectionType = selection;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
     }
 
     public void UpdateImportantChecks(List<string> importantChecks)
     {
         this.importantChecks = importantChecks;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
     }
 
     public void UpdateAvailableQualityOfLifeOptions(Dictionary<string, Dictionary<string, bool>> availableQualityOfLifeOptions)
     {
         this.availableQualityOfLifeOptions = availableQualityOfLifeOptions;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
     }
 
     public void UpdatePlandoOption(bool isPlando)
@@ -225,8 +335,159 @@
         this.IsPlando = isPlando;
     }
 
-    public void UpdateCanBeNone(bool canBeNone)
+    public void UpdateEXPMultiplier(float expMultiplier)
     {
-        this.CanBeNone = canBeNone;
+        this.expMultiplier = expMultiplier;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateLimiters(Dictionary<string, int> limiters)
+    {
+        this.limiters = limiters;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateSelectedClearConditionType(string type)
+    {
+        this.selectedClearConditionType = type;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateClearConditions(Dictionary<string, int> clearConditions)
+    {
+        this.clearConditions = clearConditions;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public async void SaveSectionConfiguration(string saveName)
+    {
+        if (this.currentSection == "Pools")
+        {
+            await SavePoolConfiguration(saveName);
+        }
+        else if (this.currentSection == "QoL")
+        {
+            await SaveQoLConfiguration(saveName);
+        }
+        else if (this.currentSection == "Hints")
+        {
+            await SaveHintConfiguration(saveName);
+        }
+        else if (this.currentSection == "Clear Conditions")
+        {
+            await SaveClearConditionConfiguration(saveName);
+        }
+        else if (this.currentSection == "Review")
+        {
+            var parsedSavedName = saveName.Split('_')[1];
+
+            await SavePoolConfiguration($"Pools_{parsedSavedName}");
+            await SaveQoLConfiguration($"QoL_{parsedSavedName}");
+            await SaveHintConfiguration($"Hints_{parsedSavedName}");
+            await SaveClearConditionConfiguration($"Clear Conditions_{parsedSavedName}");
+        }
+    }
+
+    private async Task SavePoolConfiguration(string saveName)
+    {
+        var pool = new Pool
+        {
+            Selections = this.availablePools,
+            Exceptions = this.exceptions,
+            Limiters = this.limiters,
+            EXPMultiplier = this.expMultiplier
+        };
+
+        await this.localStorage.SetItemAsync(saveName, pool);
+    }
+
+    private async Task SaveQoLConfiguration(string saveName)
+    {
+        var qol = new QoL
+        {
+            Selections = this.availableQualityOfLifeOptions
+        };
+
+        await this.localStorage.SetItemAsync(saveName, qol);
+    }
+
+    private async Task SaveHintConfiguration(string saveName)
+    {
+        var hint = new Hint
+        {
+            Type = this.hintSelectionType,
+            Checks = this.importantChecks
+        };
+
+        await this.localStorage.SetItemAsync(saveName, hint);
+    }
+
+    private async Task SaveClearConditionConfiguration(string saveName)
+    {
+        var clearCondition = new ClearCondition
+        {
+            Type = this.selectedClearConditionType,
+            Conditions = this.clearConditions
+        };
+
+        await this.localStorage.SetItemAsync(saveName, clearCondition);
+    }
+
+    public async void SelectSectionConfiguration(string saveName)
+    {
+        var section = saveName.Split('_')[0];
+
+        this.selectedConfigurations[section] = saveName;
+
+        if (section == "Pools")
+        {
+            var pool = await this.localStorage.GetItemAsync<Pool>(saveName);
+
+            this.UpdateAvailablePools(pool.Selections);
+            this.UpdateExceptions(pool.Exceptions);
+            this.UpdateEXPMultiplier(pool.EXPMultiplier);
+            this.UpdateLimiters(pool.Limiters);
+        }
+        else if (section == "QoL")
+        {
+            var qol = await this.localStorage.GetItemAsync<QoL>(saveName);
+
+            this.UpdateAvailableQualityOfLifeOptions(qol.Selections);
+        }
+        else if (section == "Hints")
+        {
+            var hint = await this.localStorage.GetItemAsync<Hint>(saveName);
+
+            this.UpdateHintSelection(hint.Type);
+            this.UpdateImportantChecks(hint.Checks);
+        }
+        else if (section == "Clear Conditions")
+        {
+            var clearCondition = await this.localStorage.GetItemAsync<ClearCondition>(saveName);
+
+            this.UpdateSelectedClearConditionType(clearCondition.Type);
+            this.UpdateClearConditions(clearCondition.Conditions);
+        }
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
     }
 }

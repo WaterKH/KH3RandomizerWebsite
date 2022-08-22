@@ -1,0 +1,56 @@
+{
+  "HE": {
+    "Field - HE_01_GAMEFLOW": {
+      "FilePath": "Content/Levels/he/he_01/umap/he_01_gameflow",
+      "Addresses": [ "0x10F17", "0x10B1C", "0x10721" ],
+      "EnemyPath": "\u0000"
+    }
+  },
+  "TT": {
+
+  },
+  "TS": {
+
+  },
+  "RA": {
+
+  },
+  "MI": {
+
+  },
+  "FZ": {
+
+  },
+  "CA": {
+
+  },
+  "BX": {
+
+  },
+  "DW": {
+  },
+  "KG": {
+
+  },
+  "EW": {
+
+  },
+  "BT": {
+    
+  },
+  "KG_DLC": {
+
+  },
+  "DW_DLC": {
+
+  },
+  "BT_DLC": {
+
+  },
+  "RG_DLC": {
+
+  },
+  "SS_DLC": {
+
+  }
+}

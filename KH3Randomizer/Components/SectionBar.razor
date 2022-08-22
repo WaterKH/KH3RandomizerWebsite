@@ -1,17 +1,11 @@
-﻿<div class="row">
+﻿@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<div class="row">
     <div class="col-md-2">
         <div class="@(this.CurrentSection == "Pools" ? "active-section-marker" : "section-marker")">
             <h4 class="section-item" style="position: absolute;">Pools</h4>
         </div>
     </div>
-    @if (this.IsPlando)
-    {
-    <div class="col-md-2">
-        <div class="@(this.CurrentSection == "Options" ? "active-section-marker" : "section-marker")">
-            <h4 class="section-item" style="position: absolute;">Options</h4>
-        </div>
-    </div>
-    }
     <div class="col-md-2">
         <div class="@(this.CurrentSection == "QoL" ? "active-section-marker" : "section-marker")">
             <h4 class="section-item" style="position: absolute;">QoL</h4>
@@ -22,19 +16,70 @@
             <h4 class="section-item" style="position: absolute;">Hints</h4>
         </div>
     </div>
-    <div class="col-md-2">
-        <div class="@(this.CurrentSection == "Review" ? "active-section-marker" : "section-marker")">
+    <div class="col-md-3">
+        <div class="@(this.CurrentSection == "Clear Conditions" ? "active-section-marker" : "section-marker")">
+            <h4 class="section-item" style="position: absolute;">Clear Conditions</h4>
+        </div>
+    </div>
+    <div class="col-md-1">
+        <div class="@(this.CurrentSection == "Review" || this.CurrentSection == "Options" ? "active-section-marker" : "section-marker")">
             <h4 class="section-item" style="position: absolute;">Review</h4>
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1">
         <div>
-            <h4 class="section-item" style="color: white;">Spoiler</h4>
+            <h4 class="section-item" style="color: #ffffff00; cursor: default;">UNDEFINED</h4>
         </div>
     </div>
 </div>
 
+<hr />
+
+@if (this.CurrentSection != "Options")
+{
+<div class="row">
+    <div class="col-md-6" style="align-self: center;">
+        <label><b>Configurations:</b></label>
+
+        <button @onclick="OpenManageConfigurationsModal" class="btn kh-button" style="margin-left: 15px;">Manage Configurations</button>
+    </div>
+
+    <div class="col-md-6" style="text-align: end;">
+        <input id="configuration" name="configuration" class="kh-inputfield" @onchange="@((value) => this.localStorageName = value.Value.ToString())" placeholder="Enter a configuration name..." style="width: 55%;" />
+        <button @onclick="SaveConfiguration" class="btn kh-button">@(this.CurrentSection == "Review" ? "Save All Configurations" : "Save Configuration")</button>
+    </div>
+</div>
+
+<hr />
+}
+
 @code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
     [Parameter] public string CurrentSection { get; set; }
     [Parameter] public bool IsPlando { get; set; }
+    [Parameter] public Dictionary<string, string> SelectedConfigurations { get; set; }
+    [Parameter] public EventCallback<string> SaveSectionConfiguration { get; set; }
+    [Parameter] public EventCallback<string> UpdateSectionConfiguration { get; set; }
+
+    private string localStorageName = "";
+
+
+    @* Create Open Manage Configurations Modal *@
+    private void OpenManageConfigurationsModal()
+    {
+        var parameters = new ModalParameters();
+        parameters.Add("Section", this.CurrentSection);
+        parameters.Add("SelectedConfigurations", this.SelectedConfigurations);
+        parameters.Add("UpdateSectionConfiguration", this.UpdateSectionConfiguration);
+
+        var options = new ModalOptions { Class = "modal-custom" };
+
+        Modal.Show<ConfigurationModal>("Manage Configurations", parameters, options);
+    }
+    
+    private async Task SaveConfiguration()
+    {
+        await this.SaveSectionConfiguration.InvokeAsync($"{this.CurrentSection}_{this.localStorageName}");
+    }
 }

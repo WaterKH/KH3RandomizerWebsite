@@ -1,0 +1,54 @@
+﻿@using UE4DataTableInterpreter.Enums
+
+@inject RandomizerService RandomizerService
+
+<div class="simple-form change-option-modal">
+    <div class="button-group">
+        <div class="row">
+            @foreach (var stat in this.OriginalStats)
+            {
+                <div class="col-md-3" style="text-align: end;">
+                    <label for="@stat.Key">@stat.Key</label>
+                    <input id="@stat.Key" name="@stat.Key" type="number" class="kh-inputfield" style="width: 55%;" 
+                           @onchange="@((value) => this.UpdatedStats[stat.Key] = value.Value.ToString())" value="@stat.Value" />
+                </div>
+            }
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <button @onclick="@Update" class="btn kh-button" style="margin-right: 5px;">Update Stat</button>
+
+                <button @onclick="ModalInstance.CancelAsync" class="btn kh-button-cancel" style="margin-left: 15px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter] public Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>> UpdateStat { get; set; }
+
+    [Parameter] public DataTableEnum Category { get; set; }
+    [Parameter] public string SubCategory { get; set; }
+    [Parameter] public Dictionary<string, string> OriginalStats { get; set; }
+    [Parameter] public Dictionary<string, string> UpdatedStats { get; set; }
+
+    public async void Update()
+    {
+        UpdateStat.Invoke(this.Category, this.SubCategory, this.OriginalStats, this.UpdatedStats);
+
+        await ModalInstance.CloseAsync();
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

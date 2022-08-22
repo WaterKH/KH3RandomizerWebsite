@@ -1,0 +1,123 @@
+﻿@inject RandomizerService RandomizerService
+@inject HintService HintService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IJSRuntime js
+
+@using UE4DataTableInterpreter.Enums;
+@using Models.Configuration;
+@using System.Text.RegularExpressions;
+
+<div class="simple-form create-quick-seed-modal" style="min-width: 60vw; background-color: #F2F2F2; overflow-y: auto; overflow-x: hidden;">
+    <div class="row" style="margin-bottom: 15px;">
+        <div class="kh-input col-md-11">
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="seed" style="font-size: 1.3rem; padding: 5px 0px 0px 0px;">Seed Name: </label>
+                </div>
+
+                <div class="col-md-5">
+                    <input id="seed" name="seed" class="kh-inputfield" @onchange="((seed) => this.currentSeed = seed.Value.ToString())" placeholder="Enter a seed name..." />
+                </div>
+
+                <div class="col-md-1" style="margin-top: 8px; float: right;">
+                    <Tooltip Text="This is what is used to randomize the items. You can generate a duplicate seed if the same name is used.">
+                        <i class="bi bi-question-circle" style="font-size: 1.2rem;"></i>
+                    </Tooltip>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var configurationName in this.configurationNames)
+        {
+            <div class="col-md-3">
+                <label><b>@(configurationName):</b></label>
+                <select class="kh-select" @bind="this.selectedConfigurations[configurationName]">
+                    @if (this.configurations != null)
+                    {
+                        <option value="">--- Select ---</option>
+                        @foreach (var configuration in this.configurations.Where(x => x.Contains(configurationName)))
+                        {
+                            <option value="@configuration">@configuration.Split('_')[1]</option>
+                        }
+                    }
+                </select>
+            </div>
+        }
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div>
+                <button @onclick="CreateSeed" class="btn @(this.selectedConfigurations.Any(x => x.Value == "") || this.currentSeed == "" ? "kh-disabled-button": "kh-button")"
+                        style="margin-left: 15px;" disabled="@(this.selectedConfigurations.Any(x => x.Value == "") || this.currentSeed == "")">
+                    Create Seed
+                </button>
+                <button @onclick="ModalInstance.CancelAsync" class="btn kh-button-cancel" style="margin-left: 15px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    private List<string> configurationNames = new List<string> { "Pools", "QoL", "Hints", "Clear Conditions" };
+    private Dictionary<string, string> selectedConfigurations = new Dictionary<string, string> {
+        { "Pools", "" }, { "QoL", "" }, { "Hints", "" }, { "Clear Conditions", "" }
+    };
+
+    private IEnumerable<string> configurations { get; set; }
+
+    private string currentSeed = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            this.configurations = await this.GetConfigurations();
+
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task<IEnumerable<string>> GetConfigurations()
+    {
+        return await this.localStorage.KeysAsync();
+    }
+
+    public async Task CreateSeed()
+    {
+        this.currentSeed = Regex.Replace(this.currentSeed, @"[^\w\-]", "");
+
+        var poolConfiguration = await this.localStorage.GetItemAsync<Pool>(this.selectedConfigurations["Pools"]);
+        var qolConfiguration = await this.localStorage.GetItemAsync<QoL>(this.selectedConfigurations["QoL"]);
+        var hintConfiguration = await this.localStorage.GetItemAsync<Hint>(this.selectedConfigurations["Hints"]);
+        var clearConditionConfiguration = await this.localStorage.GetItemAsync<ClearCondition>(this.selectedConfigurations["Clear Conditions"]);
+
+        // Generate modifications
+        List<Tuple<Option, Option>> modifications = new();
+
+        // Generate Randomized Seed
+        var file = await this.RandomizerService.GenerateRandomizerSeed(this.currentSeed, poolConfiguration, qolConfiguration, hintConfiguration, clearConditionConfiguration, modifications);
+
+        await js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.currentSeed + ".zip", Convert.ToBase64String(file));
+        //await js.InvokeAsync<object>("saveAsFile", "pakchunk99-randomizer-" + this.currentSeed + ".pak", Convert.ToBase64String(files[0]));
+        //await js.InvokeAsync<object>("saveAsFile", "SpoilerLog-" + this.currentSeed + ".json", Convert.ToBase64String(files[1]));
+
+        this.RandomizerService.DeleteRandomizerSeed(this.currentSeed);
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}

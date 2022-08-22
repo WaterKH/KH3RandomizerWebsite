@@ -1,0 +1,62 @@
+﻿@using UE4DataTableInterpreter.Enums
+@using KH3Randomizer.Models.Stats
+
+@inject RandomizerService RandomizerService
+
+<Table Items="this.WeaponUpgradeStats" Context="WeaponUpgradeStat" CurrentPage="1">
+    <TableHeader>
+        <th>Level</th>
+        <th>Attack Plus</th>
+        <th>Magic Plus</th>
+        <th>Action</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@WeaponUpgradeStat.Id.KeyIdToDisplay()</td>
+        <td>@WeaponUpgradeStat.AttackPlus</td>
+        <td>@WeaponUpgradeStat.MagicPlus</td>
+        <td><a href="#" @onclick="() => OpenModal(WeaponUpgradeStat)" @onclick:preventDefault>Change</a></td>
+    </RowTemplate>
+</Table>
+
+@code {
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    [Parameter] public string WeaponUpgradeStatName { get; set; }
+
+    [Parameter] public Action<DataTableEnum, string, Dictionary<string, string>, Dictionary<string, string>> UpdateStat { get; set; }
+    [Parameter] public Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> RandomizedOptions { get; set; }
+
+    private List<WeaponUpgradeStat> WeaponUpgradeStats { get; set; }
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        if (parameters.TryGetValue<string>(nameof(this.WeaponUpgradeStatName), out var value) && parameters.TryGetValue<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>>(nameof(RandomizedOptions), out var options))
+        {
+            this.randomizedOptions = options;
+            this.WeaponUpgradeStats = this.RandomizerService.GetAvailableWeaponUpgradeStats(value, ref this.randomizedOptions);
+        }
+
+        await base.SetParametersAsync(parameters);
+    }
+
+    private void OpenModal(WeaponUpgradeStat weaponUpgradeStat)
+    {
+        var parameters = new ModalParameters();
+
+        var weaponUpgradeStats = new Dictionary<string, string> {
+            { "AttackPlus", weaponUpgradeStat.AttackPlus }, { "MagicPlus", weaponUpgradeStat.MagicPlus }
+        };
+
+        parameters.Add("Category", DataTableEnum.WeaponEnhanceStat);
+        parameters.Add("SubCategory", weaponUpgradeStat.Id);
+        parameters.Add("OriginalStats", weaponUpgradeStats);
+        parameters.Add("UpdatedStats", weaponUpgradeStats.ToDictionary(x => x.Key, y => y.Value));
+
+        parameters.Add("UpdateStat", UpdateStat);
+
+        var options = new ModalOptions { Class = "modal-custom" };
+
+        Modal.Show<ChangeStat>($"Change {this.WeaponUpgradeStatName} Stats - {weaponUpgradeStat.Id.KeyIdToDisplay()}", parameters, options);
+    }
+}

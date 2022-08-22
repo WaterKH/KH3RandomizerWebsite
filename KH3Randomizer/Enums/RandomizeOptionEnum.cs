@@ -10,6 +10,9 @@ namespace KH3Randomizer.Enums
         None = 0,
         Vanilla = 1,
         Randomize = 2,
-        Replace = 3
+        Replace = 3,
+
+        Balanced = 4,
+        Boosted = 5
     }
 }

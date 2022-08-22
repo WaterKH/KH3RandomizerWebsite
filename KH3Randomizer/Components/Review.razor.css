@@ -22,7 +22,7 @@
 }
 
 .kh-input {
-    background: linear-gradient(to right, #015eea, #00c0fa);
+    background: #0081ff;
     padding: 5px 25px;
     margin: 0px 0px -35px 15px;
     border-radius: 10px;
@@ -48,7 +48,7 @@ input:focus {
 }
 
 .kh-button {
-    background: linear-gradient(to right, #015eea, #00c0fa);
+    background: #0081ff;
     padding: 5px 25px;
     border-radius: 10px;
     color: white;
@@ -57,8 +57,17 @@ input:focus {
     transition: opacity 0.3s ease-in-out;
 }
 
-.kh-button:hover {
-    opacity: .75;
+    .kh-button:hover {
+        opacity: .75;
+    }
+
+.kh-button-disabled {
+    background: #525252;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
 }
 
 .subreview-section {

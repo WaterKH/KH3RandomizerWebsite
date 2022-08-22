@@ -1,7 +1,8 @@
 ﻿@inject KH3Randomizer.Data.RandomizerService RandomizerService
 
-@using Enums; 
-@using UE4DataTableInterpreter.Enums; 
+@using Enums;
+@using UE4DataTableInterpreter.Enums;
+@using UE4DataTableInterpreter.Models;
 @using System.Text.RegularExpressions;
 
 <div class="pools-section">
@@ -12,7 +13,7 @@
                     <label for="seed" style="font-size: 1.3rem; padding: 5px 0px 0px 0px;">Seed Name: </label>
                 </div>
 
-                <div class="col-md-5">
+                <div class="col-md-3">
                     <input id="seed" name="seed" class="kh-inputfield" @onchange="RandomizeByPools" placeholder="Enter a seed name..." value="@(string.IsNullOrEmpty(this.currentSeed) ? "" : this.currentSeed)" />
                 </div>
 
@@ -22,24 +23,13 @@
                     </Tooltip>
                 </div>
 
+                <div class="col-md-2">
+                    <button class="btn kh-button-light" @onclick="RandomSeed">Random Seed</button>
+                </div>
+
                 <div class="col-md-4">
                     <label style="font-size: 1.3rem; padding: 5px 0px 0px 0px;">Remaining Vanilla or Replace Pools: <b>@this.remainingReplaceVanillaCount</b></label>
                 </div>
-                @*<div class="col-md-4" style="margin-top: 8px; text-align: end;">
-                    <b>All Pools: </b>
-
-                    <div id="poolOptionEnums" style="display: inline-flex;">
-                        <button class="kh-left-switch @(this.randomizeOption == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdatePools(RandomizeOptionEnum.Vanilla); })">
-                            Vanilla
-                        </button>
-                        <button class="kh-center-switch @(this.randomizeOption == RandomizeOptionEnum.Randomize ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdatePools(RandomizeOptionEnum.Randomize); })">
-                            Randomize
-                        </button>
-                        <button class="kh-right-switch @(this.randomizeOption == RandomizeOptionEnum.Replace ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdatePools(RandomizeOptionEnum.Replace); })">
-                            Replace
-                        </button>
-                    </div>
-                </div>*@
             </div>
         </div>
     </div>
@@ -47,16 +37,16 @@
     <div class="pools-subsection">
         <h3 style="display: inline;">World Pools</h3>
         <Tooltip Text="All of these categories contain Treasures, Events & Bonuses">
-            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue; padding-left: 30px;"></i>
+            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #0081ff; padding-left: 30px;"></i>
         </Tooltip>
 
         <div class="row">
-            @foreach (var pool in worldPools)
+            @foreach (var pool in this.worldPools)
             {
                 <div class="col-md-4" style="margin: 15px 0px;">
                     <div class="row">
                         <div class="col-md-12">
-                            <label style="margin-top: 5px;"><b>@pool.Key:</b></label>
+                            <label style="margin-top: 5px;"><b>@pool.Key</b></label>
 
                             <div id="poolOptionEnums" style="display: inline-flex; float: right;">
                                 <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateWorldPool(pool.Key, RandomizeOptionEnum.Vanilla); })" disabled="@this.maxReplaceVanillaMet">
@@ -80,28 +70,181 @@
         <h3>Miscellaneous Pools</h3>
 
         <div class="row">
-            @foreach (var pool in miscellaneousPools.Where(x => x.Key != "Always On"))
+            @foreach (var pool in this.miscellaneousPools.Where(x => x.Key != "Always On"))
             {
                 <div class="col-md-4" style="margin: 15px 0px;">
                     <div class="row">
                         <div class="col-md-3">
-                            <label style="margin-top: 5px;"><b>@pool.Key:</b></label>
+                            <label style="margin-top: 5px;"><b>@pool.Key</b></label>
                         </div>
                         <div class="col-md-1">
                             <Tooltip Text="@this.poolDescriptions[pool.Key]">
-                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue; padding-right: 5px;"></i>
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #0081ff; padding-right: 5px;"></i>
                             </Tooltip>
                         </div>
                         <div class="col-md-8">
                             <div id="poolOptionEnums" style="display: inline-flex; float: right;">
-                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Vanilla); })" disabled="@(pool.Key == "Battle Portals" || this.maxReplaceVanillaMet)">
+                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Vanilla); })" disabled="@(this.maxReplaceVanillaMet)">
                                     Vanilla
                                 </button>
-                                <button class="kh-center-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Randomize); })" disabled="@(pool.Key == "Battle Portals")">
+                                <button class="kh-center-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Randomize); })">
                                     Randomize
                                 </button>
-                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Replace ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Replace); })" disabled="@(pool.Key == "Battle Portals" || this.maxReplaceVanillaMet)">
+                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Replace ? "kh-switch-active" : "")" @onclick="@(() => { this.UpdateMiscellaneousPool(pool.Key, RandomizeOptionEnum.Replace); })" disabled="@(this.maxReplaceVanillaMet)">
                                     Replace
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if ((pool.Key == "Sora" || pool.Key == "Moogle Workshop" || pool.Key == "Lucky Emblems") && pool.Value == RandomizeOptionEnum.Randomize)
+                    {
+                        var limitKey = pool.Key == "Sora" ? "Level Up Limit" :
+                                    pool.Key == "Moogle Workshop" ? "Moogle Synthesis Limit" :
+                                    "Lucky Emblem Limit";
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label style="margin-top: 5px;">
+                                    <b>
+                                        @limitKey
+                                    </b>
+                                </label>
+                            </div>
+                            <div class="col-md-1">
+                                <Tooltip Text="@this.limitDescriptions[limitKey]">
+                                    <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #ffca85; padding-right: 5px;"></i>
+                                </Tooltip>
+                            </div>
+                            <div class="col-md-5" style="align-self: center; text-align-last: center;">
+                                <input type="range" min="@this.limiterRanges[limitKey][0]" max="@this.limiterRanges[limitKey][1]" step="@this.limiterRanges[limitKey][2]"
+                                       value="@this.limiters[limitKey]" style="accent-color: #ffca85;"
+                                       @onchange="@((e) => { this.limiters[limitKey] = int.Parse(e.Value.ToString()); this.UpdateLimiters.InvokeAsync(this.limiters);
+                                                        this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed }); })">
+                            </div>
+                            <div class="col-md-2" style="align-self: center; text-align-last: center;">
+                                <b>@this.limiters[limitKey]</b>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <hr />
+
+        <h3>Stat Pools</h3>
+
+        <div class="row">
+            @foreach (var pool in this.statPools)
+            {
+                <div class="col-md-4" style="margin: 15px 0px;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label style="margin-top: 5px;"><b>@pool.Key.Replace(" Stats", "")</b></label>
+                        </div>
+
+                        <div class="col-md-1">
+                            <Tooltip Text="@this.poolDescriptions[pool.Key]">
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #ba85ff; padding-right: 5px;"></i>
+                            </Tooltip>
+                        </div>
+
+                        <div class="col-md-8">
+                            <div id="poolOptionEnums" style="display: inline-flex; float: right;">
+                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active selected-kh-stat-color" : "")" @onclick="@(() => { this.UpdateStatPool(pool.Key, RandomizeOptionEnum.Vanilla); })">
+                                    Vanilla
+                                </button>
+                                <button class="kh-center-switch @(pool.Value == RandomizeOptionEnum.Balanced ? "kh-switch-active selected-kh-stat-color" : "")" @onclick="@(() => { this.UpdateStatPool(pool.Key, RandomizeOptionEnum.Balanced); })">
+                                    Balanced
+                                </button>
+                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Boosted ? "kh-switch-active selected-kh-stat-color" : "")" @onclick="@(() => { this.UpdateStatPool(pool.Key, RandomizeOptionEnum.Boosted); })">
+                                    Boosted
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @* EXP Multiplier *@
+            <div class="col-md-4" style="margin: 15px 0px;">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label style="margin-top: 5px;"><b>EXP Multiplier:</b></label>
+                    </div>
+                    <div class="col-md-1">
+                        <Tooltip Text="@this.poolDescriptions["EXP Multiplier"]">
+                            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #ba85ff; padding-right: 5px;"></i>
+                        </Tooltip>
+                    </div>
+                    <div class="col-md-5" style="align-self: center; text-align-last: center;">
+                        <input type="range" min="0.5" max="5" step="0.5" value="@this.expMultiplier" style="accent-color: #ba85ff;"
+                               @onchange="@((e) => { this.expMultiplier = float.Parse(e.Value.ToString()); this.UpdateEXPMultiplier.InvokeAsync(this.expMultiplier); this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed }); })">
+                    </div>
+                    <div class="col-md-2" style="align-self: center; text-align-last: center;">
+                        <b>@(this.expMultiplier)x</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <h3 style="display: inline;">Enemy &amp; Party Pools</h3>
+        <Tooltip Text="These options may cause the game to be unstable, thus not allowing a seed to be completed.">
+            <i class="bi bi-exclamation-triangle" style="font-size: 1.2rem; color: #ff9900; padding-left: 30px;"></i>
+        </Tooltip>
+
+        <div class="row">
+            @foreach (var pool in this.enemyPools)
+            {
+                <div class="col-md-4" style="margin: 15px 0px;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label style="margin-top: 5px;"><b>@pool.Key</b></label>
+                        </div>
+
+                        <div class="col-md-1">
+                            <Tooltip Text="@this.poolDescriptions[pool.Key]">
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #ff4949; padding-right: 5px;"></i>
+                            </Tooltip>
+                        </div>
+
+                        <div class="col-md-8" style="text-align: center;">
+                            <div id="poolOptionEnums" style="display: inline-flex;">
+                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active selected-kh-enemy-color" : "")" @onclick="@(() => { this.UpdateEnemyPool(pool.Key, RandomizeOptionEnum.Vanilla); })">
+                                    Vanilla
+                                </button>
+                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active selected-kh-enemy-color" : "")" @onclick="@(() => { this.UpdateEnemyPool(pool.Key, RandomizeOptionEnum.Randomize); })">
+                                    Randomize
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @foreach (var pool in this.partyPools)
+            {
+                <div class="col-md-4" style="margin: 15px 0px;">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label style="margin-top: 5px;"><b>@pool.Key</b></label>
+                        </div>
+
+                        <div class="col-md-1">
+                            <Tooltip Text="@this.poolDescriptions[pool.Key]">
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #ff4949; padding-right: 5px;"></i>
+                            </Tooltip>
+                        </div>
+
+                        <div class="col-md-8" style="text-align: center;">
+                            <div id="poolOptionEnums" style="display: inline-flex;">
+                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active selected-kh-enemy-color" : "")" @onclick="@(() => { this.UpdatePartyPool(pool.Key, RandomizeOptionEnum.Vanilla); })">
+                                    Vanilla
+                                </button>
+                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active selected-kh-enemy-color" : "")" @onclick="@(() => { this.UpdatePartyPool(pool.Key, RandomizeOptionEnum.Randomize); })">
+                                    Randomize
                                 </button>
                             </div>
                         </div>
@@ -112,36 +255,24 @@
     </div>
 
     <div class="pools-subsection">
-        <h3 style="display: inline;">Exceptions</h3>
+        <h3 style="display: inline;">World &amp; Miscellaneous Exceptions</h3>
 
         <div class="row">
-            @* This is because canBeNone was developed outside of the exception framework and re-designing the entire structure again is too much right now *@
-            <div class="col-md-4" style="margin: 15px 0px;">
-                <div class="row">
-                    <div class="col-md-2">
-                        <label class="switch">
-                            <input type="checkbox" @onchange="@(() => { this.CanBeNone = !this.CanBeNone; this.UpdateCanBeNone.InvokeAsync(this.CanBeNone); 
-                                                                    this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed }); })" checked="@this.CanBeNone">
-                            <span class="slider round"></span>
-                        </label>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label><b>Can Be None</b></label>
-                    </div>
-
-                    <div class="col-md-1">
-                        <Tooltip Text="Allows None to appear in all Pools. For instance, opening a chest may have nothing in it.">
-                            <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
-                        </Tooltip>
-                    </div>
-                </div>
-            </div>
-
-            @foreach (var (name, value) in this.exceptions)
+            @foreach (var (name, value) in this.exceptions.Where(x => x.Key == "Can Be None" || x.Key == "Default Abilities" || x.Key == "Default Critical Abilities" || x.Key == "Early Critical Abilities" || x.Key == "Extra Movement" || x.Key == "Safe Magic Locations"
+                                                                 || x.Key == "Replace Classic Kingdom Reward" || x.Key == "Replace Little Chef's Reward" || x.Key == "Replace Golden Herc Rewards" || x.Key == "Replace Sora Collection Rewards" ||  x.Key == "Replace Photo Missions"))
             {
                 <div class="col-md-4" style="margin: 15px 0px;">
                     <div class="row">
+                        <div class="col-md-6">
+                            <label><b>@name</b></label>
+                        </div>
+
+                        <div class="col-md-2">
+                            <Tooltip Text="@this.exceptionDescriptions[name]">
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #0081ff;"></i>
+                            </Tooltip>
+                        </div>
+
                         <div class="col-md-2">
                             <label class="switch">
                                 <input type="checkbox" @onchange="@((value) => { this.exceptions[name] = (bool)value.Value; this.UpdateExceptions.InvokeAsync(this.exceptions);
@@ -149,15 +280,68 @@
                                 <span class="slider round"></span>
                             </label>
                         </div>
+                    </div>
+                </div>
+            }
+        </div>
 
+        <hr />
+
+        <h3 style="display: inline;">Stat Exceptions</h3>
+
+        <div class="row">
+            @foreach (var (name, value) in this.exceptions.Where(x => x.Key == "Allow All Stats" || x.Key == "Allow Negative Stats"))
+            {
+                <div class="col-md-4" style="margin: 15px 0px;">
+                    <div class="row">
                         <div class="col-md-6">
                             <label><b>@name</b></label>
                         </div>
 
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <Tooltip Text="@this.exceptionDescriptions[name]">
-                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: dodgerblue;"></i>
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #ba85ff;"></i>
                             </Tooltip>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="switch">
+                                <input type="checkbox" @onchange="@((value) => { this.exceptions[name] = (bool)value.Value; this.UpdateExceptions.InvokeAsync(this.exceptions);
+                                                                        this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed }); })" checked="@value">
+                                <span class="slider round kh-stat-color"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <hr />
+
+        <h3 style="display: inline;">Enemy &amp; Party Exceptions</h3>
+
+        <div class="row">
+            @foreach (var (name, value) in this.exceptions.Where(x => x.Key == "Default Data Battles" || x.Key == "Default End Game Battles" || x.Key == "Default Yozora Battle"
+                                                               || x.Key == "Enemy Chaos" || x.Key == "Default Donald & Goofy" || x.Key == "Party Chaos"))
+            {
+                <div class="col-md-4" style="margin: 15px 0px;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label><b>@name</b></label>
+                        </div>
+
+                        <div class="col-md-2">
+                            <Tooltip Text="@this.exceptionDescriptions[name]">
+                                <i class="bi bi-question-circle" style="font-size: 1.2rem; color: #ff4949;"></i>
+                            </Tooltip>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="switch">
+                                <input type="checkbox" @onchange="@((value) => { this.exceptions[name] = (bool)value.Value; this.UpdateExceptions.InvokeAsync(this.exceptions);
+                                                                        this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed }); })" checked="@value">
+                                <span class="slider round kh-enemy-color"></span>
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -167,16 +351,14 @@
 
     @if (!this.IsSpoilerLog)
     {
-    <b>Is Plandomizer: </b>
+        <b>Is Plandomizer: </b>
 
-    <label class="switch">
-        <input type="checkbox" @onchange="@(() => { this.IsPlando = !this.IsPlando; this.UpdatePlando.InvokeAsync(this.IsPlando); })" checked="@this.IsPlando">
-        <span class="slider round"></span>
-    </label>
+        <label class="switch">
+            <input type="checkbox" @onchange="@(() => { this.IsPlando = !this.IsPlando; this.UpdatePlando.InvokeAsync(this.IsPlando); })" checked="@this.IsPlando">
+            <span class="slider round"></span>
+        </label>
 
-    <label style="margin-left: 10px;"><i>This feature is active but not supported for the 1.1 release.</i></label>
-    
-    <button class="btn kh-button" @onclick="@(() => { string section = this.IsPlando ? "Options" : "Quality of Life"; this.ContinueToNext(section); })" style="float: right;">Continue to @(this.IsPlando ? "Options" : "Quality of Life")...</button>
+        <button class="btn kh-button" @onclick="@(() => ContinueToNext("QoL"))" style="float: right;">Continue to Quality of Life...</button>
     }
 </div>
 
@@ -186,16 +368,21 @@
     [Parameter] public EventCallback<string> ContinueTo { get; set; }
     [Parameter] public EventCallback<Dictionary<string, RandomizeOptionEnum>> UpdateAvailablePools { get; set; }
     [Parameter] public EventCallback<bool> UpdatePlando { get; set; }
-    [Parameter] public EventCallback<bool> UpdateCanBeNone { get; set; }
+    [Parameter] public EventCallback<float> UpdateEXPMultiplier { get; set; }
     [Parameter] public EventCallback<string> UpdateCurrentSeed { get; set; }
     [Parameter] public EventCallback<Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>>> UpdateRandomizedOptions { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, Enemy>> UpdateRandomizedEnemies { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, string>> UpdateRandomizedBosses { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, string>> UpdateRandomizedPartyMembers { get; set; }
     [Parameter] public EventCallback<Dictionary<string, bool>> UpdateExceptions { get; set; }
+    [Parameter] public EventCallback<Dictionary<string, int>> UpdateLimiters { get; set; }
 
     [Parameter] public Dictionary<string, RandomizeOptionEnum> AvailablePools { get; set; }
     [Parameter] public Dictionary<string, bool> Exceptions { get; set; }
+    [Parameter] public Dictionary<string, int> Limiters { get; set; }
     [Parameter] public bool IsPlando { get; set; }
     [Parameter] public bool IsSpoilerLog { get; set; } = false;
-    [Parameter] public bool CanBeNone { get; set; }
+    [Parameter] public float EXPMultiplier { get; set; }
     [Parameter] public string CurrentSeed { get; set; }
 
     private RandomizeOptionEnum randomizeOption { get; set; } = RandomizeOptionEnum.None;
@@ -203,17 +390,57 @@
 
     private Dictionary<string, RandomizeOptionEnum> worldPools = new Dictionary<string, RandomizeOptionEnum>();
     private Dictionary<string, RandomizeOptionEnum> miscellaneousPools = new Dictionary<string, RandomizeOptionEnum>();
+    private Dictionary<string, RandomizeOptionEnum> statPools = new Dictionary<string, RandomizeOptionEnum>();
+    private Dictionary<string, RandomizeOptionEnum> enemyPools = new Dictionary<string, RandomizeOptionEnum>();
+    private Dictionary<string, RandomizeOptionEnum> partyPools = new Dictionary<string, RandomizeOptionEnum>();
     private Dictionary<string, bool> exceptions { get; set; }
+    private Dictionary<string, int> limiters { get; set; }
 
-    private int maxReplaceVanillaCount = 13;
+    private int maxReplaceVanillaCount = 9;
     private bool maxReplaceVanillaMet = false;
     private int remainingReplaceVanillaCount = 0;
 
+    private float expMultiplier = 1.0f;
+
     private Dictionary<string, string> exceptionDescriptions = new Dictionary<string, string>
     {
+        { "Can Be None", "Allows None to appear in all Pools. For instance, opening a chest may have nothing in it." },
         { "Default Abilities", "Keeps Sora's base abilities from being randomized, like Pole Spin, Dodge, Block, etc." },
         { "Default Critical Abilities", "Keeps Sora's base critical abilities from being randomized, like Critical Converter, Critical Counter, etc." },
         { "Early Critical Abilities", "Keeps Sora's early critical abilities earned from being randomized, like Air Slide, Superslide, etc." },
+        { "Extra Movement", "Adds additional movement abilities that overwrite materials in the Pools, like Dodge Roll, Air Slide, etc. - This can cause empty checks." },
+        { "Safe Magic Locations", "Attempts to add Magic only in places where a retry will not remove it from Sora's magic pool." },
+
+        { "Replace Classic Kingdom Reward", "Replaces the reward for getting all High-scores with something marked as replaceable." },
+        { "Replace Little Chef's Reward", "Replaces the reward for completing all Little Chef's recipes with something marked as replaceable." },
+        { "Replace Golden Herc Rewards", "Replaces the reward for finding all Golden Herc statues with something marked as replaceable." },
+        { "Replace Sora Collection Rewards", "Replaces the reward for collecting 222 and 333 Soras in the Final World with something marked as replaceable." },
+        { "Replace Photo Missions", "Replaces the reward for taking pictures of specific enemies, party members or locations." },
+
+        { "Allow All Stats", "Allows stats that are 0 or unmodified to be entered into the pool." },
+        { "Allow Negative Stats", "Allows a 50% random chance for a stat to become negative." },
+
+        { "Default Data Battles", "Keeps Data Battles from being randomized, like Data Luxord, Data Xion, etc." },
+        { "Default End Game Battles", "Keeps End Game Battles from being randomized, like Master Xehanort, Replica Xehanort, etc." },
+        { "Default Yozora Battle", "Keeps Yozora from being encountered outside of his specified battle." },
+        { "Default Donald & Goofy", "Donald & Goofy will always be in your party." },
+        { "Enemy Chaos", "Each enemy is randomized per entity, as opposed to per type." },
+        { "Party Chaos", "Party Members will randomly be assigned on every room change." },
+    };
+
+    private Dictionary<string, string> limitDescriptions = new Dictionary<string, string>
+    {
+        { "Level Up Limit", "Randomizes up to and including the limit amount; Replaces the rest." },
+        { "Lucky Emblem Limit", "Randomizes up to and including the limit amount; Replaces the rest." },
+        { "Moogle Synthesis Limit", "Allows up to the inclusive limit of Important Items." }
+    };
+
+    // Value: { Min, Max, Step } for input tag of type range
+    private Dictionary<string, List<int>> limiterRanges = new Dictionary<string, List<int>>
+    {
+        { "Level Up Limit", new List<int> { 5, 50, 5 } },
+        { "Lucky Emblem Limit", new List<int> { 10, 90, 10 } },
+        { "Moogle Synthesis Limit", new List<int> { 5, 40, 1 } }
     };
 
     private Dictionary<string, string> poolDescriptions = new Dictionary<string, string> {
@@ -226,13 +453,30 @@
         { "Flantastic Flans", "Rewards earned for max completing a Flan Missions." },
         { "Minigames", "Rewards earned for obtaining an A-Rank in a Minigame." },
         { "Battle Portals", "Rewards earned for completing a Battle Portal." },
+
+        { "Base Sora Stats", "Stats related to Sora's initial Max Health, Magic and Focus Points." },
+        { "Level Up Stats", "Stats for Sora's Level Up Attack, Magic, Defense and Ability Points." },
+        { "Equipment Stats", "Stats for Resistance, Attack, Magic, Defense, and Ability Points on Equipment." },
+        { "Keyblade Enhance Stats", "Stats related to Attack and Magic Points on Keyblade Level Ups." },
+        { "Food Effect Stats", "Stats for Max Health, Magic, Attack, Magic and Defense on Food." },
+        { "EXP Multiplier", "Multiplier for EXP that is multiplied to each Enemy's EXP output value." },
+
+        { "Enemies", "Randomizes types of Enemies and Mini-Bosses, for instance all Shadows are randomized to Neoshadows." },
+        { "Bosses", "Randomizes Mid-Bosses and Final Bosses in all Worlds." },
+        { "Party Members", "Randomizes Party Members in all Worlds, including Keyblade Graveyard." },
     };
 
     protected override void OnInitialized()
     {
         this.worldPools = this.RandomizerService.GetPools(this.AvailablePools, "World");
         this.miscellaneousPools = this.RandomizerService.GetPools(this.AvailablePools, "Miscellaneous");
+        this.statPools = this.RandomizerService.GetPools(this.AvailablePools, "Stats");
+        this.enemyPools = this.RandomizerService.GetPools(this.AvailablePools, "Enemy");
+        this.partyPools = this.RandomizerService.GetPools(this.AvailablePools, "Party Members");
+
         this.exceptions = this.Exceptions;
+        this.limiters = this.Limiters;
+        this.expMultiplier = this.EXPMultiplier;
 
         this.CheckMaxReplacePools();
 
@@ -243,7 +487,13 @@
     {
         this.worldPools = this.RandomizerService.GetPools(this.AvailablePools, "World");
         this.miscellaneousPools = this.RandomizerService.GetPools(this.AvailablePools, "Miscellaneous");
+        this.statPools = this.RandomizerService.GetPools(this.AvailablePools, "Stats");
+        this.enemyPools = this.RandomizerService.GetPools(this.AvailablePools, "Enemy");
+        this.partyPools = this.RandomizerService.GetPools(this.AvailablePools, "Party Members");
+
         this.exceptions = this.Exceptions;
+        this.limiters = this.Limiters;
+        this.expMultiplier = this.EXPMultiplier;
 
         this.CheckMaxReplacePools();
 
@@ -270,6 +520,27 @@
         this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed });
     }
 
+    private void UpdateStatPool(string key, RandomizeOptionEnum randomizeOptionEnum)
+    {
+        this.statPools[key] = randomizeOptionEnum;
+
+        this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed });
+    }
+
+    private void UpdateEnemyPool(string key, RandomizeOptionEnum randomizeOptionEnum)
+    {
+        this.enemyPools[key] = randomizeOptionEnum;
+
+        this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed });
+    }
+
+    private void UpdatePartyPool(string key, RandomizeOptionEnum randomizeOptionEnum)
+    {
+        this.partyPools[key] = randomizeOptionEnum;
+
+        this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed });
+    }
+
     private void CheckMaxReplacePools()
     {
         var worldCount = this.worldPools.Where(x => x.Value != RandomizeOptionEnum.Randomize).Count();
@@ -286,7 +557,7 @@
         foreach (var pool in this.worldPools)
             this.worldPools[pool.Key] = randomizeOptionEnum;
 
-        foreach (var pool in this.miscellaneousPools.Where(x => x.Key != "Always On" && x.Key != "Battle Portals"))
+        foreach (var pool in this.miscellaneousPools.Where(x => x.Key != "Always On"))
             this.miscellaneousPools[pool.Key] = randomizeOptionEnum;
 
 
@@ -305,11 +576,70 @@
         var combinedDictionary = worldPools.ToDictionary(x => x.Key, y => y.Value);
         miscellaneousPools.ToList().ForEach(x => combinedDictionary.Add(x.Key, x.Value));
 
-        this.UpdateAvailablePools.InvokeAsync(combinedDictionary);
+        var randomizedItems = this.RandomizerService.Process(this.currentSeed, combinedDictionary, this.exceptions, this.limiters, this.exceptions["Can Be None"]);
 
-        var randomizedItems = this.RandomizerService.Process(this.currentSeed, combinedDictionary, this.exceptions, this.CanBeNone);
+        // Update with Stats
+        var randomizedStats = this.RandomizerService.ProcessStats(this.currentSeed, statPools, this.exceptions);
+
+        foreach (var (randomizedCategory, randomizedStatSubCategories) in randomizedStats)
+        {
+            foreach (var (randomizedSubCategory, randomizedValues) in randomizedStatSubCategories)
+            {
+                foreach (var (name, value) in randomizedValues)
+                {
+                    if (!randomizedItems.ContainsKey(randomizedCategory))
+                        randomizedItems.Add(randomizedCategory, new Dictionary<string, Dictionary<string, string>>());
+
+                    if (!randomizedItems[randomizedCategory].ContainsKey(randomizedSubCategory))
+                        randomizedItems[randomizedCategory].Add(randomizedSubCategory, new Dictionary<string, string>());
+
+                    if (!randomizedItems[randomizedCategory][randomizedSubCategory].ContainsKey(name))
+                        randomizedItems[randomizedCategory][randomizedSubCategory].Add(name, "");
+
+                    randomizedItems[randomizedCategory][randomizedSubCategory][name] = value;
+                }
+            }
+        }
+
+        // Add Exp Multiplier
+        if (randomizedItems.ContainsKey(DataTableEnum.EXP))
+        {
+            randomizedItems[DataTableEnum.EXP]["EXP"]["Multiplier"] = this.expMultiplier.ToString();
+        }
+        else
+        {
+            randomizedItems.Add(DataTableEnum.EXP, new Dictionary<string, Dictionary<string, string>>());
+            randomizedItems[DataTableEnum.EXP].Add("EXP", new Dictionary<string, string>());
+            randomizedItems[DataTableEnum.EXP]["EXP"].Add("Multiplier", this.expMultiplier.ToString());
+        }
 
         this.UpdateRandomizedOptions.InvokeAsync(randomizedItems);
+
+
+        // Randomize Enemies
+        var randomizedEnemies = this.RandomizerService.ProcessEnemies(this.currentSeed, enemyPools, this.exceptions);
+
+        this.UpdateRandomizedEnemies.InvokeAsync(randomizedEnemies);
+
+
+        // Randomize Bosses
+        var randomizedBosses = this.RandomizerService.ProcessBosses(this.currentSeed, enemyPools, this.exceptions);
+
+        this.UpdateRandomizedBosses.InvokeAsync(randomizedBosses);
+
+
+        // Randomize Party Members
+        var randomizedPartyMembers = this.RandomizerService.ProcessPartyMembers(this.currentSeed, partyPools, this.exceptions);
+
+        this.UpdateRandomizedPartyMembers.InvokeAsync(randomizedPartyMembers);
+
+
+        // Add rest of pools back to AvailablePools
+        statPools.ToList().ForEach(x => combinedDictionary.Add(x.Key, x.Value));
+        enemyPools.ToList().ForEach(x => combinedDictionary.Add(x.Key, x.Value));
+        partyPools.ToList().ForEach(x => combinedDictionary.Add(x.Key, x.Value));
+
+        this.UpdateAvailablePools.InvokeAsync(combinedDictionary);
     }
 
     private async void ContinueToNext(string section)
@@ -327,7 +657,16 @@
                 return;
             }
         }
-        
+
         await this.ContinueTo.InvokeAsync(section);
+    }
+
+    private async void RandomSeed()
+    {
+        this.currentSeed = Guid.NewGuid().ToString().Replace("-", "");
+
+        await this.UpdateCurrentSeed.InvokeAsync(this.currentSeed);
+
+        this.RandomizeByPools(new ChangeEventArgs { Value = this.currentSeed });
     }
 }

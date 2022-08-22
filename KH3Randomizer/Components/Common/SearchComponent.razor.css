@@ -1,5 +1,5 @@
 ﻿.kh-input {
-    background: linear-gradient(to right, #015eea, #00c0fa);
+    background: #0081ff;
     padding: 10px 15px;
     margin-bottom: 1.5vh;
     margin-left: 1vw;
@@ -11,11 +11,11 @@
 }
 
 .options-input {
-    background: linear-gradient(to right, #015eea, #00c0fa);
+    background: #0081ff;
 }
 
 .modal-input {
-    background: linear-gradient(to right, #a169e0, #cbabee);
+    background: #0081ff;
 }
 
 .kh-inputfield {

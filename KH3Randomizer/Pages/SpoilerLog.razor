@@ -1,10 +1,11 @@
 ﻿@page "/spoilerlog"
 
 @using UE4DataTableInterpreter.Enums;
+@using UE4DataTableInterpreter.Models;
 @using System.Text.Json;
 @using System.IO;
 @using Enums;
-@using System.Text.RegularExpressions; 
+@using System.Text.RegularExpressions;
 
 @inject RandomizerService RandomizerService
 
@@ -45,29 +46,31 @@
     <div class="spoiler-log-options">
         <div class="spoiler-log-pools">
             <div class="row">
-                <Pools AvailablePools="@this.availablePools" CanBeNone="@this.canBeNone" CurrentSeed="@this.currentSeed" IsSpoilerLog="true" Exceptions="@this.exceptions"
-                       UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdateCanBeNone="@(canBeNone => UpdateCanBeNone(canBeNone))" UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" 
-                       UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))" UpdateExceptions="@(exceptions => UpdateExceptions(exceptions))">
-                </Pools>
+                <Pools AvailablePools="@this.availablePools" EXPMultiplier="@this.expMultiplier" CurrentSeed="@this.currentSeed" IsSpoilerLog="true" Exceptions="@this.exceptions" Limiters="@this.limiters"
+                       UpdateAvailablePools="@(pools => UpdateAvailablePools(pools))" UpdateEXPMultiplier="@(expMultiplier => UpdateEXPMultiplier(expMultiplier))"
+                       UpdateRandomizedOptions="@(randOptions => UpdateRandomizedOptions(randOptions))" UpdateRandomizedEnemies="@(randEnemies => UpdateRandomizedEnemies(randEnemies))"
+                       UpdateRandomizedPartyMembers="@(randPartyMembers => UpdateRandomizedPartyMembers(randPartyMembers))" UpdateCurrentSeed="@(currentSeed => UpdateCurrentSeed(currentSeed))"
+                       UpdateExceptions="@(exceptions => UpdateExceptions(exceptions))" UpdateLimiters="@(limiters => this.UpdateLimiters(limiters))">
+                </Pools> 
             </div>
         </div>
 
         @if (this.randomizedOptions.Count > 0)
         {
-        <hr />
+            <hr />
 
-        <div class="kh-modification-button">
-            @if (this.modifications.Count > 0)
-            {
-                <button class="btn btn-danger" @onclick="ResetModifications">Reset Modifications</button>
-            }
-        </div>
+            <div class="kh-modification-button">
+                @if (this.modifications.Count > 0)
+                {
+                    <button class="btn btn-danger" @onclick="ResetModifications">Reset Modifications</button>
+                }
+            </div>
 
-        <div style="margin-top: 25px;"></div>
+            <div style="margin-top: 25px;"></div>
 
-        <OptionsSubsection UpdateAvailableOptions="@this.UpdateAvailableOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
-                           CurrentSeed="@this.currentSeed" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions"
-                           ActionType="Options" SpoilerChecked="false" />
+            <OptionsSubsection UpdateAvailableOptions="@this.UpdateAvailableOptions" UpdateRandomizedOptions="@this.UpdateRandomizedOptions" UpdateModifications="@this.UpdateModifications"
+                               CurrentSeed="@this.currentSeed" AvailableOptions="@this.availableOptions" RandomizedOptions="@this.randomizedOptions"
+                               ActionType="Options" SpoilerChecked="false" />
         }
     </div>
 </div>
@@ -78,34 +81,71 @@
     private bool canBeNone { get; set; }
 
     private Dictionary<string, RandomizeOptionEnum> availablePools = new Dictionary<string, RandomizeOptionEnum>
-    {
+{
         // World Categories - Custom Categories that contain Treasures, Events & Bonuses
         { "Olympus", RandomizeOptionEnum.Randomize }, { "Twilight Town", RandomizeOptionEnum.Randomize }, { "Toy Box", RandomizeOptionEnum.Randomize },
-        { "Kingdom of Corona", RandomizeOptionEnum.Randomize }, { "Monstropolis", RandomizeOptionEnum.Randomize }, { "100 Acre Wood", RandomizeOptionEnum.Randomize },
+        { "Kingdom of Corona", RandomizeOptionEnum.Randomize }, { "Monstropolis", RandomizeOptionEnum.Randomize }, { "100 Acre Wood", RandomizeOptionEnum.Replace },
         { "Arendelle", RandomizeOptionEnum.Randomize }, { "San Fransokyo", RandomizeOptionEnum.Randomize }, { "The Caribbean", RandomizeOptionEnum.Randomize },
-        { "Keyblade Graveyard", RandomizeOptionEnum.Randomize }, { "Re:Mind", RandomizeOptionEnum.Randomize }, { "Dark World", RandomizeOptionEnum.Randomize },
+        { "Keyblade Graveyard", RandomizeOptionEnum.Randomize }, { "Re+Mind", RandomizeOptionEnum.Randomize }, { "Dark World", RandomizeOptionEnum.Randomize },
         { "Unreality", RandomizeOptionEnum.Randomize },
 
         // Miscellaneous Categories
-        { "Sora", RandomizeOptionEnum.Randomize }, { "Equipment Abilities", RandomizeOptionEnum.Replace }, { "Data Battle Rewards", RandomizeOptionEnum.Replace },
+        { "Sora", RandomizeOptionEnum.Randomize }, { "Equipment Abilities", RandomizeOptionEnum.Randomize }, { "Data Battle Rewards", RandomizeOptionEnum.Randomize },
         { "Moogle Workshop", RandomizeOptionEnum.Randomize }, { "Fullcourse Abilities", RandomizeOptionEnum.Vanilla }, { "Lucky Emblems", RandomizeOptionEnum.Randomize },
-        { "Flantastic Flans", RandomizeOptionEnum.Replace }, { "Minigames", RandomizeOptionEnum.Replace }, { "Battle Portals", RandomizeOptionEnum.Replace },
+        { "Flantastic Flans", RandomizeOptionEnum.Replace }, { "Minigames", RandomizeOptionEnum.Replace }, { "Battle Portals", RandomizeOptionEnum.Randomize },
+
+        // Stat Categories
+        { "Base Sora Stats", RandomizeOptionEnum.Balanced }, { "Level Up Stats", RandomizeOptionEnum.Balanced }, { "Keyblade Enhance Stats", RandomizeOptionEnum.Boosted },
+        { "Equipment Stats", RandomizeOptionEnum.Balanced }, { "Food Effect Stats", RandomizeOptionEnum.Balanced },
+
+        // Enemy Categories
+        { "Enemies", RandomizeOptionEnum.Randomize }, { "Bosses", RandomizeOptionEnum.Randomize }, 
+        
+        // Party Categories
+        { "Party Members", RandomizeOptionEnum.Randomize },
 
         // Always On - Proofs, Oathkeeper, Oblivion, Meow Wow, Gummiphone
         { "Always On", RandomizeOptionEnum.Replace }
     };
 
+    private float expMultiplier { get; set; } = 1.0f;
+
     private Dictionary<string, bool> exceptions = new Dictionary<string, bool>
     {
+        { "Can Be None", false },
         { "Default Abilities", false },
         { "Default Critical Abilities", true },
-        { "Early Critical Abilities", false }
+        { "Early Critical Abilities", false },
+        { "Extra Movement", true },
+        { "Safe Magic Locations", true },
+
+        { "Replace Classic Kingdom Reward", true },
+        { "Replace Little Chef's Reward", true },
+        { "Replace Golden Herc Rewards", true },
+        { "Replace Sora Collection Rewards", true },
+        { "Replace Photo Missions", true },
+
+        { "Allow All Stats", false },
+        { "Allow Negative Stats", false },
+
+        { "Default Data Battles", true },
+        { "Default End Game Battles", true },
+        { "Default Yozora Battle", true },
+        { "Default Donald & Goofy", false },
+        { "Enemy Chaos", false },
+        { "Party Chaos", false }
+    };
+
+    private Dictionary<string, int> limiters = new Dictionary<string, int>
+    {
+        { "Level Up Limit", 35 }, { "Lucky Emblem Limit", 50 }, { "Moogle Synthesis Limit", 15 }
     };
 
     private Dictionary<string, Dictionary<string, bool>> availableOptions = new();
-    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
 
-    //private Dictionary<string, Dictionary<string, bool>> tempOptions = new();
+    private Dictionary<DataTableEnum, Dictionary<string, Dictionary<string, string>>> randomizedOptions = new();
+    private Dictionary<string, Enemy> randomizedEnemies = new();
+    private Dictionary<string, string> randomizedPartyMembers = new();
 
     private List<Tuple<Option, Option>> modifications = new();
 
@@ -124,8 +164,6 @@
         this.currentSeed = Regex.Replace(this.currentSeed, @"[^\w\-]", "");
 
         this.UpdateCurrentSeed(this.currentSeed);
-
-        this.RandomizerService.RandomizeItems(this.currentSeed, ref this.availableOptions, ref this.randomizedOptions);
 
         this.UpdateAvailableOptions(this.availableOptions);
         this.UpdateRandomizedOptions(this.randomizedOptions);
@@ -196,10 +234,19 @@
         });
     }
 
+    public void UpdateLimiters(Dictionary<string, int> limiters)
+    {
+        this.limiters = limiters;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
     public void UpdateAvailableOptions(Dictionary<string, Dictionary<string, bool>> availableOptions)
     {
         this.availableOptions = availableOptions;
-        //this.tempOptions = availableOptions;
 
         InvokeAsync(() =>
         {
@@ -234,6 +281,36 @@
         });
     }
 
+    public void UpdateRandomizedEnemies(Dictionary<string, Enemy> randomizedEnemies)
+    {
+        this.randomizedEnemies = randomizedEnemies;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateRandomizedPartyMembers(Dictionary<string, string> randomizedPartyMembers)
+    {
+        this.randomizedPartyMembers = randomizedPartyMembers;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    public void UpdateEXPMultiplier(float expMultiplier)
+    {
+        this.expMultiplier = expMultiplier;
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
     public async void LoadSpoilerLog(InputFileChangeEventArgs e)
     {
         var file = e.File;
@@ -247,11 +324,12 @@
             this.UpdateCurrentSeed(spoilerLogFile.SeedName);
             this.UpdateAvailablePools(spoilerLogFile.AvailablePools);
             this.UpdateExceptions(spoilerLogFile.Exceptions);
+            this.UpdateLimiters(spoilerLogFile.Limiters);
 
             this.RandomizerService.GetAvailableOptions(this.availablePools, ref this.availableOptions, false);
             this.UpdateAvailableOptions(this.availableOptions);
 
-            this.randomizedOptions = this.RandomizerService.Process(this.currentSeed, this.availablePools, this.exceptions, this.canBeNone);
+            this.randomizedOptions = this.RandomizerService.Process(this.currentSeed, this.availablePools, this.exceptions, this.limiters, this.canBeNone);
             this.UpdateRandomizedOptions(this.randomizedOptions);
 
             foreach (var item in spoilerLogFile.Modifications)

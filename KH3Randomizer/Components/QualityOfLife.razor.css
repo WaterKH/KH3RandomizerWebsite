@@ -10,7 +10,7 @@
 }
 
 .kh-button {
-    background: linear-gradient(to right, #015eea, #00c0fa);
+    background: #0081ff;
     padding: 5px 25px;
     border-radius: 10px;
     color: white;
@@ -95,4 +95,35 @@ hr {
     width: 96%;
     background-color: #cdcdcd;
     height: 1px;
+}
+
+.rounded-selector {
+    padding: 5px 10px;
+    border: 1px solid #49b3ff;
+    border-radius: 20px;
+    margin: 5px;
+    display: block;
+    text-align: center;
+    transition: background-color 0.5s ease;
+}
+
+    .rounded-selector:hover {
+        background-color: #c1e5ff;
+    }
+
+.rounded-selected {
+    background-color: #49b3ff;
+}
+
+.a-tag-selector {
+    color: unset;
+    text-decoration: none;
+}
+
+    .a-tag-selector:hover {
+        color: white;
+    }
+
+.a-tag-selected {
+    color: white;
 }

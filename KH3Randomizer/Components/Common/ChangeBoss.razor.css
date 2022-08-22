@@ -1,0 +1,63 @@
+.change-option-modal {
+    max-height: 80vh;
+    max-width: 80vw;
+    min-width: 80vw;
+    overflow-y: auto;
+    background-color: #F2F2F2;
+}
+
+.kh-button {
+    background: #0081ff;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: white;
+    border: unset;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button:hover {
+        opacity: .75;
+    }
+
+.kh-button-cancel {
+    background-color: transparent;
+    padding: 5px 25px;
+    border-radius: 10px;
+    color: black;
+    border: grey solid 1px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+    .kh-button-cancel:hover {
+        opacity: .75;
+    }
+
+.kh-inputfield {
+    padding: 5px 15px;
+    border-radius: 5px;
+    text-align: left;
+    width: 50%;
+    height: auto;
+    margin-left: 10px;
+    border: 1px solid black;
+}
+
+.selectable-item {
+    background-color: #f2f2f2;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 30px;
+    margin: 5px 7px;
+    display: inline-block;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid #49b3ff;
+    transition: background-color 0.3s ease-in-out;
+}
+
+    .selectable-item:hover {
+        background-color: #b9edff;
+    }

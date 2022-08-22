@@ -1,0 +1,115 @@
+﻿@using UE4DataTableInterpreter.Models
+
+@inject RandomizerService RandomizerService
+
+<div class="simple-form change-option-modal">
+    <div class="row" style="width: 95%;">
+        <div class="col-md-4">
+            <label for="enemy">Enemy: </label>
+            <label id="enemy"><b>@this.Enemy.EnemyPath.Split('/')[^2].EnemyIdToEnemyName()</b></label>
+        </div>
+        <div class="col-md-8">
+            <label for="enemy">Enemy Path: </label>
+            <label id="enemy"><b>@this.Enemy.EnemyPath.Replace("\u0000", "")</b></label>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="search-section">
+        <div class="selected-checks">
+            <div class="row" style="width: 100%; margin: 25px 0px;">
+                <div class="col-md-1">
+                    <label style="margin-top: 8px; font-size: larger; font-weight: 500;"><b>Search: </b></label>
+                </div>
+
+                <div class="col-md-8" style="align-self: center;">
+                    <input value="@searchValue" id="enemySearch" name="enemySearch" class="kh-inputfield" @oninput="@((e) => this.SearchEnemies(e.Value.ToString()))" placeholder="Search for available values..." />
+                </div>
+            </div>
+        </div>
+
+        <div class="found-checks">
+            @if (this.foundEnemies.Any())
+            {
+                @foreach (var enemy in this.foundEnemies)
+                {
+                    <span class="selectable-item" @onclick="@(() => { this.Enemy.EnemyPath = enemy; })">@enemy.Split('/')[^2].EnemyIdToEnemyName()</span>
+                }
+            }
+            else if (string.IsNullOrEmpty(this.searchValue))
+            {
+                <em>Search results will be displayed here if found.</em>
+            }
+            else
+            {
+                <em>No checks found for @this.searchValue</em>
+            }
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row" style="width: 95%;">
+        <div class="col-md-12">
+            <div>
+                <button @onclick="@Update" class="btn kh-button" style="margin-right: 5px;">Update Enemy</button>
+
+                <button @onclick="ModalInstance.CancelAsync" class="btn kh-button-cancel" style="margin-left: 15px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; }
+
+    [Parameter] public Action<string, Enemy> UpdateEnemy { get; set; }
+
+    [Parameter] public string Name { get; set; }
+    [Parameter] public Enemy Enemy { get; set; }
+
+    private string searchValue = "";
+    private List<string> allEnemies = new List<string>();
+    private List<string> foundEnemies = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        this.allEnemies = this.RandomizerService.GetDefaultEnemies();
+    }
+
+    public async void Update()
+    {
+        UpdateEnemy.Invoke(this.Name, this.Enemy);
+
+        await ModalInstance.CloseAsync();
+
+        await InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+
+    private void SearchEnemies(string search)
+    {
+        this.searchValue = search;
+
+        this.foundEnemies = new List<string>();
+
+        if (string.IsNullOrEmpty(this.searchValue))
+            return;
+
+        foreach (var enemyPath in this.allEnemies)
+        {
+            if (enemyPath.Split('/')[^2].EnemyIdToEnemyName().ToLower().Contains(searchValue.ToLower()))
+                this.foundEnemies.Add(enemyPath);
+        }
+
+        this.foundEnemies.Sort();
+
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+        });
+    }
+}
