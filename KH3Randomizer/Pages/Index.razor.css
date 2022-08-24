@@ -1,3 +1,14 @@
 .section-manager {
 
 }
+
+.top-banner {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 1000;
+    left: 90px;
+    text-align: center;
+    background-color: aliceblue;
+    padding: 5px;
+}

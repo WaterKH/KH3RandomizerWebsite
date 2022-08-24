@@ -212,10 +212,10 @@
 
                         <div class="col-md-8" style="text-align: center;">
                             <div id="poolOptionEnums" style="display: inline-flex;">
-                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active selected-kh-enemy-color" : "")" @onclick="@(() => { this.UpdateEnemyPool(pool.Key, RandomizeOptionEnum.Vanilla); })">
+                                <button class="kh-left-switch @(pool.Value == RandomizeOptionEnum.Vanilla ? "kh-switch-active selected-kh-enemy-color" : "")" @onclick="@(() => { this.UpdateEnemyPool(pool.Key, RandomizeOptionEnum.Vanilla); })" disabled="@(pool.Key == "Enemies")">
                                     Vanilla
                                 </button>
-                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active selected-kh-enemy-color" : "")" @onclick="@(() => { this.UpdateEnemyPool(pool.Key, RandomizeOptionEnum.Randomize); })">
+                                <button class="kh-right-switch @(pool.Value == RandomizeOptionEnum.Randomize ? "kh-switch-active selected-kh-enemy-color" : "")" @onclick="@(() => { this.UpdateEnemyPool(pool.Key, RandomizeOptionEnum.Randomize); })" disabled="@(pool.Key == "Enemies")">
                                     Randomize
                                 </button>
                             </div>

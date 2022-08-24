@@ -9,6 +9,10 @@
 
 @inject KH3Randomizer.Data.RandomizerService RandomizerService
 
+<div class="top-banner">
+    <b style="font-size: large;">Currently the Online Webapp does not support Enemy Randomization. This feature is only offered on the <a href="https://github.com/WaterKH/KH3RandomizerClient/releases" target="_blank">Latest Offline Client</a>.</b>
+</div>
+
 <div class="randomizer-content">
     <SectionBar CurrentSection="@this.currentSection" IsPlando="@this.IsPlando" SelectedConfigurations="@this.selectedConfigurations" SaveSectionConfiguration="@this.SaveSectionConfiguration" UpdateSectionConfiguration="@this.SelectSectionConfiguration"></SectionBar>
 
@@ -89,7 +93,7 @@
         { "Equipment Stats", RandomizeOptionEnum.Balanced }, { "Food Effect Stats", RandomizeOptionEnum.Balanced },
 
         // Enemy Categories
-        { "Enemies", RandomizeOptionEnum.Randomize }, { "Bosses", RandomizeOptionEnum.Randomize }, 
+        { "Enemies", RandomizeOptionEnum.Vanilla }, { "Bosses", RandomizeOptionEnum.Randomize }, 
         
         // Party Categories
         { "Party Members", RandomizeOptionEnum.Randomize },
