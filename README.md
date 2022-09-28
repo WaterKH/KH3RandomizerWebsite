@@ -47,5 +47,6 @@ There were several people that helped by submitting bugs, participating in commu
 - Rudabegga: They pointed us towards hosting with DigitalOcean, which has made the online seed generator the most stable it's ever been.
 - Clara The Classy: They did an amazing job cross-referencing treasure chest data to verify that chests were being properly shown on the website with the correct text.
 - SwiftShadow: They helped by contributing code to the hint system, allowing easier to follow hints, modular amount of hints per report and added a new category to map to.
+- SonicShadowSilver2: They helped by contributing meaningful descriptions to the overall hints used by the hint service.
 
 You can also join the [Kingdom Hearts 3 Randomizer Community Discord](https://discord.gg/qf42CZfVBr) to help, find people to play the KH3 Rando with or discuss this project in general.
